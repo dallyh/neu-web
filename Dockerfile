@@ -15,7 +15,12 @@ ARG PUBLIC_SITE_URL
 ARG PUBLIC_HCAPTCHA_SITE_KEY
 ENV PUBLIC_SITE_URL=${PUBLIC_SITE_URL}
 ENV PUBLIC_HCAPTCHA_SITE_KEY=${PUBLIC_HCAPTCHA_SITE_KEY}
-RUN --mount=type=secret,id=GITHUB_TOKEN,env=GITHUB_TOKEN,required=true pnpm build
+# Coolify skips automatic secret injection for RUN commands that already have mounts.
+# Mount public build variables here too; ARG values still work for local builds.
+RUN --mount=type=secret,id=GITHUB_TOKEN,env=GITHUB_TOKEN,required=true \
+    --mount=type=secret,id=PUBLIC_SITE_URL,env=PUBLIC_SITE_URL \
+    --mount=type=secret,id=PUBLIC_HCAPTCHA_SITE_KEY,env=PUBLIC_HCAPTCHA_SITE_KEY \
+    pnpm build
 
 FROM base AS prod-deps
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
