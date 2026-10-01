@@ -1,0 +1,178 @@
+/* Neubrutalism personal-site design tokens */
+
+:root {
+	color-scheme: light;
+
+	/* Palette */
+	--nb-bg: #fffdf5;
+	--nb-surface: #ffffff;
+	--nb-surface-muted: #f1eee5;
+	--nb-ink: #111111;
+	--nb-text: #111111;
+	--nb-text-muted: #4c4c4c;
+
+	--nb-primary: #ffd23f;
+	--nb-secondary: #74b9ff;
+	--nb-accent: #ff6b6b;
+	--nb-success: #88d498;
+	--nb-success-ink: #176b3a;
+	--nb-error: #b42318;
+	--nb-warning: #ffa552;
+	--nb-lavender: #b8a9fa;
+	--nb-focus: #005fcc;
+
+	/* Accent foregrounds */
+	--nb-on-primary: #111111;
+	--nb-on-secondary: #111111;
+	--nb-on-accent: #111111;
+	--nb-on-success: #111111;
+	--nb-on-success-ink: #fffdf5;
+	--nb-on-error: #fffdf5;
+	--nb-on-warning: #111111;
+	--nb-on-lavender: #111111;
+	--nb-on-focus: #fffdf5;
+	--nb-action-bg: #111111;
+	--nb-action-bg-inverted: #fffdf5;
+	--nb-action-text: #fffdf5;
+	--nb-action-shadow: 5px 5px 0 0 var(--nb-action-bg);
+	--nb-action-shadow-inverted: 5px 5px 0 0 var(--nb-action-bg-inverted);
+
+	/* Structure */
+	--nb-border-color: var(--nb-ink);
+	--nb-border-sm: 2px;
+	--nb-border-md: 3px;
+	--nb-border-lg: 4px;
+	--nb-radius: 0px;
+	--nb-radius-decorative: 2px;
+
+	/* Hard depth */
+	--nb-shadow-color: var(--nb-ink);
+	--nb-shadow-sm: 3px 3px 0 0 var(--nb-shadow-color);
+	--nb-shadow-md: 5px 5px 0 0 var(--nb-shadow-color);
+	--nb-shadow-lg: 8px 8px 0 0 var(--nb-shadow-color);
+	--nb-shadow-hover: 7px 7px 0 0 var(--nb-shadow-color);
+
+	/* Typography */
+	--nb-font-display: var(--font-bebas-neue);
+	--nb-font-heading: var(--font-plus-jakarta-sans);
+	--nb-font-body: var(--font-dm-sans);
+	--nb-font-mono: var(--font-jetbrains-mono);
+
+	--nb-display-xl: clamp(3.5rem, 10vw, 8rem);
+	--nb-display: clamp(2.75rem, 7vw, 6rem);
+	--nb-h1: clamp(2.4rem, 5vw, 4.5rem);
+	--nb-h2: clamp(1.9rem, 3.5vw, 3rem);
+	--nb-h3: clamp(1.35rem, 2vw, 2rem);
+	--nb-body-lg: 1.125rem;
+	--nb-body: 1rem;
+	--nb-small: 0.875rem;
+	--nb-meta: 0.8125rem;
+
+	--nb-leading-tight: 1.05;
+	--nb-leading-heading: 1.15;
+	--nb-leading-body: 1.65;
+
+	/* Spacing */
+	--nb-space-1: 0.25rem;
+	--nb-space-2: 0.5rem;
+	--nb-space-3: 0.75rem;
+	--nb-space-4: 1rem;
+	--nb-space-5: 1.25rem;
+	--nb-space-6: 1.5rem;
+	--nb-space-8: 2rem;
+	--nb-space-10: 2.5rem;
+	--nb-space-12: 3rem;
+	--nb-space-16: 4rem;
+	--nb-space-20: 5rem;
+	--nb-space-24: 6rem;
+
+	/* Layout */
+	--nb-page-max: 90rem;
+	--nb-content-max: 75rem;
+	--nb-reading-max: 70ch;
+	--nb-page-padding: clamp(1rem, 3vw, 3rem);
+
+	/* Motion */
+	--nb-duration-fast: 100ms;
+	--nb-duration: 150ms;
+	--nb-ease: ease;
+}
+
+[data-theme="dark"],
+.dark {
+	color-scheme: dark;
+
+	--nb-bg: #151515;
+	--nb-surface: #202020;
+	--nb-surface-muted: #2a2a2a;
+	--nb-ink: #f8f5e9;
+	--nb-text: #f8f5e9;
+	--nb-text-muted: #c8c4b8;
+
+	--nb-primary: #ffd23f;
+	--nb-secondary: #74b9ff;
+	--nb-accent: #ff7a70;
+	--nb-success: #88d498;
+	--nb-success-ink: #88d498;
+	--nb-error: #ff8f8f;
+	--nb-warning: #ffad66;
+	--nb-lavender: #c0b3ff;
+	--nb-focus: #8ec5ff;
+
+	--nb-on-primary: #111111;
+	--nb-on-secondary: #111111;
+	--nb-on-accent: #111111;
+	--nb-on-success: #111111;
+	--nb-on-success-ink: #111111;
+	--nb-on-error: #111111;
+	--nb-on-warning: #111111;
+	--nb-on-focus: #111111;
+
+	--nb-border-color: var(--nb-ink);
+	--nb-shadow-color: var(--nb-ink);
+}
+
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme="light"]):not(.light) {
+		color-scheme: dark;
+
+		--nb-bg: #151515;
+		--nb-surface: #202020;
+		--nb-surface-muted: #2a2a2a;
+		--nb-ink: #f8f5e9;
+		--nb-text: #f8f5e9;
+		--nb-text-muted: #c8c4b8;
+
+		--nb-primary: #ffd23f;
+		--nb-secondary: #74b9ff;
+		--nb-accent: #ff7a70;
+		--nb-success: #88d498;
+		--nb-success-ink: #88d498;
+		--nb-error: #ff8f8f;
+		--nb-warning: #ffad66;
+		--nb-lavender: #c0b3ff;
+		--nb-focus: #8ec5ff;
+
+		--nb-on-primary: #111111;
+		--nb-on-secondary: #111111;
+		--nb-on-accent: #111111;
+		--nb-on-success: #111111;
+		--nb-on-success-ink: #111111;
+		--nb-on-error: #111111;
+		--nb-on-warning: #111111;
+		--nb-on-focus: #111111;
+
+		--nb-border-color: var(--nb-ink);
+		--nb-shadow-color: var(--nb-ink);
+	}
+}
+
+@media (max-width: 48rem) {
+	:root {
+		--nb-shadow-sm: 2px 2px 0 0 var(--nb-shadow-color);
+		--nb-shadow-md: 4px 4px 0 0 var(--nb-shadow-color);
+		--nb-shadow-lg: 6px 6px 0 0 var(--nb-shadow-color);
+		--nb-action-shadow: 4px 4px 0 0 var(--nb-action-bg);
+		--nb-action-shadow-inverted: 4px 4px 0 0 var(--nb-action-bg-inverted);
+	}
+}

@@ -1,0 +1,16 @@
+---
+import { useIntlayer } from "astro-intlayer";
+
+interface Props extends astroHTML.JSX.AnchorHTMLAttributes {}
+
+const { href, rel, target, ...rest } = Astro.props;
+const ui = useIntlayer("site");
+---
+
+<a href={href} target={target ?? "_blank"} rel={rel ?? "noopener noreferrer"} {...rest}>
+	<slot />
+	<span aria-hidden="true" class="ml-1 inline-block font-nb-mono text-[0.8em]">
+		↗
+	</span>
+	<span class="sr-only"> ({ui.opensNewTab})</span>
+</a>

@@ -1,0 +1,46 @@
+---
+import { Icon } from "astro-iconset/components";
+import { useIntlayer } from "astro-intlayer";
+import { contactLinks } from "../../lib/contact-links";
+
+const ui = useIntlayer("site");
+const profiles = [
+	{ label: "GitHub", icon: "github", href: contactLinks.github },
+	{ label: "LinkedIn", icon: "linkedin", href: contactLinks.linkedin },
+] as const;
+const emailHref = contactLinks.email ? `mailto:${contactLinks.email}` : "#contact-heading";
+---
+
+<section aria-labelledby="contact-links-heading" class="mt-14">
+	<h2 id="contact-links-heading" class="mb-3 font-nb-heading text-nb-h2 leading-tight font-bold">
+		{ui.contactLinks}
+	</h2>
+	<p class="mb-6 max-w-[70ch]">{ui.contactLinksIntro}</p>
+	<ul class="grid gap-5 md:grid-cols-3">
+		{profiles.map(({ label, icon, href }) => (
+			<li class="border-[3px] border-nb-ink bg-nb-surface p-5 shadow-nb-sm">
+				<div class="mb-3 flex items-center gap-3 font-nb-heading text-lg font-bold">
+					<Icon name={icon} size={28} aria-hidden="true" />
+					<span>{label}</span>
+				</div>
+				{href ? (
+					<a class="font-medium underline decoration-2 underline-offset-4" href={href} target="_blank" rel="noopener noreferrer">
+						{ui.visitProfile}
+						<span class="sr-only"> ({ui.opensNewTab})</span>
+					</a>
+				) : (
+					<p class="text-sm text-nb-text-muted">{ui.profileComingSoon}</p>
+				)}
+			</li>
+		))}
+		<li class="border-[3px] border-nb-ink bg-nb-surface p-5 shadow-nb-sm">
+			<div class="mb-3 flex items-center gap-3 font-nb-heading text-lg font-bold">
+				<Icon name="email" size={28} aria-hidden="true" />
+				<span>{ui.email}</span>
+			</div>
+			<a class="break-all font-medium underline decoration-2 underline-offset-4" href={emailHref}>
+				{contactLinks.email ?? ui.useContactForm}
+			</a>
+		</li>
+	</ul>
+</section>

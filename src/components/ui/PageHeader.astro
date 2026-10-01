@@ -1,0 +1,11 @@
+---
+interface Props {
+	class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<header class:list={["nb-page-header w-full border-[3px] border-nb-ink p-5 shadow-nb-md md:p-8 print:border-0 print:bg-white print:p-0 print:text-black print:shadow-none", className]}>
+	<slot />
+</header>

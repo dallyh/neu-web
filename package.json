@@ -1,20 +1,44 @@
 {
-  "name": "neu-web",
-  "type": "module",
-  "version": "0.0.1",
-  "engines": {
-    "node": ">=22.12.0"
-  },
-  "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
-    "preview": "astro preview",
-    "astro": "astro"
-  },
-  "dependencies": {
-    "astro": "^7.3.5"
-  },
-  "allowScripts": {
-    "esbuild": true
-  }
+    "name": "neu-web",
+    "type": "module",
+    "version": "0.0.1",
+    "engines": {
+        "node": ">=22.12.0"
+    },
+    "scripts": {
+        "dev": "astro dev",
+        "build": "astro build",
+        "start": "node ./dist/server/entry.mjs",
+        "check": "astro check",
+        "preview": "astro preview",
+        "astro": "astro",
+        "format": "pnpm run format:code",
+        "format:code": "prettier -w \"**/*\" --ignore-unknown --cache"
+    },
+    "dependencies": {
+        "@astrojs/mdx": "^8.0.2",
+        "@astrojs/node": "^11.1.6",
+        "astro": "^7.3.5",
+        "astro-expressive-code": "^0.44.2",
+        "astro-iconset": "^0.0.6",
+        "astro-intlayer": "^9.5.10",
+        "intlayer": "^9.5.10",
+        "octokit": "^5.0.5",
+        "sharp": "^0.35.5"
+    },
+    "allowScripts": {
+        "esbuild": true
+    },
+    "packageManager": "pnpm@12.6.0+sha512.3ef68f951cb111ac204b4a5a16f0b2ddf0da56a96e0413e81d855d9f0b55ef926714709028e1cd00c405c2c5fb7b9e8ec4dc46777c805d0373c2f2ff00fd20ec",
+    "devDependencies": {
+        "@astrojs/check": "^0.9.10",
+        "@tailwindcss/vite": "^4.3.3",
+        "@types/node": "^24.19.0",
+        "prettier": "^3.9.9",
+        "prettier-plugin-astro": "^1.1.0",
+        "prettier-plugin-tailwindcss": "^0.8.1",
+        "prettier-plugin-toml": "^3.0.2",
+        "tailwindcss": "^4.3.3",
+        "typescript": "^6.0.3"
+    }
 }

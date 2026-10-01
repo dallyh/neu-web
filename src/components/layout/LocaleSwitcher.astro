@@ -1,0 +1,24 @@
+---
+import { useIntlayer, useLocale } from "astro-intlayer";
+import { getLocalizedUrl } from "intlayer";
+import { withTrailingSlash } from "../../lib/urls";
+
+interface Props {
+	paths: Record<string, string>;
+	fallbackPath: string;
+}
+
+const { paths, fallbackPath } = Astro.props;
+const ui = useIntlayer("site");
+const { locale, availableLocales } = useLocale();
+const localeLinkClass =
+	"inline-flex min-h-11 min-w-11 items-center justify-center border-2 border-transparent p-2 font-nb-heading text-sm font-bold no-underline hover:bg-nb-surface-muted aria-[current=true]:border-nb-ink aria-[current=true]:bg-nb-primary aria-[current=true]:text-nb-on-primary aria-[current=true]:underline";
+---
+
+<nav class="flex flex-wrap items-center gap-2 border-l-2 border-nb-ink pl-3" aria-label={ui.language}>
+	{availableLocales.map((target) => (
+		<a class={localeLinkClass} href={paths[target] ?? withTrailingSlash(getLocalizedUrl(fallbackPath, target))} hreflang={target} lang={target} aria-current={target === locale ? "true" : undefined}>
+			{target.toUpperCase()}
+		</a>
+	))}
+</nav>

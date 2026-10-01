@@ -1,0 +1,38 @@
+---
+import { useIntlayer } from "astro-intlayer";
+import { Icon } from "astro-iconset/components";
+
+type CalloutType = "note" | "tip" | "success" | "caution" | "danger";
+interface Props {
+	type?: CalloutType;
+	title?: string;
+}
+
+const { type = "note", title } = Astro.props;
+const ui = useIntlayer("site");
+const labels = { note: ui.calloutNote, tip: ui.calloutTip, success: ui.calloutSuccess, caution: ui.calloutCaution, danger: ui.calloutDanger };
+const backgrounds: Record<CalloutType, string> = {
+	note: "bg-nb-secondary text-nb-on-secondary",
+	tip: "bg-nb-primary text-nb-on-primary",
+	success: "bg-nb-surface text-nb-text",
+	caution: "bg-nb-surface-muted text-nb-text",
+	danger: "bg-nb-accent text-nb-on-accent",
+};
+const icons: Record<CalloutType, string> = {
+	note: "callout-note",
+	tip: "callout-tip",
+	success: "callout-success",
+	caution: "callout-caution",
+	danger: "callout-danger",
+};
+---
+
+<aside class:list={["nb-callout my-8 border-[3px] border-nb-ink p-5 shadow-nb-sm print:break-inside-avoid print:shadow-none", backgrounds[type]]}>
+	<p class="mb-2 flex items-center gap-2 font-nb-heading font-bold">
+		<Icon name={icons[type]} size={24} class="shrink-0" aria-hidden="true" />
+		<span>{title ?? labels[type]}</span>
+	</p>
+	<div class="nb-callout-body">
+		<slot />
+	</div>
+</aside>

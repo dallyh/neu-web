@@ -1,0 +1,67 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { useIntlayer, useLocale } from "astro-intlayer";
+import { contentUrl } from "../lib/content";
+import Tag from "./ui/Tag.astro";
+import { getBlogTags, tagLabel, tagUrl } from "../lib/tags";
+import type { GitHubProjectData } from "../lib/github";
+import GitHubLanguages from "./portfolio/GitHubLanguages.astro";
+import ContentImage from "./ui/ContentImage.astro";
+
+type Props =
+	| { entry: CollectionEntry<"blog">; collection: "blog"; priority?: boolean; headingLevel?: 2 | 3 }
+	| { entry: CollectionEntry<"portfolio">; collection: "portfolio"; priority?: boolean; headingLevel?: 2 | 3; githubData?: GitHubProjectData };
+const props = Astro.props;
+const { entry, collection } = props;
+const Heading = props.headingLevel === 2 ? "h2" : "h3";
+const ui = useIntlayer("site");
+const { locale } = useLocale();
+const date = props.collection === "blog" ? props.entry.data.publishedAt : (props.githubData?.createdAt ?? props.entry.data.date);
+const href = props.collection === "blog" ? contentUrl("blog", props.entry) : contentUrl("portfolio", props.entry);
+const blogTags = props.collection === "blog" ? await getBlogTags(props.entry) : [];
+---
+
+<div class="bg-[var(--nb-shadow-color)] shadow-nb-md">
+	<article
+		class:list={[
+			"flex h-full flex-col gap-4 border-[3px] border-nb-ink p-5 transition-transform duration-300 hover:-translate-x-0.5 hover:-translate-y-0.5 focus-within:outline-[3px] focus-within:outline-nb-focus focus-within:outline-offset-4 motion-reduce:transform-none motion-reduce:transition-none md:p-6",
+			collection === "portfolio" ? "bg-nb-secondary text-nb-on-secondary" : "bg-nb-surface text-nb-text",
+		]}
+	>
+		{entry.data.draft && <span class="self-start border-2 border-nb-ink bg-nb-warning px-2 py-1 font-nb-mono text-nb-meta font-bold uppercase text-nb-on-warning">{ui.draft}</span>}
+		{entry.data.image && (
+			<a href={href} class="block overflow-hidden border-2 border-nb-ink">
+				<ContentImage
+					src={entry.data.image}
+					alt={entry.data.imageAlt ?? ""}
+					width={1536}
+					height={1024}
+					loading={props.priority ? "eager" : "lazy"}
+					decoding="async"
+					class="aspect-[3/2] max-h-96 w-full object-cover"
+				/>
+			</a>
+		)}
+		<p class="flex justify-between gap-4 font-nb-mono text-nb-meta leading-snug uppercase">
+			<time datetime={date.toISOString()}>{new Intl.DateTimeFormat(locale, { year: "numeric", month: "long", day: "numeric" }).format(date)}</time>
+			<span>{collection === "blog" ? ui.blog : ui.portfolio}</span>
+		</p>
+		<Heading class="font-nb-heading text-nb-h3 leading-tight font-bold">
+			<a class="underline decoration-2 underline-offset-4" href={href}>
+				{entry.data.title}
+			</a>
+		</Heading>
+		<p>{entry.data.description}</p>
+		<div class="flex flex-wrap gap-2">
+			{blogTags.map((tag) => (
+				<Tag label={tagLabel(tag, locale)} href={tagUrl(tag, locale)} />
+			))}
+			{props.collection === "portfolio" && props.entry.data.tags.map((tag) => <Tag label={tag} />)}
+		</div>
+		{props.collection === "portfolio" && props.githubData && <GitHubLanguages languages={props.githubData.languages} />}
+		<a class="mt-auto self-start font-bold underline decoration-2 underline-offset-4" href={href}>
+			{collection === "blog" ? ui.readArticle : ui.readProject}
+			<span aria-hidden="true"> ↗</span>
+		</a>
+	</article>
+</div>

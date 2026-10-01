@@ -1,0 +1,51 @@
+---
+import type { LocalesValues } from "intlayer";
+import { useIntlayer } from "astro-intlayer";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import ContactForm from "../../../components/ContactForm.astro";
+import ContactLinks from "../../../components/about/ContactLinks.astro";
+import PageHeader from "../../../components/ui/PageHeader.astro";
+import { getResumes, type ResumeEntry } from "../../../lib/resume";
+import { sectionUrl } from "../../../lib/urls";
+
+interface Props {
+	resume: ResumeEntry;
+}
+
+export async function getStaticPaths() {
+	return (await getResumes()).map((resume) => ({ params: { locale: resume.data.locale }, props: { resume } }));
+}
+
+const { resume } = Astro.props;
+const locale = resume.data.locale as LocalesValues;
+const ui = useIntlayer("site");
+const paths = Object.fromEntries((await getResumes()).map((entry) => [entry.data.locale, sectionUrl("about", entry.data.locale as LocalesValues)]));
+---
+
+<BaseLayout title={`${ui.about} · ${ui.name}`} description={ui.aboutDescription} paths={paths} fallbackPath="/about/">
+	<PageHeader class="mb-12 bg-nb-success-ink text-nb-on-success-ink">
+		<h1 class="nb-page-header-title">{ui.about}</h1>
+		<p class="nb-page-header-description">{ui.aboutDescription}</p>
+	</PageHeader>
+	<div class="grid items-start gap-10 lg:grid-cols-[minmax(0,2fr)_minmax(19rem,3fr)]">
+		<section aria-labelledby="about-me-heading" class="border-[3px] border-nb-ink bg-nb-secondary p-6 text-nb-on-secondary shadow-nb-md md:p-8">
+			<h2 id="about-me-heading" class="mb-5 font-nb-heading text-nb-h2 leading-tight font-bold">
+				{ui.aboutMe}
+			</h2>
+			<p class="mb-8 text-lg">{resume.data.summary}</p>
+			<span class="nb-action-shadow">
+				<a class="nb-action" href={sectionUrl("about/cv", locale)}>
+					{ui.viewCv}
+				</a>
+			</span>
+		</section>
+		<section aria-labelledby="contact-heading">
+			<h2 id="contact-heading" class="mb-3 font-nb-heading text-nb-h2 leading-tight font-bold">
+				{ui.contact}
+			</h2>
+			<p class="mb-6">{ui.contactIntro}</p>
+			<ContactForm />
+		</section>
+	</div>
+	<ContactLinks />
+</BaseLayout>

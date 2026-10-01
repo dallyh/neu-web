@@ -1,0 +1,39 @@
+---
+import { getCollection } from "astro:content";
+import { useIntlayer, useLocale } from "astro-intlayer";
+
+interface Props {
+	languages: Record<string, number>;
+}
+
+const { languages } = Astro.props;
+const ui = useIntlayer("site");
+const { locale } = useLocale();
+const total = Object.values(languages).reduce((sum, bytes) => sum + bytes, 0);
+const palette = ["var(--nb-primary)", "var(--nb-accent)", "var(--nb-lavender)", "var(--nb-success)", "var(--nb-warning)", "var(--nb-ink)"];
+const colors = new Map((await getCollection("githubLanguages")).map((entry) => [entry.id, entry.data.color]));
+const segments = Object.entries(languages)
+	.filter(([, bytes]) => bytes > 0)
+	.sort(([, a], [, b]) => b - a)
+	.map(([name, bytes], index) => ({ name, percentage: (bytes / total) * 100, color: colors.get(name) ?? palette[index % palette.length] }));
+const percentageFormatter = new Intl.NumberFormat(locale, { maximumFractionDigits: 1 });
+---
+
+{segments.length > 0 && (
+	<div class="space-y-2" role="group" aria-label={ui.codeLanguages}>
+		<p class="font-nb-mono text-nb-meta font-bold uppercase">{ui.codeLanguages}</p>
+		<div class="flex h-3 overflow-hidden border border-nb-ink bg-nb-surface" aria-hidden="true">
+			{segments.map(({ name, percentage, color }) => (
+				<span title={name} style={`width: ${percentage}%; background-color: ${color}`} />
+			))}
+		</div>
+		<ul class="flex flex-wrap gap-x-3 gap-y-1 font-nb-mono text-nb-meta">
+			{segments.map(({ name, percentage, color }) => (
+				<li class="inline-flex items-center gap-1.5">
+					<span class="size-2.5 shrink-0 border border-nb-ink" style={`background-color: ${color}`} aria-hidden="true" />
+					{name} {percentageFormatter.format(percentage)}%
+				</li>
+			))}
+		</ul>
+	</div>
+)}

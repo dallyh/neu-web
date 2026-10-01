@@ -1,0 +1,67 @@
+---
+import { locales } from "intlayer";
+import { useIntlayer } from "astro-intlayer";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ProjectCard from "../../components/portfolio/ProjectCard.astro";
+import FeaturedPosts from "../../components/home/FeaturedPosts.astro";
+import NewestPosts from "../../components/home/NewestPosts.astro";
+import { getEntries } from "../../lib/content";
+import { sectionUrl } from "../../lib/urls";
+
+export function getStaticPaths() {
+	return locales.map((locale) => ({ params: { locale } }));
+}
+const locale = Astro.params.locale!;
+const ui = useIntlayer("site");
+const projects = await getEntries("portfolio", locale);
+const articles = await getEntries("blog", locale);
+const featuredProjects = projects.filter((entry) => entry.data.featured).slice(0, 3);
+const featuredPosts = articles.filter((entry) => entry.data.featured).slice(0, 3);
+const newestPosts = articles.slice(0, 3);
+const paths = Object.fromEntries(locales.map((target) => [target, sectionUrl("", target)]));
+const sectionHeadingClass = "my-8 mt-16 flex flex-wrap items-center justify-between gap-6";
+---
+
+<BaseLayout title={ui.name} description={ui.heroText} paths={paths}>
+	<section class="grid items-end gap-8 py-8 pb-10 md:grid-cols-[minmax(0,3fr)_minmax(16rem,2fr)] md:gap-12 md:pb-20" aria-labelledby="hero-title">
+		<h1 id="hero-title" class="max-w-[11ch] font-nb-display text-nb-display-xl leading-[1.05] font-normal tracking-[-.04em]">
+			{ui.heroTitle}
+		</h1>
+		<div class="border-[3px] border-nb-ink bg-nb-primary p-6 text-nb-on-primary shadow-nb-lg">
+			<p class="text-lg mb-4">{ui.heroText}</p>
+			<div class="flex flex-wrap items-center gap-6">
+				<span class="nb-action-shadow">
+					<a class="nb-action" href={sectionUrl("portfolio", locale)}>
+						{ui.viewAllProjects}
+					</a>
+				</span>
+				<span class="nb-action-shadow">
+					<a class="nb-action nb-action-secondary" href={sectionUrl("blog", locale)}>
+						{ui.viewAllArticles}
+					</a>
+				</span>
+			</div>
+		</div>
+	</section>
+	<FeaturedPosts entries={featuredPosts} />
+	<section aria-labelledby="work-heading">
+		<div class={sectionHeadingClass}>
+			<h2 id="work-heading" class="font-nb-heading text-nb-h2 leading-tight font-bold">
+				{ui.selectedWork}
+			</h2>
+			<a class="underline decoration-2 underline-offset-4" href={sectionUrl("portfolio", locale)}>
+				{ui.viewAllProjects} ↗
+			</a>
+		</div>
+		{featuredProjects.length ? (
+			<div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+				{featuredProjects.map((entry, index) => (
+					<ProjectCard entry={entry} priority={index === 0} />
+				))}
+			</div>
+		) : (
+			<p>{ui.emptyProjects}</p>
+		)}
+	</section>
+	<NewestPosts entries={newestPosts} />
+</BaseLayout>

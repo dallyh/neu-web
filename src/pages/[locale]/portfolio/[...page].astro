@@ -1,0 +1,46 @@
+---
+import type { GetStaticPaths, Page } from "astro";
+import type { CollectionEntry } from "astro:content";
+import { locales } from "intlayer";
+import { useIntlayer } from "astro-intlayer";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import ProjectCard from "../../../components/portfolio/ProjectCard.astro";
+import Pagination from "../../../components/ui/Pagination.astro";
+import PageHeader from "../../../components/ui/PageHeader.astro";
+import { getEntries } from "../../../lib/content";
+import { listingPageUrl } from "../../../lib/urls";
+
+export const getStaticPaths = (async ({ paginate }) => {
+	// Page-specific pagination setting. Astro runs getStaticPaths in isolation.
+	const pagination = { itemsPerPage: 6 };
+	const entriesByLocale = await Promise.all(locales.map(async (locale) => ({ locale, entries: await getEntries("portfolio", locale) })));
+	const pageCounts = Object.fromEntries(entriesByLocale.map(({ locale, entries }) => [locale, Math.max(1, Math.ceil(entries.length / pagination.itemsPerPage))]));
+	return entriesByLocale.flatMap(({ locale, entries }) => paginate(entries, { params: { locale }, props: { pageCounts }, pageSize: pagination.itemsPerPage }));
+}) satisfies GetStaticPaths;
+
+interface Props {
+	page: Page<CollectionEntry<"portfolio">>;
+	pageCounts: Record<string, number>;
+}
+
+const { page, pageCounts } = Astro.props;
+const ui = useIntlayer("site");
+const paths = Object.fromEntries(locales.map((target) => [target, listingPageUrl("portfolio", target, page.currentPage <= pageCounts[target] ? page.currentPage : 1)]));
+---
+
+<BaseLayout title={`${ui.portfolio} · ${ui.name}`} description={ui.selectedWork} paths={paths} fallbackPath="/portfolio/">
+	<PageHeader class="my-8 mb-12 bg-nb-secondary text-nb-on-secondary">
+		<h1 class="nb-page-header-title">{ui.portfolio}</h1>
+		<p class="nb-page-header-description">{ui.selectedWork}</p>
+	</PageHeader>
+	{page.data.length ? (
+		<div class="grid grid-cols-[repeat(auto-fit,minmax(min(100%,21rem),1fr))] gap-8">
+			{page.data.map((entry, index) => (
+				<ProjectCard entry={entry} headingLevel={2} priority={index === 0} />
+			))}
+		</div>
+	) : (
+		<p>{ui.emptyProjects}</p>
+	)}
+	<Pagination page={page} />
+</BaseLayout>

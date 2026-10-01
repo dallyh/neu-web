@@ -1,0 +1,16 @@
+---
+import type { CollectionEntry } from "astro:content";
+import ContentCard from "../ContentCard.astro";
+import { getGitHubProjectData } from "../../lib/github";
+
+interface Props {
+	entry: CollectionEntry<"portfolio">;
+	priority?: boolean;
+	headingLevel?: 2 | 3;
+}
+
+const { entry, priority, headingLevel } = Astro.props;
+const githubData = await getGitHubProjectData(entry.data.githubUrl);
+---
+
+<ContentCard {entry} collection="portfolio" {priority} {headingLevel} {githubData} />

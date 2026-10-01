@@ -1,0 +1,19 @@
+---
+import ExternalLink from "./ExternalLink.astro";
+
+interface Props extends astroHTML.JSX.AnchorHTMLAttributes {}
+
+const { href, ...rest } = Astro.props;
+const url = href ? new URL(href, Astro.url) : undefined;
+const external = url && (url.protocol === "http:" || url.protocol === "https:") && url.origin !== Astro.url.origin;
+---
+
+{external ? (
+	<ExternalLink href={href} {...rest}>
+		<slot />
+	</ExternalLink>
+) : (
+	<a href={href} {...rest}>
+		<slot />
+	</a>
+)}

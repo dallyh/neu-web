@@ -1,0 +1,52 @@
+---
+import { getEntries, getTranslations, contentUrl } from "../../../lib/content";
+import { sectionUrl } from "../../../lib/urls";
+import { render } from "astro:content";
+import { useIntlayer } from "astro-intlayer";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import Tag from "../../../components/ui/Tag.astro";
+import MdxContent from "../../../components/mdx/MdxContent.astro";
+import PageHeader from "../../../components/ui/PageHeader.astro";
+import ContentImage from "../../../components/ui/ContentImage.astro";
+
+export async function getStaticPaths() {
+	return (await getEntries("portfolio")).map((entry) => ({ params: { locale: entry.data.locale, slug: entry.data.slug }, props: { entry } }));
+}
+const { entry } = Astro.props;
+const { Content, headings } = await render(entry);
+const ui = useIntlayer("site");
+const translations = await getTranslations("portfolio", entry.data.translationKey);
+const paths = Object.fromEntries(translations.map((sibling) => [sibling.data.locale, contentUrl("portfolio", sibling)]));
+---
+
+<BaseLayout title={`${entry.data.title} · ${ui.name}`} description={entry.data.description} paths={paths} fallbackPath="/portfolio/">
+	<article>
+		<PageHeader>
+			<p class="nb-page-header-label">{ui.portfolio}</p>
+			<h1 class="nb-page-header-title">{entry.data.title}</h1>
+			<p class="nb-page-header-description">{entry.data.description}</p>
+		</PageHeader>
+		{entry.data.image && (
+			<figure class="mt-8 overflow-hidden border-2 border-nb-ink">
+				<ContentImage src={entry.data.image} alt={entry.data.imageAlt ?? ""} width={1536} height={1024} class="max-h-[34rem] w-full object-cover" />
+			</figure>
+		)}
+		<div class="my-6 mb-12 flex flex-wrap items-center gap-4 font-nb-mono text-nb-meta">
+			{entry.data.role && (
+				<span>
+					{ui.role}: {entry.data.role}
+				</span>
+			)}
+			<span>
+				{ui.stack}: {entry.data.stack.join(", ")}
+			</span>
+			{entry.data.tags.map((tag) => (
+				<Tag label={tag} />
+			))}
+		</div>
+		<MdxContent {Content} {headings} showTableOfContents={entry.data.showTableOfContents} />
+	</article>
+	<a class="my-12 inline-block font-bold underline decoration-2 underline-offset-4 print:hidden" href={sectionUrl("portfolio", entry.data.locale)}>
+		← {ui.backToPortfolio}
+	</a>
+</BaseLayout>

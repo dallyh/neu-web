@@ -1,0 +1,60 @@
+---
+import type { GetStaticPaths, Page } from "astro";
+import type { CollectionEntry } from "astro:content";
+import { locales } from "intlayer";
+import { useIntlayer } from "astro-intlayer";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import ContentCard from "../../../components/ContentCard.astro";
+import Pagination from "../../../components/ui/Pagination.astro";
+import PageHeader from "../../../components/ui/PageHeader.astro";
+import Tag from "../../../components/ui/Tag.astro";
+import { getEntries } from "../../../lib/content";
+import { getTags, tagLabel, tagUrl } from "../../../lib/tags";
+import { listingPageUrl, sectionUrl } from "../../../lib/urls";
+
+export const getStaticPaths = (async ({ paginate }) => {
+	// Page-specific pagination setting. Astro runs getStaticPaths in isolation.
+	const pagination = { itemsPerPage: 6 };
+	const entriesByLocale = await Promise.all(locales.map(async (locale) => ({ locale, entries: await getEntries("blog", locale) })));
+	const pageCounts = Object.fromEntries(entriesByLocale.map(({ locale, entries }) => [locale, Math.max(1, Math.ceil(entries.length / pagination.itemsPerPage))]));
+	return entriesByLocale.flatMap(({ locale, entries }) => paginate(entries, { params: { locale }, props: { pageCounts }, pageSize: pagination.itemsPerPage }));
+}) satisfies GetStaticPaths;
+
+interface Props {
+	page: Page<CollectionEntry<"blog">>;
+	pageCounts: Record<string, number>;
+}
+
+const locale = Astro.params.locale!;
+const { page, pageCounts } = Astro.props;
+const ui = useIntlayer("site");
+const tags = (await getTags()).sort((a, b) => tagLabel(a, locale).localeCompare(tagLabel(b, locale), locale));
+const paths = Object.fromEntries(locales.map((target) => [target, listingPageUrl("blog", target, page.currentPage <= pageCounts[target] ? page.currentPage : 1)]));
+---
+
+<BaseLayout title={`${ui.blog} · ${ui.name}`} description={ui.latestWriting} paths={paths} fallbackPath="/blog/">
+	<PageHeader class="my-8 mb-12 bg-nb-warning text-nb-on-warning">
+		<h1 class="nb-page-header-title">{ui.blog}</h1>
+		<p class="nb-page-header-description">{ui.latestWriting}</p>
+		<a class="mt-4 inline-block font-bold underline decoration-2 underline-offset-4" href={sectionUrl("tags", locale)}>
+			{ui.browseTags} ↗
+		</a>
+	</PageHeader>
+	{tags.length > 0 && (
+		<nav aria-label={ui.tags} class="mb-8 flex flex-wrap gap-2">
+			{tags.map((tag) => (
+				<Tag label={tagLabel(tag, locale)} href={tagUrl(tag, locale)} />
+			))}
+		</nav>
+	)}
+	{page.data.length ? (
+		<div class="grid grid-cols-[repeat(auto-fit,minmax(min(100%,21rem),1fr))] gap-8">
+			{page.data.map((entry, index) => (
+				<ContentCard entry={entry} collection="blog" headingLevel={2} priority={index === 0} />
+			))}
+		</div>
+	) : (
+		<p>{ui.emptyArticles}</p>
+	)}
+	<Pagination page={page} />
+</BaseLayout>

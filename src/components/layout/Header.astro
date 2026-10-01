@@ -1,0 +1,109 @@
+---
+import { useIntlayer, useLocale } from "astro-intlayer";
+import { getPathWithoutLocale } from "intlayer";
+import { sectionUrl } from "../../lib/urls";
+import { Icon } from "astro-iconset/components";
+
+const ui = useIntlayer("site");
+const { locale } = useLocale();
+const path = getPathWithoutLocale(Astro.url.pathname);
+const section = path.startsWith("/about/cv") ? "cv" : path.startsWith("/about") ? "about" : path.startsWith("/blog") || path.startsWith("/tags") ? "blog" : path.startsWith("/portfolio") ? "portfolio" : "";
+const navLinkClass = "nb-action nb-action-accent w-full px-3 py-2 text-sm lg:w-auto";
+---
+
+<header
+	class="mx-[clamp(1rem,3vw,3rem)] mt-6 mb-16 flex max-w-[90rem] flex-wrap items-center gap-4 border-[3px] border-nb-ink bg-nb-surface p-4 shadow-nb-md max-lg:mb-10 2xl:mx-auto print:hidden"
+	data-site-header
+>
+	<a class="mr-auto inline-flex items-center gap-2 font-nb-heading font-bold no-underline" href={sectionUrl("", locale)}>
+		{ui.name}
+		<span class="text-2xl leading-none text-nb-accent" aria-hidden="true">
+			✳
+		</span>
+	</a>
+	<button
+		class="nb-menu-toggle group inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center border-2 border-nb-ink bg-nb-primary p-2 text-nb-on-primary hover:bg-nb-secondary lg:hidden"
+		type="button"
+		aria-controls="site-menu"
+		aria-expanded="false"
+		aria-label={ui.openMenu}
+		data-label-open={ui.openMenu}
+		data-label-close={ui.closeMenu}
+		data-menu-toggle
+	>
+		<Icon name="menu" size={24} class="group-aria-[expanded=true]:hidden" aria-hidden="true" />
+		<Icon name="close" size={24} class="hidden group-aria-[expanded=true]:block" aria-hidden="true" />
+	</button>
+	<div
+		id="site-menu"
+		class="nb-header-menu-nojs hidden w-full flex-col gap-4 border-t-2 border-nb-ink pt-4 lg:ml-auto lg:flex lg:w-auto lg:flex-row lg:flex-wrap lg:items-center lg:border-0 lg:pt-0"
+		data-menu-panel
+	>
+		<nav class="flex w-full flex-col gap-3 lg:w-auto lg:flex-row lg:flex-wrap lg:items-center" aria-label={ui.navigation}>
+			<span class="nb-action-shadow-theme">
+				<a class:list={[navLinkClass, "aria-[current=page]:nb-action-primary"]}href={sectionUrl("", locale)} aria-current={section === "" ? "page" : undefined}>
+					{ui.home}
+				</a>
+			</span>
+			<span class="nb-action-shadow-theme">
+				<a class:list={[navLinkClass, "aria-[current=page]:nb-action-secondary"]} href={sectionUrl("portfolio", locale)} aria-current={section === "portfolio" ? "page" : undefined}>
+					{ui.portfolio}
+				</a>
+			</span>
+			<span class="nb-action-shadow-theme">
+				<a class:list={[navLinkClass, "aria-[current=page]:nb-action-warning"]}href={sectionUrl("blog", locale)} aria-current={section === "blog" ? "page" : undefined}>
+					{ui.blog}
+				</a>
+			</span>
+			<span class="nb-action-shadow-theme">
+				<a class:list={[navLinkClass, "aria-[current=page]:nb-action-success-ink"]} href={sectionUrl("about", locale)} aria-current={section === "about" ? "page" : undefined}>
+					{ui.about}
+				</a>
+			</span>
+			<span class="nb-action-shadow-theme">
+				<a class:list={[navLinkClass, "aria-[current=page]:nb-action-lavender"]} href={sectionUrl("about/cv", locale)} aria-current={section === "cv" ? "page" : undefined}>
+					{ui.cv}
+				</a>
+			</span>
+		</nav>
+		<div class="flex flex-wrap items-center gap-3 border-t-2 border-nb-ink pt-4 lg:border-0 lg:pt-0">
+			<slot />
+		</div>
+	</div>
+</header>
+
+<noscript>
+	<style is:inline>
+		@media (max-width: 63.999rem) {
+			.nb-header-menu-nojs {
+				display: flex !important;
+			}
+			.nb-menu-toggle {
+				display: none !important;
+			}
+		}
+	</style>
+</noscript>
+
+<script>
+	const header = document.querySelector<HTMLElement>("[data-site-header]");
+	const button = header?.querySelector<HTMLButtonElement>("[data-menu-toggle]");
+	const panel = header?.querySelector<HTMLElement>("[data-menu-panel]");
+	const mobile = window.matchMedia("(max-width: 63.999rem)");
+
+	function setMenuOpen(open: boolean): void {
+		if (!button || !panel) return;
+		button.setAttribute("aria-expanded", String(open));
+		button.setAttribute("aria-label", open ? (button.dataset.labelClose ?? "") : (button.dataset.labelOpen ?? ""));
+		panel.classList.toggle("hidden", !open);
+	}
+
+	button?.addEventListener("click", () => setMenuOpen(button.getAttribute("aria-expanded") !== "true"));
+	header?.addEventListener("keydown", (event) => {
+		if (event.key === "Escape" && button?.getAttribute("aria-expanded") === "true") {
+			setMenuOpen(false);
+			button.focus();
+		}
+	});
+	mobile.addEventListener("change", () => setMenuOpen(false));
+</script>

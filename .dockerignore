@@ -1,0 +1,13 @@
+.git
+.astro
+.intlayer
+dist
+node_modules
+.env
+.env.*
+*.log
+.vscode
+.idea
+.codex
+Dockerfile*
+README.md

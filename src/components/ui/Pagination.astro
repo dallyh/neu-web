@@ -1,0 +1,131 @@
+---
+/*import { Icon } from "astro-iconset/components";
+import { useIntlayer } from "astro-intlayer";
+import { withTrailingSlash } from "../../lib/urls";
+
+interface Props {
+	page: {
+		currentPage: number;
+		lastPage: number;
+		url: {
+			first: string | undefined;
+			prev: string | undefined;
+			next: string | undefined;
+			last: string | undefined;
+		};
+	};
+}
+
+const { page } = Astro.props;
+const ui = useIntlayer("site");
+const controlClass = "inline-flex size-11 items-center justify-center border-2 border-nb-ink bg-nb-surface text-nb-text no-underline";
+const links = [
+	{ href: page.url.first, label: ui.firstPage, icon: "page-first" },
+	{ href: page.url.prev, label: ui.previousPage, icon: "page-previous" },
+	{ href: page.url.next, label: ui.nextPage, icon: "page-next" },
+	{ href: page.url.last, label: ui.lastPage, icon: "page-last" },
+];*/
+
+import { Icon } from "astro-iconset/components";
+import { useIntlayer } from "astro-intlayer";
+import { withTrailingSlash } from "../../lib/urls";
+
+interface Props {
+	page: {
+		currentPage: number;
+		lastPage: number;
+		url: {
+			first: string | undefined;
+			prev: string | undefined;
+			next: string | undefined;
+			last: string | undefined;
+		};
+	};
+}
+
+const { page } = Astro.props;
+const ui = useIntlayer("site");
+const controlClass = "nb-action nb-action-primary p-0 size-11 no-underline";
+const links = [
+	{ href: page.url.first, label: ui.firstPage, icon: "page-first" },
+	{ href: page.url.prev, label: ui.previousPage, icon: "page-previous" },
+	{ href: page.url.next, label: ui.nextPage, icon: "page-next" },
+	{ href: page.url.last, label: ui.lastPage, icon: "page-last" },
+];
+---
+
+<nav aria-label={ui.pagination} class="mt-12 flex flex-wrap items-center justify-center gap-2 print:hidden">
+	{links.slice(0, 2).map(({ href, label, icon }) =>
+		href ? (
+			<span class="nb-action-shadow-theme">
+				<a class:list={[controlClass]} href={withTrailingSlash(href)} aria-label={label} title={label}>
+					<Icon name={icon} size={22} aria-hidden="true" />
+				</a>
+			</span>
+		) : (
+			<span class="nb-action-shadow-theme">
+				<span class:list={[controlClass, "cursor-not-allowed opacity-45"]} aria-label={label} aria-disabled="true" title={label}>
+					<Icon name={icon} size={22} aria-hidden="true" />
+				</span>
+			</span>
+		),
+	)}
+	<span
+		class="inline-flex min-h-11 items-center justify-center gap-1.5 border-2 border-nb-ink bg-nb-primary px-3 font-nb-mono text-sm font-bold text-nb-on-primary"
+		aria-current="page"
+		aria-label={`${ui.currentPage} ${page.currentPage} / ${page.lastPage}`}
+	>
+		<Icon name="page-current" size={18} aria-hidden="true" />
+		{page.currentPage} / {page.lastPage}
+	</span>
+	{links.slice(2).map(({ href, label, icon }) =>
+		href ? (
+			<span class="nb-action-shadow-theme">
+				<a class:list={[controlClass]} href={withTrailingSlash(href)} aria-label={label} title={label}>
+					<Icon name={icon} size={22} aria-hidden="true" />
+				</a>
+			</span>
+		) : (
+			<span class="nb-action-shadow-theme">
+				<span class:list={[controlClass, "cursor-not-allowed opacity-45"]} aria-label={label} aria-disabled="true" title={label}>
+					<Icon name={icon} size={22} aria-hidden="true" />
+				</span>
+			</span>
+		),
+	)}
+</nav>
+---
+<!--
+<nav aria-label={ui.pagination} class="mt-12 flex flex-wrap items-center justify-center gap-2 print:hidden">
+	{links.slice(0, 2).map(({ href, label, icon }) =>
+		href ? (
+			<a class:list={[controlClass, "hover:bg-nb-secondary hover:text-nb-on-secondary"]} href={withTrailingSlash(href)} aria-label={label} title={label}>
+				<Icon name={icon} size={22} aria-hidden="true" />
+			</a>
+		) : (
+			<span class:list={[controlClass, "cursor-not-allowed opacity-45"]} aria-label={label} aria-disabled="true" title={label}>
+				<Icon name={icon} size={22} aria-hidden="true" />
+			</span>
+		),
+	)}
+	<span
+		class="inline-flex min-h-11 items-center justify-center gap-1.5 border-2 border-nb-ink bg-nb-primary px-3 font-nb-mono text-sm font-bold text-nb-on-primary"
+		aria-current="page"
+		aria-label={`${ui.currentPage} ${page.currentPage} / ${page.lastPage}`}
+	>
+		<Icon name="page-current" size={18} aria-hidden="true" />
+		{page.currentPage} / {page.lastPage}
+	</span>
+	{links.slice(2).map(({ href, label, icon }) =>
+		href ? (
+			<a class:list={[controlClass, "hover:bg-nb-secondary hover:text-nb-on-secondary"]} href={withTrailingSlash(href)} aria-label={label} title={label}>
+				<Icon name={icon} size={22} aria-hidden="true" />
+			</a>
+		) : (
+			<span class:list={[controlClass, "cursor-not-allowed opacity-45"]} aria-label={label} aria-disabled="true" title={label}>
+				<Icon name={icon} size={22} aria-hidden="true" />
+			</span>
+		),
+	)}
+</nav>
+-->

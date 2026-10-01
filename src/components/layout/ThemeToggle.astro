@@ -1,0 +1,26 @@
+---
+import { useIntlayer } from "astro-intlayer";
+import { Icon } from "astro-iconset/components";
+const ui = useIntlayer("site");
+---
+
+<button
+	class="inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center border-2 border-nb-ink bg-transparent p-2 text-nb-text hover:bg-nb-surface-muted"
+	type="button"
+	aria-label={ui.theme}
+	title={ui.theme}
+	data-theme-toggle
+>
+	<Icon name="moon" size={24} class="nb-theme-icon-moon" aria-hidden="true" />
+	<Icon name="sun" size={24} class="nb-theme-icon-sun" aria-hidden="true" />
+</button>
+
+<script>
+	const button = document.querySelector<HTMLButtonElement>("[data-theme-toggle]");
+	button?.addEventListener("click", () => {
+		const dark = document.documentElement.dataset.theme === "dark" || (!document.documentElement.dataset.theme && matchMedia("(prefers-color-scheme: dark)").matches);
+		const next = dark ? "light" : "dark";
+		document.documentElement.dataset.theme = next;
+		localStorage.setItem("theme", next);
+	});
+</script>

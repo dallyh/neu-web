@@ -1,0 +1,35 @@
+---
+import { locales } from "intlayer";
+import { useIntlayer } from "astro-intlayer";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import PageHeader from "../../../components/ui/PageHeader.astro";
+import { getTags, tagDescription, tagLabel, tagUrl } from "../../../lib/tags";
+import { sectionUrl } from "../../../lib/urls";
+
+export function getStaticPaths() {
+	return locales.map((locale) => ({ params: { locale } }));
+}
+const locale = Astro.params.locale!;
+const ui = useIntlayer("site");
+const tags = (await getTags()).sort((a, b) => tagLabel(a, locale).localeCompare(tagLabel(b, locale), locale));
+const paths = Object.fromEntries(locales.map((target) => [target, sectionUrl("tags", target)]));
+---
+
+<BaseLayout title={`${ui.tags} · ${ui.name}`} description={ui.browseTags} paths={paths} fallbackPath="/tags/">
+	<PageHeader class="my-8 mb-12">
+		<h1 class="nb-page-header-title">{ui.tags}</h1>
+		<p class="nb-page-header-description">{ui.browseTags}</p>
+	</PageHeader>
+	<div class="grid grid-cols-[repeat(auto-fit,minmax(min(100%,21rem),1fr))] gap-8">
+		{tags.map((tag) => (
+			<article class="border-[3px] border-nb-ink bg-nb-surface p-6 shadow-nb-md">
+				<h2 class="mb-4 font-nb-heading text-nb-h3 leading-tight font-bold">
+					<a class="underline decoration-2 underline-offset-4" href={tagUrl(tag, locale)}>
+						{tagLabel(tag, locale)}
+					</a>
+				</h2>
+				<p>{tagDescription(tag, locale)}</p>
+			</article>
+		))}
+	</div>
+</BaseLayout>

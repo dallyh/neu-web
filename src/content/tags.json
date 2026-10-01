@@ -1,0 +1,57 @@
+[
+    {
+        "id": "architecture",
+        "label": {
+            "en": "Architecture",
+            "cs": "Architektura"
+        },
+        "description": {
+            "en": "Notes on how digital projects are structured and built.",
+            "cs": "Poznámky o tom, jak jsou digitální projekty navržené a postavené."
+        }
+    },
+    {
+        "id": "internet",
+        "label": {
+            "en": "Internet",
+            "cs": "Internet"
+        },
+        "description": {
+            "en": "Internet stuff.",
+            "cs": "Internetové věci a networking"
+        }
+    },
+    {
+        "id": "astro",
+        "label": {
+            "en": "Astro",
+            "cs": "Astro"
+        },
+        "description": {
+            "en": "Articles about building websites with Astro.",
+            "cs": "Články o tvorbě webů pomocí Astro."
+        }
+    },
+    {
+        "id": "development",
+        "label": {
+            "en": "Development",
+            "cs": "Vývoj"
+        },
+        "description": {
+            "en": "Notes on software development and tools.",
+            "cs": "Poznámky k vývoji softwaru a nástrojům."
+        }
+    },
+    {
+        "id": "zerops",
+        "label": {
+            "en": "Zerops",
+            "cs": "Zerops"
+        },
+        "description": {
+            "en": "Deploying and running applications on Zerops.",
+            "cs": "Nasazování a provoz aplikací na Zerops."
+        }
+    }
+]

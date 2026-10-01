@@ -1,0 +1,186 @@
+---
+import { useIntlayer, useLocale } from "astro-intlayer";
+import { PUBLIC_HCAPTCHA_SITE_KEY } from "astro:env/client";
+
+const ui = useIntlayer("site");
+const { locale } = useLocale();
+const isDev = import.meta.env.DEV;
+const siteKey = PUBLIC_HCAPTCHA_SITE_KEY?.trim();
+const fieldClass = "nb-field w-full border-2 border-nb-ink bg-nb-surface p-3 text-nb-text focus-visible:outline-[3px] focus-visible:outline-nb-focus focus-visible:outline-offset-2";
+---
+
+<form
+	class="space-y-6 border-[3px] border-nb-ink bg-nb-surface p-5 shadow-nb-md md:p-8"
+	method="post"
+	novalidate
+	data-contact-form
+	data-message-sending={ui.contactSending}
+	data-message-sent={ui.contactSent}
+	data-message-invalid={ui.contactInvalid}
+	data-message-captcha={ui.contactCaptchaFailed}
+	data-message-failed={ui.contactFailed}
+	data-message-unavailable={ui.contactUnavailable}
+	data-message-email-required={ui.contactEmailRequired}
+	data-message-email-invalid={ui.contactEmailInvalid}
+	data-message-name-required={ui.contactNameRequired}
+	data-message-message-required={ui.contactMessageRequired}
+	data-message-field-valid={ui.contactFieldValid}
+>
+	<input type="hidden" name="locale" value={locale} />
+	<div>
+		<label class="mb-2 block font-nb-heading font-bold" for="contact-email">
+			{ui.contactFrom}
+		</label>
+		<input class={fieldClass} id="contact-email" name="from" type="email" autocomplete="email" maxlength="254" aria-describedby="contact-email-feedback" data-contact-field required />
+		<p id="contact-email-feedback" class="nb-field-feedback mt-2 text-sm font-medium" data-field-feedback aria-live="polite" hidden></p>
+	</div>
+	<div>
+		<label class="mb-2 block font-nb-heading font-bold" for="contact-name">
+			{ui.contactName}
+		</label>
+		<input class={fieldClass} id="contact-name" name="name" type="text" autocomplete="name" maxlength="120" aria-describedby="contact-name-feedback" data-contact-field required />
+		<p id="contact-name-feedback" class="nb-field-feedback mt-2 text-sm font-medium" data-field-feedback aria-live="polite" hidden></p>
+	</div>
+	<div>
+		<label class="mb-2 block font-nb-heading font-bold" for="contact-message">
+			{ui.contactMessage}
+		</label>
+		<textarea class={fieldClass} id="contact-message" name="message" rows="7" maxlength="5000" aria-describedby="contact-message-feedback" data-contact-field required></textarea>
+		<p id="contact-message-feedback" class="nb-field-feedback mt-2 text-sm font-medium" data-field-feedback aria-live="polite" hidden></p>
+	</div>
+	{isDev ? (
+		<>
+			<input type="hidden" name="h-captcha-response" value="10000000-aaaa-bbbb-cccc-000000000001" />
+			<p class="border-2 border-nb-ink bg-nb-surface-muted p-3 text-sm">{ui.contactTestMode}</p>
+		</>
+	) : siteKey ? (
+		<div class="max-w-full z-50 border-2 border-nb-ink bg-white p-2">
+			<div class="h-captcha" data-sitekey={siteKey} data-theme="light"></div>
+		</div>
+	) : (
+		<p>{ui.contactUnavailable}</p>
+	)}
+	<div class="flex flex-wrap items-center gap-6">
+		<span class="nb-action-shadow">
+			<button class="nb-action nb-action-secondary disabled:cursor-not-allowed disabled:opacity-60" type="submit" disabled={!isDev && !siteKey}>
+				{ui.contactSend}
+			</button>
+		</span>
+		<p role="status" aria-live="polite" data-contact-status></p>
+	</div>
+</form>
+
+{!isDev && siteKey && <script is:inline src={`https://js.hcaptcha.com/1/api.js?hl=${locale}`} async defer></script>}
+
+<script>
+	import { actions, isInputError } from "astro:actions";
+
+	interface HCaptchaWindow extends Window {
+		hcaptcha?: { reset: () => void };
+	}
+
+	const form = document.querySelector<HTMLFormElement>("[data-contact-form]");
+	const status = form?.querySelector<HTMLElement>("[data-contact-status]");
+	const submit = form?.querySelector<HTMLButtonElement>('button[type="submit"]');
+	const fields = Array.from(form?.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>("[data-contact-field]") ?? []);
+	const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+	function fieldError(field: HTMLInputElement | HTMLTextAreaElement): string | null {
+		const value = field.value.trim();
+		if (field.name === "from") {
+			if (!value) return form?.dataset.messageEmailRequired ?? "";
+			if (!emailPattern.test(value)) return form?.dataset.messageEmailInvalid ?? "";
+		} else if (!value) {
+			return field.name === "name" ? (form?.dataset.messageNameRequired ?? "") : (form?.dataset.messageMessageRequired ?? "");
+		}
+		return null;
+	}
+
+	function showFieldState(field: HTMLInputElement | HTMLTextAreaElement, error: string | null): boolean {
+		const feedback = field.parentElement?.querySelector<HTMLElement>("[data-field-feedback]");
+		const invalid = error !== null;
+		field.dataset.validated = "true";
+		field.classList.toggle("is-error", invalid);
+		field.classList.toggle("is-success", !invalid);
+		field.setAttribute("aria-invalid", String(invalid));
+		if (feedback) {
+			feedback.textContent = error ?? form?.dataset.messageFieldValid ?? "";
+			feedback.classList.toggle("is-error", invalid);
+			feedback.classList.toggle("is-success", !invalid);
+			feedback.hidden = false;
+		}
+		return !invalid;
+	}
+
+	function clearFieldStates(): void {
+		for (const field of fields) {
+			const feedback = field.parentElement?.querySelector<HTMLElement>("[data-field-feedback]");
+			field.classList.remove("is-error", "is-success");
+			field.removeAttribute("aria-invalid");
+			delete field.dataset.validated;
+			if (feedback) {
+				feedback.textContent = "";
+				feedback.classList.remove("is-error", "is-success");
+				feedback.hidden = true;
+			}
+		}
+	}
+
+	for (const field of fields) {
+		field.addEventListener("blur", () => showFieldState(field, fieldError(field)));
+		field.addEventListener("input", () => {
+			if (field.dataset.validated === "true") showFieldState(field, fieldError(field));
+			if (status) status.textContent = "";
+		});
+	}
+
+	form?.addEventListener("submit", async (event) => {
+		event.preventDefault();
+		if (!status || !submit) return;
+		const invalidFields = fields.filter((field) => !showFieldState(field, fieldError(field)));
+		if (invalidFields.length) {
+			status.textContent = form.dataset.messageInvalid ?? "";
+			invalidFields[0]?.focus();
+			return;
+		}
+		for (const field of fields) field.value = field.value.trim();
+
+		const data = new FormData(form);
+		if (!data.get("h-captcha-response")) {
+			status.textContent = form.dataset.messageCaptcha ?? "";
+			return;
+		}
+
+		submit.disabled = true;
+		status.textContent = form.dataset.messageSending ?? "";
+		try {
+			const { error } = await actions.sendContact(data);
+			if (!error) {
+				status.textContent = form.dataset.messageSent ?? "";
+				form.reset();
+				clearFieldStates();
+			} else {
+				if (isInputError(error)) {
+					const invalidNames = new Set(Object.keys(error.fields));
+					const serverInvalidFields = fields.filter((field) => invalidNames.has(field.name));
+					for (const field of serverInvalidFields) {
+						showFieldState(field, fieldError(field) ?? (field.name === "from" ? (form.dataset.messageEmailInvalid ?? "") : (form.dataset.messageInvalid ?? "")));
+					}
+					serverInvalidFields[0]?.focus();
+				}
+				status.textContent = isInputError(error)
+					? (form.dataset.messageInvalid ?? "")
+					: error.code === "BAD_REQUEST"
+						? (form.dataset.messageCaptcha ?? "")
+						: error.code === "SERVICE_UNAVAILABLE"
+							? (form.dataset.messageUnavailable ?? "")
+							: (form.dataset.messageFailed ?? "");
+			}
+		} catch {
+			status.textContent = form.dataset.messageFailed ?? "";
+		} finally {
+			submit.disabled = false;
+			(window as HCaptchaWindow).hcaptcha?.reset();
+		}
+	});
+</script>

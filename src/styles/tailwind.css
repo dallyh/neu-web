@@ -1,0 +1,290 @@
+@import "tailwindcss";
+@import "./tokens.css";
+
+@theme inline {
+	--color-nb-bg: var(--nb-bg);
+	--color-nb-surface: var(--nb-surface);
+	--color-nb-surface-muted: var(--nb-surface-muted);
+	--color-nb-ink: var(--nb-ink);
+	--color-nb-text: var(--nb-text);
+	--color-nb-text-muted: var(--nb-text-muted);
+	--color-nb-primary: var(--nb-primary);
+	--color-nb-secondary: var(--nb-secondary);
+	--color-nb-accent: var(--nb-accent);
+	--color-nb-success: var(--nb-success);
+	--color-nb-warning: var(--nb-warning);
+	--color-nb-focus: var(--nb-focus);
+	--color-nb-error: var(--nb-error);
+	--color-nb-success-ink: var(--nb-success-ink);
+	--color-nb-on-primary: var(--nb-on-primary);
+	--color-nb-on-secondary: var(--nb-on-secondary);
+	--color-nb-on-accent: var(--nb-on-accent);
+	--color-nb-on-success: var(--nb-on-success);
+	--color-nb-on-success-ink: var(--nb-on-success-ink);
+	--color-nb-on-error: var(--nb-on-error);
+	--color-nb-on-warning: var(--nb-on-warning);
+	--color-nb-lavender: var(--nb-lavender);
+	--color-nb-on-lavender: var(--nb-on-lavender);
+	--color-nb-on-focus: var(--nb-on-focus);
+	--shadow-nb-sm: var(--nb-shadow-sm);
+	--shadow-nb-md: var(--nb-shadow-md);
+	--shadow-nb-lg: var(--nb-shadow-lg);
+	--shadow-nb-hover: var(--nb-shadow-hover);
+	--font-nb-display: var(--nb-font-display);
+	--font-nb-heading: var(--nb-font-heading);
+	--font-nb-body: var(--nb-font-body);
+	--font-nb-mono: var(--nb-font-mono);
+	--text-nb-display-xl: var(--nb-display-xl);
+	--text-nb-h1: var(--nb-h1);
+	--text-nb-h2: var(--nb-h2);
+	--text-nb-h3: var(--nb-h3);
+	--text-nb-meta: var(--nb-meta);
+}
+
+@layer base {
+	html {
+		background: var(--nb-bg);
+		color: var(--nb-text);
+	}
+	body {
+		margin: 0;
+		background: var(--nb-bg);
+		color: var(--nb-text);
+		font-family: var(--nb-font-body);
+		font-weight: 400;
+		line-height: var(--nb-leading-body);
+	}
+	:is(code, kbd, samp, pre) {
+		font-family: var(--nb-font-mono);
+	}
+	a {
+		color: inherit;
+	}
+	:is(a, button):focus-visible {
+		outline: 3px solid var(--nb-focus);
+		outline-offset: 4px;
+	}
+}
+
+@utility nb-action-primary {
+	border-color: var(--nb-on-primary);
+	background: var(--nb-primary);
+	color: var(--nb-on-primary);
+}
+
+@utility nb-action-secondary {
+	border-color: var(--nb-on-secondary);
+	background: var(--nb-secondary);
+	color: var(--nb-on-secondary);
+}
+
+@utility nb-action-accent {
+	border-color: var(--nb-on-accent);
+	background: var(--nb-accent);
+	color: var(--nb-on-accent);
+}
+
+@utility nb-action-success {
+	border-color: var(--nb-on-success);
+	background: var(--nb-success);
+	color: var(--nb-on-success);
+}
+
+@utility nb-action-success-ink {
+	border-color: var(--nb-on-success-ink);
+	background: var(--nb-success-ink);
+	color: var(--nb-on-success-ink);
+}
+
+@utility nb-action-error {
+	border-color: var(--nb-on-error);
+	background: var(--nb-error);
+	color: var(--nb-on-error);
+}
+
+@utility nb-action-warning {
+	border-color: var(--nb-on-warning);
+	background: var(--nb-warning);
+	color: var(--nb-on-warning);
+}
+
+@utility nb-action-lavender {
+	border-color: var(--nb-on-lavender);
+	background: var(--nb-lavender);
+	color: var(--nb-on-lavender);
+}
+
+@utility nb-action-focus {
+	border-color: var(--nb-on-focus);
+	background: var(--nb-focus);
+	color: var(--nb-on-focus);
+}
+
+@utility nb-page-header-label {
+	margin-bottom: var(--nb-space-3);
+	font-family: var(--nb-font-mono);
+	font-size: var(--nb-meta);
+	text-transform: uppercase;
+}
+
+@utility nb-page-header-title {
+	margin-bottom: var(--nb-space-4);
+	font-family: var(--nb-font-heading);
+	font-size: var(--nb-h1);
+	font-weight: 700;
+	line-height: var(--nb-leading-tight);
+}
+
+@utility nb-page-header-description {
+	max-width: 90ch;
+	font-size: var(--nb-body-lg);
+}
+
+/* MDX is generated markup, so its descendants cannot carry utility classes. */
+@layer components {
+	.nb-page-header {
+		background-color: var(--nb-primary);
+		color: var(--nb-on-primary);
+	}
+
+	.nb-field.is-error {
+		border-color: var(--nb-error);
+		box-shadow: 3px 3px 0 var(--nb-error);
+	}
+	.nb-field.is-success {
+		border-color: var(--nb-success-ink);
+		box-shadow: 3px 3px 0 var(--nb-success-ink);
+	}
+	.nb-field-feedback.is-error {
+		color: var(--nb-error);
+	}
+	.nb-field-feedback.is-success {
+		color: var(--nb-success-ink);
+	}
+
+	.nb-theme-icon-sun,
+	:root[data-theme="dark"] .nb-theme-icon-moon {
+		display: none;
+	}
+	:root[data-theme="dark"] .nb-theme-icon-sun {
+		display: block;
+	}
+	@media (prefers-color-scheme: dark) {
+		:root:not([data-theme]) .nb-theme-icon-sun {
+			display: block;
+		}
+		:root:not([data-theme]) .nb-theme-icon-moon {
+			display: none;
+		}
+	}
+
+	.nb-action-shadow {
+		display: inline-flex;
+		background: var(--nb-action-bg);
+		box-shadow: var(--nb-action-shadow);
+	}
+	.nb-action-shadow-inverted {
+		display: inline-flex;
+		background: var(--nb-action-bg-inverted);
+		box-shadow: var(--nb-action-shadow-inverted);
+	}
+	.nb-action-shadow-theme {
+		display: inline-flex;
+		background: var(--nb-ink);
+		box-shadow: var(--nb-shadow-md);
+	}
+
+	.nb-action {
+		display: inline-flex;
+		min-height: 2.75rem;
+		align-items: center;
+		justify-content: center;
+		border: var(--nb-border-md) solid var(--nb-action-bg);
+		background: var(--nb-action-bg);
+		padding: 0.75rem 1.25rem;
+		color: var(--nb-action-text);
+		font-family: var(--nb-font-heading);
+		font-weight: 700;
+		line-height: 1;
+		text-align: center;
+		text-decoration: none;
+		cursor: pointer;
+		transition: transform var(--nb-duration-fast) var(--nb-ease);
+	}
+	.nb-action:hover {
+		transform: translate(-2px, -2px);
+	}
+	.nb-action:active {
+		transform: translate(3px, 3px);
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.nb-action:hover,
+		.nb-action:active {
+			transform: none;
+		}
+	}
+
+	.nb-prose > * + * {
+		margin-top: 1.1em;
+	}
+	.nb-prose :is(h2, h3) {
+		margin-top: 1.7em;
+		font-family: var(--nb-font-heading);
+		line-height: var(--nb-leading-heading);
+	}
+	.nb-prose h2 {
+		font-size: var(--nb-h2);
+	}
+	.nb-prose h3 {
+		font-size: var(--nb-h3);
+	}
+	.nb-prose :is(p, li) {
+		line-height: var(--nb-leading-body);
+	}
+	.nb-prose a {
+		font-weight: 650;
+		text-decoration: underline;
+		text-decoration-thickness: 2px;
+		text-underline-offset: 0.18em;
+	}
+	.nb-prose .nb-heading-anchor {
+		text-decoration: none;
+	}
+	.nb-callout-body > * + * {
+		margin-top: 0.75em;
+	}
+}
+
+/* Action color utilities live in this layer, so the inverted border must too. */
+@layer utilities {
+	.nb-action-shadow-inverted > .nb-action {
+		border-color: var(--nb-action-bg-inverted);
+	}
+	.nb-action-shadow-theme > .nb-action {
+		border-color: var(--nb-ink);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		scroll-behavior: auto !important;
+		transition-duration: 0.01ms !important;
+		animation-duration: 0.01ms !important;
+	}
+}
+
+@media print {
+	:root,
+	:root[data-theme="dark"],
+	:root:not([data-theme="light"]):not(.light) {
+		--nb-bg: #fff;
+		--nb-surface: #fff;
+		--nb-surface-muted: #fff;
+		--nb-ink: #000;
+		--nb-text: #000;
+		--nb-text-muted: #333;
+		--nb-shadow-color: transparent;
+	}
+}

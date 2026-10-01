@@ -1,0 +1,28 @@
+---
+import type { MarkdownHeading } from "astro";
+import { useIntlayer } from "astro-intlayer";
+
+interface Props {
+	headings: MarkdownHeading[];
+}
+
+const { headings } = Astro.props;
+const ui = useIntlayer("site");
+---
+
+{headings.length > 0 && (
+	<details class="mb-10 border-[3px] border-nb-ink bg-nb-surface p-4 shadow-nb-sm print:hidden" open>
+		<summary class="cursor-pointer font-nb-heading font-bold">{ui.tableOfContents}</summary>
+		<nav aria-label={ui.tableOfContents} class="mt-3">
+			<ol class="space-y-1 font-nb-mono text-sm">
+				{headings.map((heading) => (
+					<li style={`padding-inline-start: ${(heading.depth - 1) * 0.75}rem`}>
+						<a href={`#${heading.slug}`} class="underline-offset-4 hover:underline">
+							{heading.text}
+						</a>
+					</li>
+				))}
+			</ol>
+		</nav>
+	</details>
+)}

@@ -1,0 +1,13 @@
+---
+import ContentImage from "../ui/ContentImage.astro";
+
+interface Props {
+	src: string | ImageMetadata;
+	alt: string;
+	title?: string;
+}
+
+const { src, alt, title } = Astro.props;
+---
+
+<ContentImage {src} {alt} {title} class="my-8 block border-2 border-nb-ink" />
