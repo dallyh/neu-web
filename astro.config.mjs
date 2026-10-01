@@ -7,10 +7,13 @@ import expressiveCode from "astro-expressive-code";
 import { intlayer } from "astro-intlayer";
 import tailwindcss from "@tailwindcss/vite";
 import process from "node:process";
+import { loadEnv } from "vite";
+
+const { PUBLIC_SITE_URL } = loadEnv(process.env.NODE_ENV ?? "", process.cwd(), "");
 
 // https://astro.build/config
 export default defineConfig({
-	site: process.env.PUBLIC_SITE_URL,
+	site: PUBLIC_SITE_URL,
 	adapter: node({ mode: "standalone" }),
 	fonts: [
 		{
