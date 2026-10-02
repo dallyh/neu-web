@@ -2,7 +2,7 @@ import { ActionError, defineAction } from "astro:actions";
 import { PUBLIC_HCAPTCHA_SITE_KEY } from "astro:env/client";
 import { CONTACT_FROM_EMAIL, CONTACT_TO_EMAIL, HCAPTCHA_SECRET, RESEND_API_KEY } from "astro:env/server";
 import { z } from "astro/zod";
-import { getIntlayer, locales } from "intlayer";
+import { getIntlayer, locales, setLocaleInStorageServer } from "intlayer";
 
 const configuredEmailSchema = z.email().max(254);
 
@@ -22,6 +22,25 @@ async function verifyCaptcha(token: string, secret: string, siteKey: string): Pr
 }
 
 export const server = {
+	setLocale: defineAction({
+		input: z.object({ locale: z.enum(locales) }),
+		handler: ({ locale }, context) => {
+			setLocaleInStorageServer(locale, {
+				setCookieStore: (name, value, attributes) => {
+					const { expires, ...options } = attributes;
+					context.cookies.set(name, value, {
+						...options,
+						expires: expires === undefined ? undefined : new Date(expires),
+						maxAge: 60 * 60 * 24 * 365,
+						httpOnly: true,
+						sameSite: "lax",
+						secure: context.url.protocol === "https:",
+					});
+				},
+			});
+			return { locale };
+		},
+	}),
 	sendContact: defineAction({
 		accept: "form",
 		input: z.object({

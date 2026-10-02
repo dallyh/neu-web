@@ -27,19 +27,15 @@ const sectionHeadingClass = "my-8 mt-16 flex flex-wrap items-center justify-betw
 		<h1 id="hero-title" class="max-w-[11ch] font-nb-display text-nb-display-xl leading-[1.05] font-normal tracking-[-.04em]">
 			{ui.heroTitle}
 		</h1>
-		<div class="border-[3px] border-nb-ink bg-nb-primary p-6 text-nb-on-primary shadow-nb-lg">
+		<div class="nb-card nb-card-primary nb-card-no-action">
 			<p class="text-lg mb-4">{ui.heroText}</p>
 			<div class="flex flex-wrap items-center gap-6">
-				<span class="nb-action-shadow">
-					<a class="nb-action" href={sectionUrl("portfolio", locale)}>
-						{ui.viewAllProjects}
-					</a>
-				</span>
-				<span class="nb-action-shadow">
-					<a class="nb-action nb-action-secondary" href={sectionUrl("blog", locale)}>
-						{ui.viewAllArticles}
-					</a>
-				</span>
+				<a class="nb-action nb-action-secondary nb-shadow" href={sectionUrl("portfolio", locale)}>
+					{ui.viewAllProjects}
+				</a>
+				<a class="nb-action nb-action-warning nb-shadow" href={sectionUrl("blog", locale)}>
+					{ui.viewAllArticles}
+				</a>
 			</div>
 		</div>
 	</section>

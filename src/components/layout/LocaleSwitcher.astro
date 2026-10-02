@@ -15,10 +15,31 @@ const localeLinkClass =
 	"inline-flex min-h-11 min-w-11 items-center justify-center border-2 border-transparent p-2 font-nb-heading text-sm font-bold no-underline hover:bg-nb-surface-muted aria-[current=true]:border-nb-ink aria-[current=true]:bg-nb-primary aria-[current=true]:text-nb-on-primary aria-[current=true]:underline";
 ---
 
-<nav class="flex flex-wrap items-center gap-2 border-l-2 border-nb-ink pl-3" aria-label={ui.language}>
+<nav class="flex flex-wrap items-center gap-2 border-l-2 border-nb-ink pl-3" aria-label={ui.language} data-locale-switcher>
 	{availableLocales.map((target) => (
 		<a class={localeLinkClass} href={paths[target] ?? withTrailingSlash(getLocalizedUrl(fallbackPath, target))} hreflang={target} lang={target} aria-current={target === locale ? "true" : undefined}>
 			{target.toUpperCase()}
 		</a>
 	))}
 </nav>
+
+<script>
+	import { actions } from "astro:actions";
+	import { isDeclaredLocale } from "intlayer";
+
+	document.querySelectorAll<HTMLAnchorElement>("[data-locale-switcher] a").forEach((link) => {
+		link.addEventListener("click", async (event) => {
+			if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+			const locale = link.hreflang;
+			if (!isDeclaredLocale(locale)) return;
+
+			event.preventDefault();
+			try {
+				await actions.setLocale({ locale });
+			} catch {
+				// Keep the translated link usable even when saving the preference fails.
+			}
+			window.location.assign(link.href);
+		});
+	});
+</script>

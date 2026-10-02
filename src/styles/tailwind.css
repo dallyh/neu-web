@@ -72,8 +72,18 @@
 	color: var(--nb-on-primary);
 }
 
+@utility nb-card-primary {
+	background: var(--nb-primary);
+	color: var(--nb-on-primary);
+}
+
 @utility nb-action-secondary {
 	border-color: var(--nb-on-secondary);
+	background: var(--nb-secondary);
+	color: var(--nb-on-secondary);
+}
+
+@utility nb-card-secondary {
 	background: var(--nb-secondary);
 	color: var(--nb-on-secondary);
 }
@@ -84,8 +94,18 @@
 	color: var(--nb-on-accent);
 }
 
+@utility nb-card-accent {
+	background: var(--nb-accent);
+	color: var(--nb-on-accent);
+}
+
 @utility nb-action-success {
 	border-color: var(--nb-on-success);
+	background: var(--nb-success);
+	color: var(--nb-on-success);
+}
+
+@utility nb-card-success {
 	background: var(--nb-success);
 	color: var(--nb-on-success);
 }
@@ -96,8 +116,18 @@
 	color: var(--nb-on-success-ink);
 }
 
+@utility nb-card-success-ink {
+	background: var(--nb-success-ink);
+	color: var(--nb-on-success-ink);
+}
+
 @utility nb-action-error {
 	border-color: var(--nb-on-error);
+	background: var(--nb-error);
+	color: var(--nb-on-error);
+}
+
+@utility nb-card-error {
 	background: var(--nb-error);
 	color: var(--nb-on-error);
 }
@@ -108,8 +138,18 @@
 	color: var(--nb-on-warning);
 }
 
+@utility nb-card-warning {
+	background: var(--nb-warning);
+	color: var(--nb-on-warning);
+}
+
 @utility nb-action-lavender {
 	border-color: var(--nb-on-lavender);
+	background: var(--nb-lavender);
+	color: var(--nb-on-lavender);
+}
+
+@utility nb-card-lavender {
 	background: var(--nb-lavender);
 	color: var(--nb-on-lavender);
 }
@@ -118,6 +158,31 @@
 	border-color: var(--nb-on-focus);
 	background: var(--nb-focus);
 	color: var(--nb-on-focus);
+}
+
+@utility nb-card-focus {
+	background: var(--nb-focus);
+	color: var(--nb-on-focus);
+}
+
+/* Apply directly to an action or card when its shadow needs the opposite color. */
+@utility nb-shadow-inverted {
+	--nb-interactive-shadow-color: var(--nb-action-bg-inverted);
+	border-color: var(--nb-action-bg-inverted);
+}
+
+@utility nb-shadow {
+	--nb-interactive-shadow-color: var(--nb-action-bg);
+	border-color: var(--nb-action-bg);
+}
+
+/* Clone the lowered marker stroke behind each line of wrapped inline text. */
+@utility nb-marker {
+	-webkit-box-decoration-break: clone;
+	box-decoration-break: clone;
+	padding-inline: 0.08em;
+	padding-bottom: 0.08em;
+	box-shadow: inset 0 -0.530em 0 var(--nb-marker-color);
 }
 
 @utility nb-page-header-label {
@@ -177,29 +242,14 @@
 			display: none;
 		}
 	}
-
-	.nb-action-shadow {
-		display: inline-flex;
-		background: var(--nb-action-bg);
-		box-shadow: var(--nb-action-shadow);
-	}
-	.nb-action-shadow-inverted {
-		display: inline-flex;
-		background: var(--nb-action-bg-inverted);
-		box-shadow: var(--nb-action-shadow-inverted);
-	}
-	.nb-action-shadow-theme {
-		display: inline-flex;
-		background: var(--nb-ink);
-		box-shadow: var(--nb-shadow-md);
-	}
-
 	.nb-action {
 		display: inline-flex;
 		min-height: 2.75rem;
 		align-items: center;
 		justify-content: center;
-		border: var(--nb-border-md) solid var(--nb-action-bg);
+		border: var(--nb-border-md) solid var(--nb-ink);
+		box-shadow: var(--nb-shadow-offset-md) var(--nb-shadow-offset-md) 0 0 var(--nb-interactive-shadow-color, var(--nb-shadow-color));
+		border-radius: var(--nb-radius);
 		background: var(--nb-action-bg);
 		padding: 0.75rem 1.25rem;
 		color: var(--nb-action-text);
@@ -209,17 +259,51 @@
 		text-align: center;
 		text-decoration: none;
 		cursor: pointer;
-		transition: transform var(--nb-duration-fast) var(--nb-ease);
+		transition:
+			transform var(--nb-duration-fast) var(--nb-ease),
+			box-shadow var(--nb-duration-fast) var(--nb-ease);
 	}
-	.nb-action:hover {
+	.nb-card {
+		border: var(--nb-border-md) solid var(--nb-ink);
+		border-radius: var(--nb-radius);
+		background: var(--nb-surface);
+		padding: var(--nb-space-5);
+		color: var(--nb-text);
+		box-shadow: var(--nb-shadow-offset-md) var(--nb-shadow-offset-md) 0 0 var(--nb-interactive-shadow-color, var(--nb-shadow-color));
+		transition:
+			transform var(--nb-duration) var(--nb-ease),
+			box-shadow var(--nb-duration) var(--nb-ease);
+	}
+	.nb-card:focus-within:not(.nb-card-no-action) {
+		outline: var(--nb-border-md) solid var(--nb-focus);
+		outline-offset: var(--nb-space-1);
+	}
+	@media (min-width: 48rem) {
+		.nb-card {
+			padding: var(--nb-space-6);
+		}
+	}
+
+	.nb-card:hover:not(.nb-card-no-action) {
 		transform: translate(-2px, -2px);
+		box-shadow: calc(var(--nb-shadow-offset-md) + 4px) calc(var(--nb-shadow-offset-md) + 4px) 0 0 var(--nb-interactive-shadow-color, var(--nb-shadow-color));
 	}
-	.nb-action:active {
+	.nb-action:hover:not(:disabled):not([aria-disabled="true"]) {
+		transform: translate(-2px, -2px);
+		box-shadow: calc(var(--nb-shadow-offset-md) + 2px) calc(var(--nb-shadow-offset-md) + 2px) 0 0 var(--nb-interactive-shadow-color, var(--nb-shadow-color));
+	}
+	.nb-action:active:not(:disabled):not([aria-disabled="true"]) {
 		transform: translate(3px, 3px);
+		box-shadow: none;
+	}
+	.nb-action:disabled,
+	.nb-action[aria-disabled="true"] {
+		cursor: not-allowed;
 	}
 	@media (prefers-reduced-motion: reduce) {
-		.nb-action:hover,
-		.nb-action:active {
+		.nb-action:hover:not(:disabled):not([aria-disabled="true"]),
+		.nb-action:active:not(:disabled):not([aria-disabled="true"]),
+		.nb-card:hover {
 			transform: none;
 		}
 	}
@@ -252,16 +336,6 @@
 	}
 	.nb-callout-body > * + * {
 		margin-top: 0.75em;
-	}
-}
-
-/* Action color utilities live in this layer, so the inverted border must too. */
-@layer utilities {
-	.nb-action-shadow-inverted > .nb-action {
-		border-color: var(--nb-action-bg-inverted);
-	}
-	.nb-action-shadow-theme > .nb-action {
-		border-color: var(--nb-ink);
 	}
 }
 

@@ -27,7 +27,7 @@ const paths = Object.fromEntries(
 
 <BaseLayout title={`${resume.data.title} · ${ui.name}`} description={resume.data.description} paths={paths} fallbackPath="/about/cv/">
 	<article class="nb-cv">
-		<PageHeader class="mb-12 bg-nb-lavender text-nb-on-lavender print:mb-6">
+		<PageHeader class="mb-12 nb-card nb-card-lavender nb-card-no-action print:mb-6">
 			<p class="nb-page-header-label">{ui.about}</p>
 			<h1 class="nb-page-header-title">{resume.data.title}</h1>
 			<p class="nb-page-header-description">{resume.data.description}</p>

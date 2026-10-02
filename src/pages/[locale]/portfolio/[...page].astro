@@ -29,12 +29,12 @@ const paths = Object.fromEntries(locales.map((target) => [target, listingPageUrl
 ---
 
 <BaseLayout title={`${ui.portfolio} · ${ui.name}`} description={ui.selectedWork} paths={paths} fallbackPath="/portfolio/">
-	<PageHeader class="my-8 mb-12 bg-nb-secondary text-nb-on-secondary">
+	<PageHeader class="my-8 mb-12 nb-card nb-card-secondary nb-card-no-action">
 		<h1 class="nb-page-header-title">{ui.portfolio}</h1>
 		<p class="nb-page-header-description">{ui.selectedWork}</p>
 	</PageHeader>
 	{page.data.length ? (
-		<div class="grid grid-cols-[repeat(auto-fit,minmax(min(100%,21rem),1fr))] gap-8">
+		<div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
 			{page.data.map((entry, index) => (
 				<ProjectCard entry={entry} headingLevel={2} priority={index === 0} />
 			))}

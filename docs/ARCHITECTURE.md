@@ -68,6 +68,10 @@ Intlayer content declaration files may live anywhere covered by Intlayer's confi
 
 Tailwind CSS v4 is wired through its Vite plugin. `tokens.css` remains the source for light/dark colors, typography, and hard shadows; `tailwind.css` exposes those tokens as utilities and holds only base, MDX prose, motion, and print rules. Page and component styling lives in Astro utility classes.
 
+Actions use `nb-action` directly on links and buttons, and content cards use `nb-card` on the article element. Both own their CSS box shadow and increase its offset as they lift on hover; actions remove the shadow while pressed. Shadow-only wrapper elements are unnecessary. The default shadow follows the theme's ink color; `nb-shadow-inverted` can override its color and the border on the same element. Disabled actions do not lift, and reduced-motion preferences suppress transforms.
+
+`nb-card` also supplies the shared border, square corners, surface/text colors, responsive padding, and focus-within outline for content, contact, and tag cards. Keep layout classes and accent color overrides on individual cards; do not repeat their shared structural styles.
+
 Astro's Fonts API uses the Fontsource provider to self-host Bebas Neue, Plus Jakarta Sans, DM Sans, and JetBrains Mono. `BaseLayout.astro` registers the font variables, and the typography tokens in `tokens.css` map them to display, heading, body, and mono roles. The configured Latin and Latin Extended subsets cover English and Czech pages. Production builds require access to Fontsource when the font cache is empty.
 
 ## Rendering philosophy

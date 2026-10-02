@@ -61,11 +61,9 @@ const fieldClass = "nb-field w-full border-2 border-nb-ink bg-nb-surface p-3 tex
 		<p>{ui.contactUnavailable}</p>
 	)}
 	<div class="flex flex-wrap items-center gap-6">
-		<span class="nb-action-shadow">
-			<button class="nb-action nb-action-secondary disabled:cursor-not-allowed disabled:opacity-60" type="submit" disabled={!isDev && !siteKey}>
-				{ui.contactSend}
-			</button>
-		</span>
+		<button class="nb-action nb-action-secondary disabled:cursor-not-allowed disabled:opacity-60" type="submit" disabled={!isDev && !siteKey}>
+			{ui.contactSend}
+		</button>
 		<p role="status" aria-live="polite" data-contact-status></p>
 	</div>
 </form>

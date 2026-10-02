@@ -8,11 +8,11 @@ const ui = useIntlayer("site");
 const { locale } = useLocale();
 const path = getPathWithoutLocale(Astro.url.pathname);
 const section = path.startsWith("/about/cv") ? "cv" : path.startsWith("/about") ? "about" : path.startsWith("/blog") || path.startsWith("/tags") ? "blog" : path.startsWith("/portfolio") ? "portfolio" : "";
-const navLinkClass = "nb-action nb-action-accent w-full px-3 py-2 text-sm lg:w-auto";
+const navLinkClass = "nb-action nb-action-accent border-nb-ink w-full px-3 py-2 text-sm lg:w-auto";
 ---
 
 <header
-	class="mx-[clamp(1rem,3vw,3rem)] mt-6 mb-16 flex max-w-[90rem] flex-wrap items-center gap-4 border-[3px] border-nb-ink bg-nb-surface p-4 shadow-nb-md max-lg:mb-10 2xl:mx-auto print:hidden"
+	class="mt-2 mb-8 flex flex-wrap items-center gap-4 nb-card nb-card-no-action p-4 max-lg:mb-10 print:hidden"
 	data-site-header
 >
 	<a class="mr-auto inline-flex items-center gap-2 font-nb-heading font-bold no-underline" href={sectionUrl("", locale)}>
@@ -40,31 +40,21 @@ const navLinkClass = "nb-action nb-action-accent w-full px-3 py-2 text-sm lg:w-a
 		data-menu-panel
 	>
 		<nav class="flex w-full flex-col gap-3 lg:w-auto lg:flex-row lg:flex-wrap lg:items-center" aria-label={ui.navigation}>
-			<span class="nb-action-shadow-theme">
-				<a class:list={[navLinkClass, "aria-[current=page]:nb-action-primary"]}href={sectionUrl("", locale)} aria-current={section === "" ? "page" : undefined}>
-					{ui.home}
-				</a>
-			</span>
-			<span class="nb-action-shadow-theme">
-				<a class:list={[navLinkClass, "aria-[current=page]:nb-action-secondary"]} href={sectionUrl("portfolio", locale)} aria-current={section === "portfolio" ? "page" : undefined}>
-					{ui.portfolio}
-				</a>
-			</span>
-			<span class="nb-action-shadow-theme">
-				<a class:list={[navLinkClass, "aria-[current=page]:nb-action-warning"]}href={sectionUrl("blog", locale)} aria-current={section === "blog" ? "page" : undefined}>
-					{ui.blog}
-				</a>
-			</span>
-			<span class="nb-action-shadow-theme">
-				<a class:list={[navLinkClass, "aria-[current=page]:nb-action-success-ink"]} href={sectionUrl("about", locale)} aria-current={section === "about" ? "page" : undefined}>
-					{ui.about}
-				</a>
-			</span>
-			<span class="nb-action-shadow-theme">
-				<a class:list={[navLinkClass, "aria-[current=page]:nb-action-lavender"]} href={sectionUrl("about/cv", locale)} aria-current={section === "cv" ? "page" : undefined}>
-					{ui.cv}
-				</a>
-			</span>
+			<a class:list={[navLinkClass, "aria-[current=page]:bg-nb-primary"]} href={sectionUrl("", locale)} aria-current={section === "" ? "page" : undefined}>
+				{ui.home}
+			</a>
+			<a class:list={[navLinkClass, "aria-[current=page]:bg-nb-secondary"]} href={sectionUrl("portfolio", locale)} aria-current={section === "portfolio" ? "page" : undefined}>
+				{ui.portfolio}
+			</a>
+			<a class:list={[navLinkClass, "aria-[current=page]:bg-nb-warning"]} href={sectionUrl("blog", locale)} aria-current={section === "blog" ? "page" : undefined}>
+				{ui.blog}
+			</a>
+			<a class:list={[navLinkClass, "aria-[current=page]:bg-nb-success-ink"]} href={sectionUrl("about", locale)} aria-current={section === "about" ? "page" : undefined}>
+				{ui.about}
+			</a>
+			<a class:list={[navLinkClass, "aria-[current=page]:bg-nb-lavender"]} href={sectionUrl("about/cv", locale)} aria-current={section === "cv" ? "page" : undefined}>
+				{ui.cv}
+			</a>
 		</nav>
 		<div class="flex flex-wrap items-center gap-3 border-t-2 border-nb-ink pt-4 lg:border-0 lg:pt-0">
 			<slot />

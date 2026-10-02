@@ -5,7 +5,8 @@ const config: IntlayerConfig = {
 		locales: ["en", "cs"],
 		defaultLocale: "en",
 	},
-	routing: { mode: "prefix-all" },
+	// The root GET endpoint owns preference-based redirects in development and production.
+	routing: { mode: "prefix-all", enableProxy: false },
 };
 
 export default config;

@@ -18,7 +18,7 @@ const emailHref = contactLinks.email ? `mailto:${contactLinks.email}` : "#contac
 	<p class="mb-6 max-w-[70ch]">{ui.contactLinksIntro}</p>
 	<ul class="grid gap-5 md:grid-cols-3">
 		{profiles.map(({ label, icon, href }) => (
-			<li class="border-[3px] border-nb-ink bg-nb-surface p-5 shadow-nb-sm">
+			<li class="nb-card">
 				<div class="mb-3 flex items-center gap-3 font-nb-heading text-lg font-bold">
 					<Icon name={icon} size={28} aria-hidden="true" />
 					<span>{label}</span>
@@ -33,7 +33,7 @@ const emailHref = contactLinks.email ? `mailto:${contactLinks.email}` : "#contac
 				)}
 			</li>
 		))}
-		<li class="border-[3px] border-nb-ink bg-nb-surface p-5 shadow-nb-sm">
+		<li class="nb-card">
 			<div class="mb-3 flex items-center gap-3 font-nb-heading text-lg font-bold">
 				<Icon name="email" size={28} aria-hidden="true" />
 				<span>{ui.email}</span>

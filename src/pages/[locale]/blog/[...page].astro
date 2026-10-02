@@ -33,7 +33,7 @@ const paths = Object.fromEntries(locales.map((target) => [target, listingPageUrl
 ---
 
 <BaseLayout title={`${ui.blog} · ${ui.name}`} description={ui.latestWriting} paths={paths} fallbackPath="/blog/">
-	<PageHeader class="my-8 mb-12 bg-nb-warning text-nb-on-warning">
+	<PageHeader class="my-8 mb-12 nb-card nb-card-warning nb-card-no-action">
 		<h1 class="nb-page-header-title">{ui.blog}</h1>
 		<p class="nb-page-header-description">{ui.latestWriting}</p>
 		<a class="mt-4 inline-block font-bold underline decoration-2 underline-offset-4" href={sectionUrl("tags", locale)}>
@@ -48,7 +48,7 @@ const paths = Object.fromEntries(locales.map((target) => [target, listingPageUrl
 		</nav>
 	)}
 	{page.data.length ? (
-		<div class="grid grid-cols-[repeat(auto-fit,minmax(min(100%,21rem),1fr))] gap-8">
+		<div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
 			{page.data.map((entry, index) => (
 				<ContentCard entry={entry} collection="blog" headingLevel={2} priority={index === 0} />
 			))}

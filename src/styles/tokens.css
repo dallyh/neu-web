@@ -20,6 +20,7 @@
 	--nb-warning: #ffa552;
 	--nb-lavender: #b8a9fa;
 	--nb-focus: #005fcc;
+	--nb-marker-color: color-mix(in srgb, var(--nb-primary) 40%, transparent);
 
 	/* Accent foregrounds */
 	--nb-on-primary: #111111;
@@ -34,8 +35,6 @@
 	--nb-action-bg: #111111;
 	--nb-action-bg-inverted: #fffdf5;
 	--nb-action-text: #fffdf5;
-	--nb-action-shadow: 5px 5px 0 0 var(--nb-action-bg);
-	--nb-action-shadow-inverted: 5px 5px 0 0 var(--nb-action-bg-inverted);
 
 	/* Structure */
 	--nb-border-color: var(--nb-ink);
@@ -47,6 +46,7 @@
 
 	/* Hard depth */
 	--nb-shadow-color: var(--nb-ink);
+	--nb-shadow-offset-md: 5px;
 	--nb-shadow-sm: 3px 3px 0 0 var(--nb-shadow-color);
 	--nb-shadow-md: 5px 5px 0 0 var(--nb-shadow-color);
 	--nb-shadow-lg: 8px 8px 0 0 var(--nb-shadow-color);
@@ -172,7 +172,6 @@
 		--nb-shadow-sm: 2px 2px 0 0 var(--nb-shadow-color);
 		--nb-shadow-md: 4px 4px 0 0 var(--nb-shadow-color);
 		--nb-shadow-lg: 6px 6px 0 0 var(--nb-shadow-color);
-		--nb-action-shadow: 4px 4px 0 0 var(--nb-action-bg);
-		--nb-action-shadow-inverted: 4px 4px 0 0 var(--nb-action-bg-inverted);
+		--nb-shadow-offset-md: 4px;
 	}
 }

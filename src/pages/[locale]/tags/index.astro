@@ -22,7 +22,7 @@ const paths = Object.fromEntries(locales.map((target) => [target, sectionUrl("ta
 	</PageHeader>
 	<div class="grid grid-cols-[repeat(auto-fit,minmax(min(100%,21rem),1fr))] gap-8">
 		{tags.map((tag) => (
-			<article class="border-[3px] border-nb-ink bg-nb-surface p-6 shadow-nb-md">
+			<article class="nb-card">
 				<h2 class="mb-4 font-nb-heading text-nb-h3 leading-tight font-bold">
 					<a class="underline decoration-2 underline-offset-4" href={tagUrl(tag, locale)}>
 						{tagLabel(tag, locale)}
