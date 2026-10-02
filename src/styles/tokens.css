@@ -20,7 +20,7 @@
 	--nb-warning: #ffa552;
 	--nb-lavender: #b8a9fa;
 	--nb-focus: #005fcc;
-	--nb-marker-color: color-mix(in srgb, var(--nb-primary) 40%, transparent);
+	--nb-marker-color: color-mix(in srgb, var(--nb-primary) 45%, transparent);
 
 	/* Accent foregrounds */
 	--nb-on-primary: #111111;

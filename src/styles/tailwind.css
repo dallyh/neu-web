@@ -67,6 +67,11 @@
 		outline: 3px solid var(--nb-focus);
 		outline-offset: 4px;
 	}
+
+	::selection {
+		background: var(--nb-primary);
+		color: var(--nb-on-primary);
+	}
 }
 
 @utility nb-action-primary {

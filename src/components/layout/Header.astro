@@ -11,15 +11,12 @@ const section = path.startsWith("/about/cv") ? "cv" : path.startsWith("/about") 
 const navLinkClass = "nb-action nb-action-accent border-nb-ink w-full px-3 py-2 text-sm lg:w-auto";
 ---
 
-<header
-	class="mt-2 mb-8 flex flex-wrap items-center gap-4 nb-card nb-card-no-action p-4 max-lg:mb-10 print:hidden"
-	data-site-header
->
+<header class="mt-2 mb-8 flex flex-wrap items-center gap-4 nb-card nb-card-no-action p-4 max-lg:mb-10 print:hidden" data-site-header>
 	<a class="mr-auto inline-flex items-center gap-2 font-nb-heading font-bold no-underline" href={sectionUrl("", locale)}>
-		{ui.name}
 		<span class="text-2xl leading-none text-nb-accent" aria-hidden="true">
 			✳
 		</span>
+		{ui.name}
 	</a>
 	<button
 		class="nb-menu-toggle group inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center border-2 border-nb-ink bg-nb-primary p-2 text-nb-on-primary hover:bg-nb-secondary lg:hidden"
@@ -49,7 +46,7 @@ const navLinkClass = "nb-action nb-action-accent border-nb-ink w-full px-3 py-2 
 			<a class:list={[navLinkClass, "aria-[current=page]:bg-nb-warning"]} href={sectionUrl("blog", locale)} aria-current={section === "blog" ? "page" : undefined}>
 				{ui.blog}
 			</a>
-			<a class:list={[navLinkClass, "aria-[current=page]:bg-nb-success-ink"]} href={sectionUrl("about", locale)} aria-current={section === "about" ? "page" : undefined}>
+			<a class:list={[navLinkClass, "aria-[current=page]:bg-nb-success"]} href={sectionUrl("about", locale)} aria-current={section === "about" ? "page" : undefined}>
 				{ui.about}
 			</a>
 			<a class:list={[navLinkClass, "aria-[current=page]:bg-nb-lavender"]} href={sectionUrl("about/cv", locale)} aria-current={section === "cv" ? "page" : undefined}>

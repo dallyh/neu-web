@@ -13,8 +13,8 @@ const content = {
 		about: t({ en: "About", cs: "O mně" }),
 		cv: t({ en: "CV", cs: "Životopis" }),
 		aboutDescription: t({ en: "A little about me and a way to get in touch.", cs: "Něco o mně a možnost se ozvat." }),
-		aboutMe: t({ en: "About me", cs: "O mně" }),
-		viewCv: t({ en: "Read my CV", cs: "Prohlédnout životopis" }),
+		aboutMe: t({ en: "Get to know me", cs: "Poznejte mě" }),
+		viewCv: t({ en: "Read my CV", cs: "Životopis" }),
 		contact: t({ en: "Contact", cs: "Kontakt" }),
 		contactLinks: t({ en: "Elsewhere & direct contact", cs: "Další spojení a přímý kontakt" }),
 		contactLinksIntro: t({ en: "Profiles and direct contact details.", cs: "Profily a přímé kontaktní údaje." }),
@@ -93,6 +93,7 @@ const content = {
 		privacyPolicyDescription: t({ en: "How this website handles your data.", cs: "Jak tento web nakládá s vašimi údaji." }),
 		effectiveDate: t({ en: "Effective date", cs: "Datum účinnosti" }),
 		statisticsLink: t({ en: "Web statistics", cs: "Statistiky webu" }),
+		printMe: t({ en: "Print me!", cs: "Vytiskni si mě!" }),
 	},
 } satisfies Dictionary;
 

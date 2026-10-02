@@ -21,7 +21,7 @@ const paths = Object.fromEntries(translations.map((sibling) => [sibling.data.loc
 
 <BaseLayout title={`${entry.data.title} · ${ui.name}`} description={entry.data.description} paths={paths} fallbackPath="/portfolio/">
 	<article>
-		<PageHeader>
+		<PageHeader class="my-8 mb-12 nb-card nb-card-secondary nb-card-no-action">
 			<p class="nb-page-header-label">{ui.portfolio}</p>
 			<h1 class="nb-page-header-title">{entry.data.title}</h1>
 			<p class="nb-page-header-description">{entry.data.description}</p>
@@ -46,7 +46,7 @@ const paths = Object.fromEntries(translations.map((sibling) => [sibling.data.loc
 		</div>
 		<MdxContent {Content} {headings} showTableOfContents={entry.data.showTableOfContents} />
 	</article>
-	<a class="my-12 inline-block font-bold underline decoration-2 underline-offset-4 print:hidden" href={sectionUrl("portfolio", entry.data.locale)}>
+	<a class="mt-6 inline-block font-bold underline decoration-2 underline-offset-4 print:hidden" href={sectionUrl("portfolio", entry.data.locale)}>
 		← {ui.backToPortfolio}
 	</a>
 </BaseLayout>

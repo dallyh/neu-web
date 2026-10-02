@@ -23,21 +23,22 @@ const paths = Object.fromEntries((await getResumes()).map((entry) => [entry.data
 ---
 
 <BaseLayout title={`${ui.about} · ${ui.name}`} description={ui.aboutDescription} paths={paths} fallbackPath="/about/">
-	<PageHeader class="mb-12 nb-card nb-card-success-ink nb-card-no-action">
+	<PageHeader class="mb-12 nb-card nb-card-success nb-card-no-action">
 		<h1 class="nb-page-header-title">{ui.about}</h1>
 		<p class="nb-page-header-description">{ui.aboutDescription}</p>
 	</PageHeader>
 	<div class="grid items-start gap-10 lg:grid-cols-[minmax(0,2fr)_minmax(19rem,3fr)]">
-		<section aria-labelledby="about-me-heading" class="nb-card nb-card-secondary nb-card-no-action">
+		<section aria-labelledby="about-me-heading" class="nb-card nb-card-secondary nb-card-no-action flex flex-col">
 			<h2 id="about-me-heading" class="mb-5 font-nb-heading text-nb-h2 leading-tight font-bold">
 				{ui.aboutMe}
 			</h2>
 			<p class="mb-8 text-lg">{resume.data.summary}</p>
-			<a class="nb-action nb-action-primary nb-shadow" href={sectionUrl("about/cv", locale)}>
+			<a class="nb-action nb-action-primary nb-shadow self-start -rotate-12" href={sectionUrl("about/cv", locale)}>
 				{ui.viewCv}
 			</a>
 		</section>
-		<section aria-labelledby="contact-heading">
+		<ContactLinks />
+		<section aria-labelledby="contact-heading" class="col-span-2">
 			<h2 id="contact-heading" class="mb-3 font-nb-heading text-nb-h2 leading-tight font-bold">
 				{ui.contact}
 			</h2>
@@ -45,5 +46,4 @@ const paths = Object.fromEntries((await getResumes()).map((entry) => [entry.data
 			<ContactForm />
 		</section>
 	</div>
-	<ContactLinks />
 </BaseLayout>

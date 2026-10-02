@@ -7,7 +7,7 @@ const { locale } = useLocale();
 const policy = (await getPrivacyPolicies()).find((entry) => privacyPolicyLocale(entry) === locale);
 ---
 
-<footer class="mt-5 grid grid-flow-col border-t-[3px] border-nb-ink py-6 font-nb-mono text-nb-meta print:hidden">
+<footer class="mt-8 grid grid-flow-col border-t-[3px] border-nb-ink py-6 font-nb-mono text-nb-meta print:hidden">
 	<div class="flex w-full flex-col">
 		<p>© {new Date().getFullYear()} - {ui.name}</p>
 		<p>{ui.footer}</p>

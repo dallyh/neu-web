@@ -88,3 +88,15 @@ const analyticsScript = `${UMAMI_URL.replace(/\/$/, "")}/script.js`;
 		</div>
 	</body>
 </html>
+
+<style>
+	@media (prefers-reduced-motion: no-preference) {
+		@view-transition {
+			navigation: auto;
+		}
+		::view-transition-old(root),
+		::view-transition-new(root) {
+			animation-duration: var(--nb-duration);
+		}
+	}
+</style>

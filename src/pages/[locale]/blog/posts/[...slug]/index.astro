@@ -54,7 +54,7 @@ const tags = await getBlogTags(entry);
 		</div>
 		<MdxContent {Content} {headings} showTableOfContents={entry.data.showTableOfContents} />
 	</article>
-	<a class="my-12 inline-block font-bold underline decoration-2 underline-offset-4 print:hidden" href={sectionUrl("blog", entry.data.locale)}>
+	<a class="mt-6 inline-block font-bold underline decoration-2 underline-offset-4 print:hidden" href={sectionUrl("blog", entry.data.locale)}>
 		← {ui.backToBlog}
 	</a>
 </BaseLayout>

@@ -19,7 +19,7 @@ const paths = Object.fromEntries(locales.map((target) => [target, tagUrl(tag, ta
 ---
 
 <BaseLayout title={`${tagLabel(tag, locale)} · ${ui.blog} · ${ui.name}`} description={tagDescription(tag, locale)} paths={paths} fallbackPath="/tags/">
-	<PageHeader class="mb-12">
+	<PageHeader class="my-8 mb-12 nb-card nb-card-warning nb-card-no-action">
 		<p class="nb-page-header-label">{ui.tags}</p>
 		<h1 class="nb-page-header-title">{tagLabel(tag, locale)}</h1>
 		<p class="nb-page-header-description">{tagDescription(tag, locale)}</p>

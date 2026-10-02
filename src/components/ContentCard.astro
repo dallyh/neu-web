@@ -41,7 +41,7 @@ const blogTags = props.collection === "blog" ? await getBlogTags(props.entry) : 
 		<span>{collection === "blog" ? ui.blog : ui.portfolio}</span>
 	</p>
 	<Heading class="font-nb-heading text-nb-h3 leading-tight font-bold">
-		<a class="nb-marker decoration-2 underline-offset-4 hover:underline focus-visible:underline" href={href}>
+		<a class="nb-marker decoration-2 underline-offset-4 hover:underline focus-visible:underline" data-text-marker={entry.data.title} href={href}>
 			{entry.data.title}
 		</a>
 	</Heading>
