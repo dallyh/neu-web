@@ -11,12 +11,12 @@ const Tag = `h${level}` as keyof HTMLElementTagNameMap;
 const ui = useIntlayer("site");
 ---
 
-<Tag {id} class="group scroll-mt-24">
+<Tag {id} class="group scroll-mt-2">
 	{id && (
 		<a
 			href={`#${id}`}
 			aria-label={ui.headingPermalink}
-			class="nb-heading-anchor mr-2 inline-block font-nb-mono text-[0.75em] no-underline opacity-60 group-hover:opacity-100 focus-visible:opacity-100 print:hidden"
+			class="nb-heading-anchor mr-2 inline-block font-nb-mono no-underline opacity-60 group-hover:opacity-100 focus-visible:opacity-100 print:hidden"
 		>
 			#
 		</a>

@@ -10,13 +10,14 @@ interface Props {
 	decoding?: "async" | "auto" | "sync";
 	class?: string;
 	title?: string;
+	fit?: "contain" | "cover";
 }
 
-const { src, alt, width, height, loading = "lazy", decoding = "async", class: className, title } = Astro.props;
+const { src, alt, width, height, loading = "lazy", decoding = "async", class: className, title, fit } = Astro.props;
 ---
 
 {typeof src === "string" ? (
 	<img {src} {alt} {title} width={width ?? 1536} height={height ?? 1024} {loading} {decoding} class={className} />
 ) : (
-	<Image {src} {alt} {title} {width} {height} {loading} {decoding} class={className} />
+	<Image {src} {alt} {title} {width} {height} {fit} {loading} {decoding} class={className} />
 )}

@@ -123,7 +123,11 @@ draft: false
 ---
 ```
 
-The body contains the printable CV. `draft: true` removes the entry from the About and CV routes. The current entries are published **placeholder drafts in their prose** so the pages can be reviewed before real details are supplied.
+The body contains the printable CV. `draft: true` removes the entry from the About and CV routes. The published English and Czech resumes live at `src/content/resume/en.mdx` and `cs.mdx`, sharing `translationKey: personal-resume`. Their `summary` supplies the About page introduction.
+
+Resume MDX imports the presentation components from `src/components/resume/`: `Hero`, `DevGrid`/`DevGridItem`, `CertGrid`/`CertCard`, and `Timeline`/`TimelineItem`. Keep the profile, skill labels, certification names, and career descriptions in the localized MDX. Use `slot="exp"` and `slot="edu"` for timeline entries. Assets are imported from `./assets/`; `CertCard` supports an optional `imgInverted` for dark-theme logos. Technology icons use the existing `astro-iconset` integration with only the required Devicon icons included in its configuration.
+
+The CV page supplies its own H1, so resume bodies start with H2 sections. Components use CSS print rules rather than a server-side print flag: technology labels, certifications, and experience remain visible, while decorative icons, logos, backgrounds, and shadows are removed for printing. Migration files are moved into the canonical entries to avoid duplicate About/CV routes for a locale.
 
 Set `showTableOfContents: true` in any blog, portfolio, or resume entry to show its heading list. It defaults to `false`; readers can expand or collapse a displayed list. The list is hidden when printing.
 

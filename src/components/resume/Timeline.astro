@@ -1,0 +1,22 @@
+---
+interface Props {
+	experienceTitle: string;
+	educationTitle: string;
+}
+const { experienceTitle, educationTitle } = Astro.props;
+---
+
+<div class="grid items-start gap-8 lg:grid-cols-2 print:grid-cols-1">
+	<section>
+		<h3 class="mt-0! mb-6 font-bold">{experienceTitle}</h3>
+		<ol class="m-0 list-none border-l-[3px] border-nb-ink print:border-l-0 p-0">
+			<slot name="exp" />
+		</ol>
+	</section>
+	<section>
+		<h3 class="mt-0! mb-6 font-bold">{educationTitle}</h3>
+		<ol class="m-0 list-none border-l-[3px] border-nb-ink print:border-l-0 p-0">
+			<slot name="edu" />
+		</ol>
+	</section>
+</div>

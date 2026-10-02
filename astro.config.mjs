@@ -67,6 +67,11 @@ export default defineConfig({
 			GITHUB_TOKEN: envField.string({ context: "server", access: "secret", optional: true }),
 		},
 	},
-	integrations: [expressiveCode(), mdx(), icon(), intlayer()],
+	integrations: [
+		expressiveCode(),
+		mdx(),
+		icon({ include: { devicon: ["html5", "css3", "javascript", "typescript", "react", "nodejs-wordmark", "csharp", "dot-net", "dotnetcore", "microsoftsqlserver", "git", "azure", "azuredevops"] } }),
+		intlayer(),
+	],
 	vite: { plugins: [tailwindcss()] },
 });

@@ -1,5 +1,8 @@
 @import "tailwindcss";
 @import "./tokens.css";
+@plugin "@tailwindcss/typography";
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
 @theme inline {
 	--color-nb-bg: var(--nb-bg);
@@ -182,7 +185,7 @@
 	box-decoration-break: clone;
 	padding-inline: 0.08em;
 	padding-bottom: 0.08em;
-	box-shadow: inset 0 -0.530em 0 var(--nb-marker-color);
+	box-shadow: inset 0 -0.53em 0 var(--nb-marker-color);
 }
 
 @utility nb-page-header-label {
@@ -203,6 +206,33 @@
 @utility nb-page-header-description {
 	max-width: 90ch;
 	font-size: var(--nb-body-lg);
+}
+
+@utility nb-prose {
+	font-family: var(--nb-font-body);
+
+	& :is(h1, h2, h3, h4, h5, h6):not(:where(.not-prose, .not-prose *)) {
+		font-family: var(--nb-font-heading);
+		line-height: var(--nb-leading-heading);
+	}
+	& h1:not(:where(.not-prose, .not-prose *)) {
+		margin-top: 0.85em;
+		margin-bottom: 0.65em;
+		font-size: var(--nb-h1);
+	}
+
+	& h2:not(:where(.not-prose, .not-prose *)) {
+		margin-top: 0.85em;
+		margin-bottom: 0.65em;
+		font-size: var(--nb-h2);
+	}
+	& h3:not(:where(.not-prose, .not-prose *)) {
+		margin-top: 0.85em;
+		font-size: var(--nb-h3);
+	}
+	& :is(code, kbd, samp, pre):not(:where(.not-prose, .not-prose *)) {
+		font-family: var(--nb-font-mono);
+	}
 }
 
 /* MDX is generated markup, so its descendants cannot carry utility classes. */
@@ -230,6 +260,23 @@
 	.nb-theme-icon-sun,
 	:root[data-theme="dark"] .nb-theme-icon-moon {
 		display: none;
+	}
+	.resume-logo-inverted {
+		display: none;
+	}
+	:root[data-theme="dark"] .resume-logo-themed {
+		display: none;
+	}
+	:root[data-theme="dark"] .resume-logo-inverted {
+		display: block;
+	}
+	@media (prefers-color-scheme: dark) {
+		:root:not([data-theme]) .resume-logo-themed {
+			display: none;
+		}
+		:root:not([data-theme]) .resume-logo-inverted {
+			display: block;
+		}
 	}
 	:root[data-theme="dark"] .nb-theme-icon-sun {
 		display: block;
@@ -308,23 +355,6 @@
 		}
 	}
 
-	.nb-prose > * + * {
-		margin-top: 1.1em;
-	}
-	.nb-prose :is(h2, h3) {
-		margin-top: 1.7em;
-		font-family: var(--nb-font-heading);
-		line-height: var(--nb-leading-heading);
-	}
-	.nb-prose h2 {
-		font-size: var(--nb-h2);
-	}
-	.nb-prose h3 {
-		font-size: var(--nb-h3);
-	}
-	.nb-prose :is(p, li) {
-		line-height: var(--nb-leading-body);
-	}
 	.nb-prose a {
 		font-weight: 650;
 		text-decoration: underline;

@@ -1,0 +1,23 @@
+---
+import type { ImageMetadata } from "astro";
+import ContentImage from "../ui/ContentImage.astro";
+interface Props {
+	img: string | ImageMetadata;
+	imgInverted?: string | ImageMetadata;
+	alt: string;
+	width?: number;
+	height?: number;
+}
+const { img, imgInverted, alt, width = 180, height = 64 } = Astro.props;
+---
+
+<li class="nb-card nb-card-success flex flex-col gap-4 text-center print:break-inside-avoid print:border-0 print:p-2 print:text-left print:shadow-none">
+	<div class="flex h-24 min-w-0 items-center justify-center print:hidden">
+		<div class:list={["resume-logo w-full max-w-52 mt-2 mb-2"]}>
+			<ContentImage src={img} {alt} {width} {height} fit="contain" class="h-16 w-full object-contain" />
+		</div>
+	</div>
+	<div class="font-nb-heading text-sm font-bold">
+		<slot />
+	</div>
+</li>
