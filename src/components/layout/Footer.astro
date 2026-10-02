@@ -9,17 +9,21 @@ const policy = (await getPrivacyPolicies()).find((entry) => privacyPolicyLocale(
 
 <footer class="mt-5 grid grid-flow-col border-t-[3px] border-nb-ink py-6 font-nb-mono text-nb-meta print:hidden">
 	<div class="flex w-full flex-col">
-		<p>{ui.name}</p>
+		<p>© {new Date().getFullYear()} - {ui.name}</p>
 		<p>{ui.footer}</p>
 	</div>
 	<div class="flex w-full flex-col text-end">
-		<a class="underline decoration-2 underline-offset-4" href={rssUrl(locale)}>
+		<a class="underline decoration-1 underline-offset-2" href={rssUrl(locale)}>
 			{ui.rss}
 		</a>
+		<a class="underline decoration-1 underline-offset-2" href="https://analytics.daliborhon.dev/share/PLvxy1iAjOUgirKl" target="_blank">
+			{ui.statisticsLink}
+		</a>
 		{policy && (
-			<a class="underline decoration-2 underline-offset-4" href={privacyPolicyUrl(policy)}>
+			<a class="underline decoration-1 underline-offset-2" href={privacyPolicyUrl(policy)}>
 				{ui.privacyPolicy}
 			</a>
 		)}
+		
 	</div>
 </footer>

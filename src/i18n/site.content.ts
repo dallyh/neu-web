@@ -3,12 +3,12 @@ import { t, type Dictionary } from "intlayer";
 const content = {
 	key: "site",
 	content: {
-		name: t({ en: "Personal website", cs: "Osobní web" }),
+		name: t({ en: "Dalibor Hon", cs: "Dalibor Hon" }),
 		home: t({ en: "Home", cs: "Domů" }),
 		portfolio: t({ en: "Portfolio", cs: "Portfolio" }),
 		blog: t({ en: "Blog", cs: "Blog" }),
 		rss: t({ en: "RSS feed", cs: "RSS kanál" }),
-		rssTitle: t({ en: "Personal website · Blog", cs: "Osobní web · Blog" }),
+		rssTitle: t({ en: "Dalibor Hon · Blog", cs: "Dalibor Hon · Blog" }),
 		rssDescription: t({ en: "The latest articles about projects, development, and the craft behind them.", cs: "Nejnovější články o projektech, vývoji a práci, která za nimi stojí." }),
 		about: t({ en: "About", cs: "O mně" }),
 		cv: t({ en: "CV", cs: "Životopis" }),
@@ -53,8 +53,10 @@ const content = {
 		language: t({ en: "Language", cs: "Jazyk" }),
 		skip: t({ en: "Skip to content", cs: "Přejít na obsah" }),
 		theme: t({ en: "Toggle color theme", cs: "Přepnout barevný motiv" }),
-		heroTitle: t({ en: "Ideas, built for the web.", cs: "Nápady postavené pro web." }),
-		heroText: t({ en: "A small space for projects, writing, and the craft behind both.", cs: "Místo pro projekty, články a práci, která za nimi stojí." }),
+		heroTitle: t({ en: "Hi there! <br/> I'm Dalibor.", cs: "Zdravím! <br/> Jsem Dalibor." }),
+		heroText: t({ 
+			en: "A Business Consultant who is a passionate analyst and also a technology enthusiast. This is my small space on the web.", 
+			cs: "Business Consultant který je zapálený analytik a zároveň i nadšenec do technologií. Tohle je mé malé místo na internetu." }),
 		selectedWork: t({ en: "Selected work", cs: "Vybrané projekty" }),
 		featuredPosts: t({ en: "Featured posts", cs: "Doporučené články" }),
 		latestWriting: t({ en: "Latest writing", cs: "Nejnovější články" }),
@@ -86,10 +88,11 @@ const content = {
 		calloutSuccess: t({ en: "Success", cs: "Úspěch" }),
 		calloutCaution: t({ en: "Caution", cs: "Upozornění" }),
 		calloutDanger: t({ en: "Warning", cs: "Varování" }),
-		footer: t({ en: "Built with care and curiosity.", cs: "Postaveno s péčí a zvídavostí." }),
+		footer: t({ en: "Blog content is licensed under CC BY-SA 4.0.", cs: "Obsah blogu je šířen pod licencí CC BY-SA 4.0" }),
 		privacyPolicy: t({ en: "Privacy policy", cs: "Zásady ochrany osobních údajů" }),
 		privacyPolicyDescription: t({ en: "How this website handles your data.", cs: "Jak tento web nakládá s vašimi údaji." }),
 		effectiveDate: t({ en: "Effective date", cs: "Datum účinnosti" }),
+		statisticsLink: t({ en: "Web statistics", cs: "Statistiky webu" }),
 	},
 } satisfies Dictionary;
 
