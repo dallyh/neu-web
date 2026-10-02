@@ -27,7 +27,7 @@ const paths = Object.fromEntries((await getResumes()).map((entry) => [entry.data
 		<h1 class="nb-page-header-title">{ui.about}</h1>
 		<p class="nb-page-header-description">{ui.aboutDescription}</p>
 	</PageHeader>
-	<div class="grid items-start gap-10 lg:grid-cols-[minmax(0,2fr)_minmax(19rem,3fr)]">
+	<div class="grid items-start grid-cols-1 gap-10 lg:grid-cols-[minmax(0,2fr)_minmax(19rem,3fr)]">
 		<section aria-labelledby="about-me-heading" class="nb-card nb-card-secondary nb-card-no-action flex flex-col">
 			<h2 id="about-me-heading" class="mb-5 font-nb-heading text-nb-h2 leading-tight font-bold">
 				{ui.aboutMe}
@@ -38,7 +38,7 @@ const paths = Object.fromEntries((await getResumes()).map((entry) => [entry.data
 			</a>
 		</section>
 		<ContactLinks />
-		<section aria-labelledby="contact-heading" class="col-span-2">
+		<section aria-labelledby="contact-heading" class="lg:col-span-2">
 			<h2 id="contact-heading" class="mb-3 font-nb-heading text-nb-h2 leading-tight font-bold">
 				{ui.contact}
 			</h2>

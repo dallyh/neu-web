@@ -94,6 +94,7 @@ const content = {
 		effectiveDate: t({ en: "Effective date", cs: "Datum účinnosti" }),
 		statisticsLink: t({ en: "Web statistics", cs: "Statistiky webu" }),
 		printMe: t({ en: "Print me!", cs: "Vytiskni si mě!" }),
+		footerNeuStyleText: t({ en: "Like the style? Visit:", cs: "Libí se Vám styl? Navštivte:" }),
 	},
 } satisfies Dictionary;
 

@@ -184,15 +184,6 @@
 	border-color: var(--nb-action-bg);
 }
 
-/* Clone the lowered marker stroke behind each line of wrapped inline text. */
-@utility nb-marker {
-	-webkit-box-decoration-break: clone;
-	box-decoration-break: clone;
-	padding-inline: 0.08em;
-	padding-bottom: 0.08em;
-	box-shadow: inset 0 -0.53em 0 var(--nb-marker-color);
-}
-
 @utility nb-page-header-label {
 	margin-bottom: var(--nb-space-3);
 	font-family: var(--nb-font-mono);
@@ -237,6 +228,40 @@
 	}
 	& :is(code, kbd, samp, pre):not(:where(.not-prose, .not-prose *)) {
 		font-family: var(--nb-font-mono);
+	}
+}
+
+@utility nb-marker-hover {
+	-webkit-box-decoration-break: clone;
+	box-decoration-break: clone;
+
+	padding-inline: 0.08em;
+	padding-bottom: 0.08em;
+
+	background-image: linear-gradient(
+		var(--nb-primary),
+		var(--nb-primary)
+	);
+
+	background-repeat: no-repeat;
+	background-size: 0% 1em;
+	background-position: 0.12em calc(100% - 0.12em);
+
+	transition:
+		background-size 300ms ease-out,
+		color 300ms ease-out;
+
+	&:hover {
+		background-size: calc(100% - 0.12em) 1em;
+		color: var(--nb-on-primary);
+	}
+
+	&:focus-visible {
+		text-decoration-line: underline;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		transition: none;
 	}
 }
 

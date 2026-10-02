@@ -7,12 +7,13 @@ const { locale } = useLocale();
 const policy = (await getPrivacyPolicies()).find((entry) => privacyPolicyLocale(entry) === locale);
 ---
 
-<footer class="mt-8 grid grid-flow-col border-t-[3px] border-nb-ink py-6 font-nb-mono text-nb-meta print:hidden">
+<footer class="mt-8 flex flex-col sm:flex-row justify-between border-t-[3px] border-nb-ink py-6 font-nb-mono text-nb-meta print:hidden">
 	<div class="flex w-full flex-col">
 		<p>© {new Date().getFullYear()} - {ui.name}</p>
 		<p>{ui.footer}</p>
+		<p>{ui.footerNeuStyleText} <a href="https://neubrutalism.com/" target="_blank" class="font-nb-display tracking-widest decoration-1 underline-offset-2 leading-3">neubrutalism<span class="text-nb-accent text-2xl leading-3">.</span>com</a></p>
 	</div>
-	<div class="flex w-full flex-col text-end">
+	<div class="flex w-full flex-col sm:text-end">
 		<a class="underline decoration-1 underline-offset-2" href={rssUrl(locale)}>
 			{ui.rss}
 		</a>
@@ -23,7 +24,6 @@ const policy = (await getPrivacyPolicies()).find((entry) => privacyPolicyLocale(
 			<a class="underline decoration-1 underline-offset-2" href={privacyPolicyUrl(policy)}>
 				{ui.privacyPolicy}
 			</a>
-		)}
-		
+		)}	
 	</div>
 </footer>

@@ -3,10 +3,9 @@ import { locales } from "intlayer";
 import { useIntlayer } from "astro-intlayer";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import ProjectCard from "../../components/portfolio/ProjectCard.astro";
-import FeaturedPosts from "../../components/home/FeaturedPosts.astro";
-import NewestPosts from "../../components/home/NewestPosts.astro";
 import { getEntries } from "../../lib/content";
 import { sectionUrl } from "../../lib/urls";
+import ContentCard from "../../components/ContentCard.astro";
 
 export function getStaticPaths() {
 	return locales.map((locale) => ({ params: { locale } }));
@@ -39,7 +38,25 @@ const sectionHeadingClass = "my-8 mt-16 flex flex-wrap items-center justify-betw
 			</div>
 		</div>
 	</section>
-	<FeaturedPosts entries={featuredPosts} />
+	<section aria-labelledby="featured-posts-heading">
+		<div class={sectionHeadingClass}>
+			<h2 id="featured-posts-heading" class="font-nb-heading text-nb-h2 leading-tight font-bold">
+				{ui.featuredPosts}
+			</h2>
+			<a class="underline decoration-2 underline-offset-4" href={sectionUrl("blog", locale)}>
+				{ui.viewAllArticles} ↗
+			</a>
+		</div>
+		{featuredPosts.length ? (
+			<div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+				{featuredPosts.map((entry, index) => (
+					<ContentCard entry={entry} collection="blog" priority={index === 0} />
+				))}
+			</div>
+		) : (
+			<p>{ui.emptyArticles}</p>
+		)}
+	</section>
 	<section aria-labelledby="work-heading">
 		<div class={sectionHeadingClass}>
 			<h2 id="work-heading" class="font-nb-heading text-nb-h2 leading-tight font-bold">
@@ -59,5 +76,23 @@ const sectionHeadingClass = "my-8 mt-16 flex flex-wrap items-center justify-betw
 			<p>{ui.emptyProjects}</p>
 		)}
 	</section>
-	<NewestPosts entries={newestPosts} />
+	<section aria-labelledby="newest-posts-heading">
+		<div class={sectionHeadingClass}>
+			<h2 id="newest-posts-heading" class="font-nb-heading text-nb-h2 leading-tight font-bold">
+				{ui.latestWriting}
+			</h2>
+			<a class="underline decoration-2 underline-offset-4" href={sectionUrl("blog", locale)}>
+				{ui.viewAllArticles} ↗
+			</a>
+		</div>
+		{newestPosts.length ? (
+			<div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+				{newestPosts.map((entry, index) => (
+					<ContentCard entry={entry} collection="blog" priority={index === 0} />
+				))}
+			</div>
+		) : (
+			<p>{ui.emptyArticles}</p>
+		)}
+	</section>
 </BaseLayout>

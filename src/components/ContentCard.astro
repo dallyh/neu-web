@@ -21,18 +21,19 @@ const href = props.collection === "blog" ? contentUrl("blog", props.entry) : con
 const blogTags = props.collection === "blog" ? await getBlogTags(props.entry) : [];
 ---
 
-<article class:list={["nb-card flex h-full flex-col gap-4"]}>
-	{entry.data.draft && <span class="self-start border-2 border-nb-ink bg-nb-warning px-2 py-1 font-nb-mono text-nb-meta font-bold uppercase text-nb-on-warning">{ui.draft}</span>}
+<article class="nb-card flex h-full flex-col gap-4 relative">
+	{entry.data.draft && <span class="absolute left-2 top-2 border-2 p-2 border-nb-ink bg-nb-warning font-nb-mono text-nb-meta font-bold uppercase text-nb-on-warning">{ui.draft}</span>}
 	{entry.data.image && (
 		<a href={href} class="block overflow-hidden border-2 border-nb-ink">
 			<ContentImage
 				src={entry.data.image}
 				alt={entry.data.imageAlt ?? ""}
-				width={1536}
-				height={1024}
+				width={1200}
+				height={630}
 				loading={props.priority ? "eager" : "lazy"}
 				decoding="async"
-				class="aspect-[3/2] max-h-96 w-full object-cover"
+				fit="contain"
+				class="aspect-1200/630 max-h-96 w-full object-cover"
 			/>
 		</a>
 	)}
@@ -41,7 +42,11 @@ const blogTags = props.collection === "blog" ? await getBlogTags(props.entry) : 
 		<span>{collection === "blog" ? ui.blog : ui.portfolio}</span>
 	</p>
 	<Heading class="font-nb-heading text-nb-h3 leading-tight font-bold">
-		<a class="nb-marker decoration-2 underline-offset-4 hover:underline focus-visible:underline" data-text-marker={entry.data.title} href={href}>
+		<a
+			class="nb-marker-hover"
+			data-text-marker={entry.data.title}
+			href={href}
+		>
 			{entry.data.title}
 		</a>
 	</Heading>

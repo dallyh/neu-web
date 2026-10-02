@@ -27,7 +27,7 @@ const links = [
 ];
 ---
 
-<nav aria-label={ui.pagination} class="mt-12 flex flex-wrap items-center justify-center gap-2 print:hidden">
+<nav aria-label={ui.pagination} class="mt-12 flex flex-wrap items-center justify-center gap-4 print:hidden">
 	{links.slice(0, 2).map(({ href, label, icon }) =>
 		href ? (
 			<a class:list={[controlClass]} href={withTrailingSlash(href)} aria-label={label} title={label}>
