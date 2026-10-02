@@ -161,6 +161,14 @@ getPortfolioUrl(entry);
 
 Do not duplicate this logic in route files.
 
+## Open Graph images
+
+Static PNG endpoints live at `/{locale}/og.png` and `/{locale}/blog/{slug}/og.png`. They are prerendered with Satori and Sharp at 1200 × 630, using separate website and blog TSX templates in `src/lib/open-graph/`. The templates use Satori's JSX runtime; React and browser hydration are unnecessary.
+
+Images use the light-theme color tokens from `tokens.css` and local Fontsource WOFF files for Bebas Neue, Plus Jakarta Sans, and DM Sans, including Latin Extended fallback glyphs. WOFF is required because Satori does not accept the WOFF2 files used by Astro's Fonts API. Fonts are cached in memory during rendering, with no remote font requests for OG generation.
+
+Website labels and hero copy come from Intlayer; blog titles, descriptions, and dates come from the localized content entry. `BaseLayout` defaults to the current locale's website image and emits absolute Open Graph and Twitter image URLs. Blog detail pages override it with their post image. Post images follow the same centralized draft filtering as detail routes, so production builds do not publish draft images. `PUBLIC_SITE_URL` must be configured for production builds.
+
 ## Draft behavior
 
 During production builds, drafts must be excluded.

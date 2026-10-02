@@ -1,14 +1,15 @@
 ---
-import { getEntries, getTranslations, contentUrl } from "../../../lib/content";
-import { sectionUrl } from "../../../lib/urls";
+import { getEntries, getTranslations, contentUrl } from "../../../../lib/content";
+import { sectionUrl } from "../../../../lib/urls";
 import { render } from "astro:content";
 import { useIntlayer } from "astro-intlayer";
-import BaseLayout from "../../../layouts/BaseLayout.astro";
-import Tag from "../../../components/ui/Tag.astro";
-import MdxContent from "../../../components/mdx/MdxContent.astro";
-import PageHeader from "../../../components/ui/PageHeader.astro";
-import ContentImage from "../../../components/ui/ContentImage.astro";
-import { getBlogTags, tagLabel, tagUrl } from "../../../lib/tags";
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import Tag from "../../../../components/ui/Tag.astro";
+import MdxContent from "../../../../components/mdx/MdxContent.astro";
+import PageHeader from "../../../../components/ui/PageHeader.astro";
+import ContentImage from "../../../../components/ui/ContentImage.astro";
+import { getBlogTags, tagLabel, tagUrl } from "../../../../lib/tags";
+import { blogOgUrl } from "../../../../lib/open-graph/urls";
 
 export async function getStaticPaths() {
 	return (await getEntries("blog")).map((entry) => ({ params: { locale: entry.data.locale, slug: entry.data.slug }, props: { entry } }));
@@ -21,7 +22,15 @@ const paths = Object.fromEntries(translations.map((sibling) => [sibling.data.loc
 const tags = await getBlogTags(entry);
 ---
 
-<BaseLayout title={`${entry.data.title} · ${ui.name}`} description={entry.data.description} paths={paths} fallbackPath="/blog/" articleDate={entry.data.publishedAt}>
+<BaseLayout
+	title={`${entry.data.title} · ${ui.name}`}
+	description={entry.data.description}
+	paths={paths}
+	fallbackPath="/blog/"
+	articleDate={entry.data.publishedAt}
+	ogImage={blogOgUrl(entry)}
+	ogImageAlt={entry.data.title}
+>
 	<article>
 		<PageHeader>
 			<p class="nb-page-header-label">{ui.blog}</p>

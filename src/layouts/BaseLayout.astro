@@ -6,6 +6,8 @@ import Footer from "../components/layout/Footer.astro";
 import LocaleSwitcher from "../components/layout/LocaleSwitcher.astro";
 import ThemeToggle from "../components/layout/ThemeToggle.astro";
 import { rssUrl } from "../lib/urls";
+import { websiteOgUrl } from "../lib/open-graph/urls";
+import { ogSize } from "../lib/open-graph/theme";
 import "../styles/tailwind.css";
 
 interface Props {
@@ -14,11 +16,14 @@ interface Props {
 	paths?: Record<string, string>;
 	fallbackPath?: string;
 	articleDate?: Date;
+	ogImage?: string;
+	ogImageAlt?: string;
 }
-const { title, description, paths = {}, fallbackPath = "/", articleDate } = Astro.props;
+const { title, description, paths = {}, fallbackPath = "/", articleDate, ogImage, ogImageAlt = title } = Astro.props;
 const { locale, availableLocales } = useLocale();
 const ui = useIntlayer("site");
 const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url).href;
+const imageUrl = new URL(ogImage ?? websiteOgUrl(locale), Astro.site ?? Astro.url).href;
 ---
 
 <!doctype html>
@@ -44,6 +49,16 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url).href;
 		<meta property="og:title" content={title} />
 		<meta property="og:description" content={description} />
 		<meta property="og:url" content={canonical} />
+		<meta property="og:image" content={imageUrl} />
+		<meta property="og:image:type" content="image/png" />
+		<meta property="og:image:width" content={String(ogSize.width)} />
+		<meta property="og:image:height" content={String(ogSize.height)} />
+		<meta property="og:image:alt" content={ogImageAlt} />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content={title} />
+		<meta name="twitter:description" content={description} />
+		<meta name="twitter:image" content={imageUrl} />
+		<meta name="twitter:image:alt" content={ogImageAlt} />
 		{articleDate && <meta property="article:published_time" content={articleDate.toISOString()} />}
 		<script is:inline>
 			try {
@@ -64,7 +79,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url).href;
 			<main id="main">
 				<slot />
 			</main>
+			<Footer />
 		</div>
-		<Footer />
 	</body>
 </html>
