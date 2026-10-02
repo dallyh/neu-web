@@ -161,6 +161,12 @@ getPortfolioUrl(entry);
 
 Do not duplicate this logic in route files.
 
+## Analytics
+
+`BaseLayout` includes the self-hosted Umami tracker only in production builds with `PREVIEW=false`. The typed public `UMAMI_URL` and `UMAMI_SITE_ID` settings default to the existing analytics instance and website ID. Set them, along with `PREVIEW`, during the build; changing runtime variables cannot change a prerendered tracking script. Docker supports both build arguments and Coolify BuildKit secret injection for these values.
+
+`src/lib/umami/auth.ts` and `client.ts` provide server-only `getToken()` and `getPageViews(path)` helpers. Login is lazy and shared across concurrent calls; expired tokens are renewed on one HTTP 401 retry. Requests have a ten-second timeout, validate their responses, and log errors with `console.error` without logging credentials or tokens. Page-view queries use Umami's `path` filter and return a primitive `number`, throwing on failure rather than reporting a false zero. `UMAMI_USERNAME` and `UMAMI_PASSWORD` are optional server secrets needed only when querying the API, and can be supplied to the Node container at runtime. No API login runs just from importing a helper or building the site.
+
 ## Open Graph images
 
 Static PNG endpoints live at `/{locale}/og.png` and `/{locale}/blog/{slug}/og.png`. They are prerendered with Satori and Sharp at 1200 × 630, using separate website and blog TSX templates in `src/lib/open-graph/`. The templates use Satori's JSX runtime; React and browser hydration are unnecessary.

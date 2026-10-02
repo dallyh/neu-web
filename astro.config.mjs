@@ -59,6 +59,11 @@ export default defineConfig({
 	],
 	env: {
 		schema: {
+			UMAMI_URL: envField.string({ context: "client", access: "public", url: true, default: "https://analytics.daliborhon.dev" }),
+			UMAMI_SITE_ID: envField.string({ context: "client", access: "public", default: "7e04370d-ecba-4fd8-8d71-2d50880d0d59" }),
+			PREVIEW: envField.boolean({ context: "server", access: "public", default: false }),
+			UMAMI_USERNAME: envField.string({ context: "server", access: "secret", optional: true }),
+			UMAMI_PASSWORD: envField.string({ context: "server", access: "secret", optional: true }),
 			PUBLIC_HCAPTCHA_SITE_KEY: envField.string({ context: "client", access: "public", optional: true }),
 			HCAPTCHA_SECRET: envField.string({ context: "server", access: "secret", optional: true }),
 			RESEND_API_KEY: envField.string({ context: "server", access: "secret", optional: true }),

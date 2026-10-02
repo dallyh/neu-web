@@ -1,6 +1,8 @@
 ---
 import { useIntlayer, useLocale } from "astro-intlayer";
 import { Font } from "astro:assets";
+import { UMAMI_URL, UMAMI_SITE_ID } from "astro:env/client";
+import { PREVIEW } from "astro:env/server";
 import Header from "../components/layout/Header.astro";
 import Footer from "../components/layout/Footer.astro";
 import LocaleSwitcher from "../components/layout/LocaleSwitcher.astro";
@@ -24,6 +26,8 @@ const { locale, availableLocales } = useLocale();
 const ui = useIntlayer("site");
 const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url).href;
 const imageUrl = new URL(ogImage ?? websiteOgUrl(locale), Astro.site ?? Astro.url).href;
+const analyticsEnabled = !PREVIEW && !import.meta.env.DEV;
+const analyticsScript = `${UMAMI_URL.replace(/\/$/, "")}/script.js`;
 ---
 
 <!doctype html>
@@ -60,6 +64,7 @@ const imageUrl = new URL(ogImage ?? websiteOgUrl(locale), Astro.site ?? Astro.ur
 		<meta name="twitter:image" content={imageUrl} />
 		<meta name="twitter:image:alt" content={ogImageAlt} />
 		{articleDate && <meta property="article:published_time" content={articleDate.toISOString()} />}
+		{analyticsEnabled && <script is:inline defer src={analyticsScript} data-website-id={UMAMI_SITE_ID} />}
 		<script is:inline>
 			try {
 				const theme = localStorage.getItem("theme");
