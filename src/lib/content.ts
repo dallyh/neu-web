@@ -9,10 +9,10 @@ export function contentUrl<C extends CollectionName>(collection: C, entry: Entry
 	return withTrailingSlash(getLocalizedUrl(`/${collection}/${entry.data.slug}/`, entry.data.locale as LocalesValues));
 }
 
-export async function getEntries<C extends CollectionName>(collection: C, locale?: string): Promise<Entry<C>[]> {
+export async function getEntries<C extends CollectionName>(collection: C, locale?: string, options: { includeDrafts?: boolean } = {}): Promise<Entry<C>[]> {
 	const entries = await getCollection(collection);
 	return entries
-		.filter((entry) => (import.meta.env.DEV || !entry.data.draft) && (!locale || entry.data.locale === locale))
+		.filter((entry) => ((import.meta.env.DEV && options.includeDrafts !== false) || !entry.data.draft) && (!locale || entry.data.locale === locale))
 		.sort((a, b) => {
 			const aDate = collection === "blog" ? (a as Entry<"blog">).data.publishedAt : (a as Entry<"portfolio">).data.date;
 			const bDate = collection === "blog" ? (b as Entry<"blog">).data.publishedAt : (b as Entry<"portfolio">).data.date;

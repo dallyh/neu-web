@@ -18,12 +18,14 @@
     "dependencies": {
         "@astrojs/mdx": "^8.0.2",
         "@astrojs/node": "^11.1.6",
+        "@astrojs/rss": "^4.0.19",
         "astro": "^7.3.5",
         "astro-expressive-code": "^0.44.2",
         "astro-iconset": "^0.0.6",
         "astro-intlayer": "^9.5.10",
         "intlayer": "^9.5.10",
         "octokit": "^5.0.5",
+        "sanitize-html": "^2.18.0",
         "sharp": "^0.35.5"
     },
     "allowScripts": {
@@ -34,6 +36,7 @@
         "@astrojs/check": "^0.9.10",
         "@tailwindcss/vite": "^4.3.3",
         "@types/node": "^24.19.0",
+        "@types/sanitize-html": "^2.16.2",
         "prettier": "^3.9.9",
         "prettier-plugin-astro": "^1.1.0",
         "prettier-plugin-tailwindcss": "^0.8.1",

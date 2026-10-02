@@ -1,6 +1,7 @@
 ---
 import { useIntlayer, useLocale } from "astro-intlayer";
 import { getPrivacyPolicies, privacyPolicyLocale, privacyPolicyUrl } from "../../lib/privacy";
+import { rssUrl } from "../../lib/urls";
 const ui = useIntlayer("site");
 const { locale } = useLocale();
 const policy = (await getPrivacyPolicies()).find((entry) => privacyPolicyLocale(entry) === locale);
@@ -9,6 +10,9 @@ const policy = (await getPrivacyPolicies()).find((entry) => privacyPolicyLocale(
 <footer class="mx-auto mt-20 flex w-full max-w-[90rem] flex-wrap justify-between gap-4 border-t-[3px] border-nb-ink px-[clamp(1rem,3vw,3rem)] py-6 font-nb-mono text-nb-meta print:hidden">
 	<span>{ui.name}</span>
 	<span>{ui.footer}</span>
+	<a class="underline decoration-2 underline-offset-4" href={rssUrl(locale)}>
+		{ui.rss}
+	</a>
 	{policy && (
 		<a class="underline decoration-2 underline-offset-4" href={privacyPolicyUrl(policy)}>
 			{ui.privacyPolicy}
