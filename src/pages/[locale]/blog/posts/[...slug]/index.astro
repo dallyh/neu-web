@@ -1,18 +1,18 @@
 ---
-import { getEntries, getTranslations, contentUrl } from "../../../../lib/content";
-import { sectionUrl } from "../../../../lib/urls";
+import { getEntries, getTranslations, contentUrl, getSlugWithoutLocale } from "../../../../../lib/content";
+import { sectionUrl } from "../../../../../lib/urls";
 import { render } from "astro:content";
 import { useIntlayer } from "astro-intlayer";
-import BaseLayout from "../../../../layouts/BaseLayout.astro";
-import Tag from "../../../../components/ui/Tag.astro";
-import MdxContent from "../../../../components/mdx/MdxContent.astro";
-import PageHeader from "../../../../components/ui/PageHeader.astro";
-import ContentImage from "../../../../components/ui/ContentImage.astro";
-import { getBlogTags, tagLabel, tagUrl } from "../../../../lib/tags";
-import { blogOgUrl } from "../../../../lib/open-graph/urls";
+import BaseLayout from "../../../../../layouts/BaseLayout.astro";
+import Tag from "../../../../../components/ui/Tag.astro";
+import MdxContent from "../../../../../components/mdx/MdxContent.astro";
+import PageHeader from "../../../../../components/ui/PageHeader.astro";
+import ContentImage from "../../../../../components/ui/ContentImage.astro";
+import { getBlogTags, tagLabel, tagUrl } from "../../../../../lib/tags";
+import { blogOgUrl } from "../../../../../lib/open-graph/urls";
 
 export async function getStaticPaths() {
-	return (await getEntries("blog")).map((entry) => ({ params: { locale: entry.data.locale, slug: entry.data.slug }, props: { entry } }));
+	return (await getEntries("blog")).map((entry) => ({ params: { locale: entry.data.locale, slug: getSlugWithoutLocale(entry.id) }, props: { entry } }));
 }
 const { entry } = Astro.props;
 const { Content, headings } = await render(entry);

@@ -1,6 +1,6 @@
 # Editorial Content
 
-The first published entries describe this website itself. Their English and Czech MDX files share `translationKey` values while using localized slugs. New entries should follow that pattern; set `draft: true` to exclude an entry from production routes and indexes.
+The first published entries describe this website itself. Their English and Czech MDX files share `translationKey` values while keeping stable English filename-based slugs. New entries should follow that pattern; set `draft: true` to exclude an entry from production routes and indexes.
 
 Blog, portfolio, and resume content live in Astro Content Collections as MDX.
 
@@ -10,15 +10,15 @@ Blog, portfolio, and resume content live in Astro Content Collections as MDX.
 src/content/
   blog/
     en/
-      astro-content-collections.mdx
+      2026-09-28-astro-content-collections.mdx
     cs/
-      kolekce-obsahu-astro.mdx
+      2026-09-28-astro-content-collections.mdx
 
   portfolio/
     en/
       project-name.mdx
     cs/
-      nazev-projektu.mdx
+      project-name.mdx
   resume/
     en/
       resume.mdx
@@ -30,7 +30,7 @@ src/content/
   tags.json
 ```
 
-The physical filename may be localized. Do not depend on identical filenames for translation matching.
+Blog and portfolio filenames define their public slugs. Keep English filenames, including date prefixes for migrated posts, stable and the same across locales. Translation matching still uses `translationKey`, not filenames.
 
 ## Shared identity
 
@@ -41,7 +41,6 @@ English:
 ```yaml
 locale: en
 translationKey: astro-content-collections
-slug: astro-content-collections
 ```
 
 Czech:
@@ -49,7 +48,6 @@ Czech:
 ```yaml
 locale: cs
 translationKey: astro-content-collections
-slug: kolekce-obsahu-v-astro
 ```
 
 ## Blog frontmatter
@@ -62,7 +60,6 @@ title: "Content collections in Astro"
 description: "..."
 locale: en
 translationKey: astro-content-collections
-slug: astro-content-collections
 publishedAt: 2026-09-28
 updatedAt: 2026-09-28
 tags: [architecture, internet]
@@ -85,7 +82,6 @@ title: "Example Project"
 description: "A concise localized project summary."
 locale: en
 translationKey: example-project
-slug: example-project
 date: 2026-09-28
 tags:
     - astro
@@ -191,7 +187,9 @@ For human-language concepts, the stable tag ID is the key and its displayed labe
 
 ## URLs
 
-Use the explicit localized `slug` from frontmatter.
+Blog and portfolio slugs are generated from the content entry ID through `getSlugWithoutLocale()`, which removes only the leading locale folder. Their schemas have no `slug` property. For example, `cs/2025-02-12-deploy-libsql-server-astro-zerops` produces `/cs/blog/posts/2025-02-12-deploy-libsql-server-astro-zerops/`. Project detail URLs use `/{locale}/portfolio/{filename}/`. Keep filenames and trailing slashes stable so historical analytics and bookmarks continue to match. Blog and portfolio indexes retain their existing pagination routes.
+
+Privacy-policy entries continue to use their explicit localized `slug` frontmatter.
 
 Do not expose `translationKey` as the URL unless they intentionally happen to be the same.
 

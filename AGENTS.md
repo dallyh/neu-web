@@ -121,10 +121,10 @@ Examples:
 - `/cs/`
 - `/en/blog/`
 - `/cs/blog/`
-- `/en/blog/example-post/`
-- `/cs/blog/ukazkovy-clanek/`
+- `/en/blog/posts/2025-02-12-example-post/`
+- `/cs/blog/posts/2025-02-12-example-post/`
 - `/en/portfolio/example-project/`
-- `/cs/portfolio/ukazkovy-projekt/`
+- `/cs/portfolio/example-project/`
 
 Use Intlayer's locale utilities and Astro integration rather than manually parsing locale URL prefixes when an official helper exists.
 
@@ -157,20 +157,18 @@ src/
 
 Localized siblings share a stable `translationKey`.
 
-The URL slug may differ by locale.
+Blog and portfolio URL slugs are derived from `entry.id` with the locale folder removed. Keep the English filenames stable across locales to preserve historical analytics URLs; blog detail routes include `/blog/posts/`.
 
 Example:
 
 ```yaml
 translationKey: content-collections-in-astro
-slug: astro-content-collections
 ```
 
 and:
 
 ```yaml
 translationKey: content-collections-in-astro
-slug: kolekce-obsahu-v-astro
 ```
 
 Never use the translated slug as the cross-locale identity.
@@ -189,7 +187,6 @@ Blog entries should support at minimum:
 - `description`
 - `locale`
 - `translationKey`
-- `slug`
 - `publishedAt`
 - `updatedAt` optional
 - `tags` (an array of references to the `tags` collection)
@@ -203,7 +200,6 @@ Portfolio entries should support at minimum:
 - `description`
 - `locale`
 - `translationKey`
-- `slug`
 - `date`
 - `tags`
 - `featured`

@@ -1,5 +1,5 @@
 ---
-import { getEntries, getTranslations, contentUrl } from "../../../lib/content";
+import { getEntries, getTranslations, contentUrl, getSlugWithoutLocale } from "../../../lib/content";
 import { sectionUrl } from "../../../lib/urls";
 import { render } from "astro:content";
 import { useIntlayer } from "astro-intlayer";
@@ -10,7 +10,7 @@ import PageHeader from "../../../components/ui/PageHeader.astro";
 import ContentImage from "../../../components/ui/ContentImage.astro";
 
 export async function getStaticPaths() {
-	return (await getEntries("portfolio")).map((entry) => ({ params: { locale: entry.data.locale, slug: entry.data.slug }, props: { entry } }));
+	return (await getEntries("portfolio")).map((entry) => ({ params: { locale: entry.data.locale, slug: getSlugWithoutLocale(entry.id) }, props: { entry } }));
 }
 const { entry } = Astro.props;
 const { Content, headings } = await render(entry);

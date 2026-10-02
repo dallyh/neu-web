@@ -134,10 +134,10 @@ Use:
 ```text
 translationKey = permanent conceptual identity
 locale         = language of this specific entry
-slug           = localized URL segment
+entry.id       = locale folder + stable English filename
 ```
 
-This allows naturally translated URLs without losing a stable relationship between sibling translations.
+`getSlugWithoutLocale(entry.id)` removes the locale folder to derive blog and portfolio URLs. Stable English filenames preserve legacy analytics paths. Blog detail URLs use `/{locale}/blog/posts/{filename}/`, and project detail URLs use `/{locale}/portfolio/{filename}/`. Translated siblings are still resolved through `translationKey`; no blog or portfolio `slug` frontmatter is needed.
 
 ## Helpers
 
@@ -169,7 +169,7 @@ Do not duplicate this logic in route files.
 
 ## Open Graph images
 
-Static PNG endpoints live at `/{locale}/og.png` and `/{locale}/blog/{slug}/og.png`. They are prerendered with Satori and Sharp at 1200 × 630, using separate website and blog TSX templates in `src/lib/open-graph/`. The templates use Satori's JSX runtime; React and browser hydration are unnecessary.
+Static PNG endpoints live at `/{locale}/og.png` and `/{locale}/blog/posts/{slug}/og.png`. They are prerendered with Satori and Sharp at 1200 × 630, using separate website and blog TSX templates in `src/lib/open-graph/`. The templates use Satori's JSX runtime; React and browser hydration are unnecessary.
 
 Images use the light-theme color tokens from `tokens.css` and local Fontsource WOFF files for Bebas Neue, Plus Jakarta Sans, and DM Sans, including Latin Extended fallback glyphs. WOFF is required because Satori does not accept the WOFF2 files used by Astro's Fonts API. Fonts are cached in memory during rendering, with no remote font requests for OG generation.
 

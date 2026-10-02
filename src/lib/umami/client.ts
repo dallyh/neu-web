@@ -7,7 +7,7 @@ const statsSchema = z.object({ pageviews: z.number().int().nonnegative() });
 /** All-time page views for an exact pathname, including its trailing slash. */
 export async function getPageViews(path: string): Promise<number> {
 	try {
-		if (!path.startsWith("/")) throw new Error("Pass a pathname such as /en/blog/example/ to getPageViews().");
+		if (!path.startsWith("/")) throw new Error("Pass a pathname such as /en/blog/posts/example/ to getPageViews().");
 		const endpoint = new URL(`${UMAMI_URL.replace(/\/$/, "")}/api/websites/${encodeURIComponent(UMAMI_SITE_ID)}/stats`);
 		endpoint.search = new URLSearchParams({ path, startAt: "0", endAt: Date.now().toString() }).toString();
 

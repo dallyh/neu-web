@@ -1,14 +1,14 @@
 import type { APIRoute, GetStaticPaths } from "astro";
 import type { CollectionEntry } from "astro:content";
 import { getIntlayer } from "intlayer";
-import { getEntries } from "../../../../lib/content";
-import { BlogTemplate } from "../../../../lib/open-graph/BlogTemplate";
-import { renderOpenGraph } from "../../../../lib/open-graph/render";
+import { getEntries, getSlugWithoutLocale } from "../../../../../lib/content";
+import { BlogTemplate } from "../../../../../lib/open-graph/BlogTemplate";
+import { renderOpenGraph } from "../../../../../lib/open-graph/render";
 
 export const prerender = true;
 export const getStaticPaths: GetStaticPaths = async () =>
 	(await getEntries("blog")).map((entry) => ({
-		params: { locale: entry.data.locale, slug: entry.data.slug },
+		params: { locale: entry.data.locale, slug: getSlugWithoutLocale(entry.id) },
 		props: { entry },
 	}));
 
