@@ -197,7 +197,7 @@
 
 @utility nb-page-header-title {
 	margin-bottom: var(--nb-space-4);
-	font-family: var(--nb-font-heading);
+	font-family: var(--nb-font-display);
 	font-size: var(--nb-h1);
 	font-weight: 700;
 	line-height: var(--nb-leading-tight);
