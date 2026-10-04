@@ -23,6 +23,17 @@ const components = { h1: Heading1, h2: Heading2, h3: Heading3, h4: Heading4, h5:
 ---
 
 <div class="prose dark:prose-invert print:prose-neutral nb-prose max-w-none">
-	{showTableOfContents && <TableOfContents {headings} />}
-	<Content {components} />
+	<div class="grid grid-cols-1 gap-8 xl:grid-cols-[minmax(0,1fr)_18rem]">
+		{showTableOfContents && (
+			<aside class="not-prose order-1 xl:order-2">
+				<div class="xl:sticky xl:top-2">
+					<TableOfContents {headings} />
+				</div>
+			</aside>
+		)}
+
+		<article class="order-2 min-w-0 xl:order-1 [&>h1:first-child]:mt-0">
+			<Content {components} />
+		</article>
+	</div>
 </div>

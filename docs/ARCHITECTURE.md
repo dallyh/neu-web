@@ -161,6 +161,10 @@ getPortfolioUrl(entry);
 
 Do not duplicate this logic in route files.
 
+## Blog comments
+
+`src/components/blog/Comments.astro` loads Giscus automatically into a clipped preview with a gradient fading to the theme’s page background. The localized “Show comments” button reveals its full height and removes the overlay. The collapsed widget is inert and hidden from assistive technology until expanded. It preserves the existing `dallyh/daliborhon.dev` repository, Comments category, and pathname mapping so historical blog URLs keep their discussions. UI labels come from Intlayer; the widget receives the active locale. A document attribute observer and system-theme listener keep its light/dark theme synchronized without requiring a custom theme event. Loading failures offer another attempt and a direct GitHub Discussions link, which also works without JavaScript. Comments are hidden when printing.
+
 ## Analytics
 
 `BaseLayout` includes the self-hosted Umami tracker only in production builds with `PREVIEW=false`. The typed public `UMAMI_URL` and `UMAMI_SITE_ID` settings default to the existing analytics instance and website ID. Set them, along with `PREVIEW`, during the build; changing runtime variables cannot change a prerendered tracking script. Docker supports both build arguments and Coolify BuildKit secret injection for these values.

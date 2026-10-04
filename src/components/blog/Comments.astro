@@ -1,0 +1,170 @@
+---
+import { useIntlayer, useLocale } from "astro-intlayer";
+
+const ui = useIntlayer("site");
+const { locale } = useLocale();
+---
+
+<section class="mt-12 border-t-[3px] border-nb-ink/25 pt-6 print:hidden" aria-labelledby="comments-heading">
+	<h2 id="comments-heading" class="font-nb-heading text-nb-h2 font-bold">
+		{ui.comments}
+	</h2>
+	<giscus-comments class="flex flex-col" data-locale={locale} data-loading-label={ui.commentsLoading} data-error-label={ui.commentsFailed} data-loaded-label={ui.commentsLoaded}>
+		<a class="inline-block underline decoration-2 underline-offset-4 mb-4" href="https://github.com/dallyh/daliborhon.dev/discussions">
+			{ui.commentsOnGithub}
+		</a>
+		<div class="relative" data-comments-preview hidden>
+			<div id="comments-content" tabindex="-1" data-comments-content inert aria-hidden="true">
+				<div class="giscus"></div>
+			</div>
+			<div class="pointer-events-none absolute inset-0" data-comments-fade aria-hidden="true"></div>
+			<div class="absolute inset-x-0 bottom-4 flex justify-center px-4" data-comments-controls>
+				<button type="button" class="nb-action nb-action-primary text-sm w-fit" aria-controls="comments-content" aria-expanded="false" data-comments-button hidden>
+					{ui.showComments}
+				</button>
+			</div>
+		</div>
+	</giscus-comments>
+</section>
+
+<script>
+	class Comments extends HTMLElement {
+		private button!: HTMLButtonElement;
+		private container!: HTMLDivElement;
+		private iframe?: HTMLIFrameElement;
+		private observer?: MutationObserver;
+		private themeObserver?: MutationObserver;
+		private timeout?: number;
+		private ready = false;
+		private systemTheme = matchMedia("(prefers-color-scheme: dark)");
+
+		private getTheme = (): "light" | "dark" => {
+			const theme = document.documentElement.dataset.theme;
+			return theme === "dark" || (!theme && this.systemTheme.matches) ? "dark" : "light";
+		};
+
+		private updateTheme = () => {
+			this.iframe?.contentWindow?.postMessage({ giscus: { setConfig: { theme: this.getTheme() } } }, "https://giscus.app");
+		};
+
+		private loaded = () => {
+			window.clearTimeout(this.timeout);
+			this.container.setAttribute("aria-busy", "false");
+			this.ready = true;
+			this.button.disabled = false;
+			this.button.textContent = this.buttonLabel;
+			this.updateTheme();
+		};
+
+		private failed = () => {
+			window.clearTimeout(this.timeout);
+			this.observer?.disconnect();
+			this.iframe?.removeEventListener("load", this.loaded);
+			this.container.hidden = true;
+			this.container.setAttribute("aria-busy", "false");
+			this.button.disabled = false;
+			this.button.textContent = this.buttonLabel;
+			this.button.setAttribute("aria-expanded", "false");
+		};
+
+		private buttonLabel = "";
+
+		private showComments = () => {
+			if (!this.ready) {
+				this.loadComments();
+				return;
+			}
+			const moveFocus = document.activeElement === this.button;
+			this.dataset.expanded = "true";
+			this.container.inert = false;
+			this.container.removeAttribute("aria-hidden");
+			this.button.setAttribute("aria-expanded", "true");
+			if (moveFocus) this.container.focus({ preventScroll: true });
+		};
+
+		private loadComments = () => {
+			this.ready = false;
+			this.button.disabled = true;
+			this.button.textContent = this.dataset.loadingLabel ?? "";
+			this.container.hidden = false;
+			this.container.setAttribute("aria-busy", "true");
+			this.container.replaceChildren(Object.assign(document.createElement("div"), { className: "giscus" }));
+
+			this.observer = new MutationObserver(() => {
+				const iframe = this.container.querySelector<HTMLIFrameElement>(".giscus-frame");
+				if (!iframe) return;
+				this.iframe = iframe;
+				iframe.title = this.dataset.loadedLabel ?? "";
+				iframe.addEventListener("load", this.loaded, { once: true });
+				this.observer?.disconnect();
+			});
+			this.observer.observe(this.container, { childList: true, subtree: true });
+
+			const script = document.createElement("script");
+			script.src = "https://giscus.app/client.js";
+			script.async = true;
+			script.crossOrigin = "anonymous";
+			Object.assign(script.dataset, {
+				repo: "dallyh/daliborhon.dev",
+				repoId: "R_kgDOH42J2g",
+				category: "Comments",
+				categoryId: "DIC_kwDOH42J2s4Cl4Zg",
+				mapping: "pathname",
+				strict: "0",
+				reactionsEnabled: "0",
+				emitMetadata: "0",
+				theme: this.getTheme(),
+				lang: this.dataset.locale,
+				inputPosition: "bottom",
+				loading: "eager",
+			});
+			script.addEventListener("error", this.failed, { once: true });
+			this.timeout = window.setTimeout(this.failed, 30_000);
+			this.container.appendChild(script);
+		};
+
+		connectedCallback() {
+			this.button = this.querySelector<HTMLButtonElement>("[data-comments-button]")!;
+			this.container = this.querySelector<HTMLDivElement>("[data-comments-content]")!;
+			this.buttonLabel = this.button.textContent ?? "";
+			this.button.hidden = false;
+			this.querySelector<HTMLElement>("[data-comments-preview]")!.hidden = false;
+			this.button.addEventListener("click", this.showComments);
+			this.themeObserver = new MutationObserver(this.updateTheme);
+			this.themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+			this.systemTheme.addEventListener("change", this.updateTheme);
+			this.loadComments();
+		}
+
+		disconnectedCallback() {
+			window.clearTimeout(this.timeout);
+			this.observer?.disconnect();
+			this.themeObserver?.disconnect();
+			this.button.removeEventListener("click", this.showComments);
+			this.iframe?.removeEventListener("load", this.loaded);
+			this.systemTheme.removeEventListener("change", this.updateTheme);
+		}
+	}
+
+	if (!customElements.get("giscus-comments")) customElements.define("giscus-comments", Comments);
+</script>
+
+<style>
+	[data-comments-preview] {
+		height: 10rem;
+		overflow: hidden;
+	}
+
+	[data-comments-fade] {
+		background: linear-gradient(to bottom, transparent, var(--nb-bg) 85%);
+	}
+
+	giscus-comments[data-expanded="true"] [data-comments-preview] {
+		height: auto;
+		overflow: visible;
+	}
+
+	giscus-comments[data-expanded="true"] :is([data-comments-fade], [data-comments-controls]) {
+		display: none;
+	}
+</style>

@@ -12,6 +12,7 @@ import { getBlogTags, tagLabel, tagUrl } from "../../../../../lib/tags";
 import { blogOgUrl } from "../../../../../lib/open-graph/urls";
 import ViewCount from "../../../../../components/blog/ViewCount.astro";
 import ReadingStats from "../../../../../components/blog/ReadingStats.astro";
+import Comments from "../../../../../components/blog/Comments.astro";
 
 export async function getStaticPaths() {
 	return (await getEntries("blog")).map((entry) => ({ params: { locale: entry.data.locale, slug: getSlugWithoutLocale(entry.id) }, props: { entry } }));
@@ -35,15 +36,23 @@ const tags = await getBlogTags(entry);
 >
 	<article>
 		<PageHeader>
-			<p class="nb-page-header-label">{ui.blog}</p>
-			<h1 class="nb-page-header-title">{entry.data.title}</h1>
-			<p class="nb-page-header-description">{entry.data.description}</p>
+			<div class="flex flex-col gap-4 xl:flex-row xl:items-center">
+				<div class="xl:max-w-[60%]">
+					<p class="nb-page-header-label">{ui.blog}</p>
+					<h1 class="nb-page-header-title">{entry.data.title}</h1>
+					<p class="nb-page-header-description">{entry.data.description}</p>
+				</div>
+
+				{entry.data.image && (
+					<div class="xl:flex xl:flex-1 xl:justify-end">
+						<figure class="w-full overflow-hidden nb-card p-0 nb-shadow xl:max-w-md">
+							<ContentImage src={entry.data.image} alt={entry.data.imageAlt ?? ""} width={1200} height={600} class="h-auto w-full object-cover" />
+						</figure>
+					</div>
+				)}
+			</div>
 		</PageHeader>
-		{entry.data.image && (
-			<figure class="mt-8 overflow-hidden border-2 border-nb-ink">
-				<ContentImage src={entry.data.image} alt={entry.data.imageAlt ?? ""} width={1536} height={1024} class="max-h-[34rem] w-full object-cover" />
-			</figure>
-		)}
+
 		<div class="my-6 mb-12 flex flex-col flex-wrap gap-0 font-nb-mono text-nb-meta">
 			<span>
 				{ui.published}: <time datetime={entry.data.publishedAt.toISOString()}>{new Intl.DateTimeFormat(entry.data.locale, { dateStyle: "long" }).format(entry.data.publishedAt)}</time>
@@ -61,6 +70,7 @@ const tags = await getBlogTags(entry);
 			</div>
 		</div>
 		<MdxContent {Content} {headings} showTableOfContents={entry.data.showTableOfContents} />
+		<Comments />
 	</article>
 	<a class="mt-6 inline-block font-bold underline decoration-2 underline-offset-4 print:hidden" href={sectionUrl("blog", entry.data.locale)}>
 		← {ui.backToBlog}
