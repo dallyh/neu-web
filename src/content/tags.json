@@ -1,27 +1,5 @@
 [
     {
-        "id": "architecture",
-        "label": {
-            "en": "Architecture",
-            "cs": "Architektura"
-        },
-        "description": {
-            "en": "Notes on how digital projects are structured and built.",
-            "cs": "Poznámky o tom, jak jsou digitální projekty navržené a postavené."
-        }
-    },
-    {
-        "id": "internet",
-        "label": {
-            "en": "Internet",
-            "cs": "Internet"
-        },
-        "description": {
-            "en": "Internet stuff.",
-            "cs": "Internetové věci a networking"
-        }
-    },
-    {
         "id": "astro",
         "label": {
             "en": "Astro",

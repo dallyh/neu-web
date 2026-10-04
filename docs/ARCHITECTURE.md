@@ -93,6 +93,8 @@ Use browser-side JavaScript only for genuinely interactive behavior such as a pe
 
 The localized About and CV pages are prerendered from the `resume` MDX collection. The form uses a small browser script to call a typed Astro Action, which runs on the standalone Astro Node adapter. The action validates fields, verifies hCaptcha server-side, and sends plain-text mail through Resend. Astro's `env.schema` declares the contact configuration: the public hCaptcha site key is built into the prerendered page, while the Resend key and hCaptcha secret stay in the server environment. The CV hides site navigation when printed.
 
+The contact form renders hCaptcha explicitly after its API-ready callback, using the active locale and the site's light/dark theme. Theme changes recreate the widget, resetting its verification while preserving form fields; a system color-scheme change applies only when no explicit site theme is selected. Recreation is deferred while a contact submission is in progress.
+
 ## Data flow
 
 ### UI strings

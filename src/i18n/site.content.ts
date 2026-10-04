@@ -44,10 +44,6 @@ const content = {
 		contactCaptchaFailed: t({ en: "Please complete the verification and try again.", cs: "Dokončete prosím ověření a zkuste to znovu." }),
 		contactFailed: t({ en: "The message could not be sent. Please try again later.", cs: "Zprávu se nepodařilo odeslat. Zkuste to prosím později." }),
 		contactUnavailable: t({ en: "The contact form is not configured yet.", cs: "Kontaktní formulář zatím není nastavený." }),
-		contactTestMode: t({
-			en: "Local test mode: hCaptcha verification uses a test token. No checkbox is needed.",
-			cs: "Místní testovací režim: hCaptcha používá testovací token. Zaškrtávací políčko není potřeba.",
-		}),
 		contactEmailSubject: t({ en: "New website contact message", cs: "Nová zpráva z webového formuláře" }),
 		tags: t({ en: "Tags", cs: "Štítky" }),
 		browseTags: t({ en: "Browse topics", cs: "Procházet témata" }),

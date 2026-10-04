@@ -33,7 +33,7 @@ const paths = Object.fromEntries((await getResumes()).map((entry) => [entry.data
 				{ui.aboutMe}
 			</h2>
 			<p class="mb-8 text-lg">{resume.data.summary}</p>
-			<a class="nb-action nb-action-primary nb-shadow self-start -rotate-12" href={sectionUrl("about/cv", locale)}>
+			<a class="nb-action nb-action-primary nb-shadow self-end -rotate-12 -translate-y-3" href={sectionUrl("about/cv", locale)}>
 				{ui.viewCv}
 			</a>
 		</section>

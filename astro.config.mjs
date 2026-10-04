@@ -15,6 +15,18 @@ const { PUBLIC_SITE_URL } = loadEnv(process.env.NODE_ENV ?? "", process.cwd(), "
 export default defineConfig({
 	site: PUBLIC_SITE_URL,
 	adapter: node({ mode: "standalone" }),
+	security: {
+		allowedDomains: [
+			{
+				hostname: "**.daliborhon.dev",
+				protocol: "https",
+			},
+			{
+				hostname: "daliborhon.dev",
+				protocol: "https",
+			},
+		],
+	},
 	fonts: [
 		{
 			provider: fontProviders.fontsource(),

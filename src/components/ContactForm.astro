@@ -4,7 +4,6 @@ import { PUBLIC_HCAPTCHA_SITE_KEY } from "astro:env/client";
 
 const ui = useIntlayer("site");
 const { locale } = useLocale();
-const isDev = import.meta.env.DEV;
 const siteKey = PUBLIC_HCAPTCHA_SITE_KEY?.trim();
 const fieldClass = "nb-field w-full border-2 border-nb-ink bg-nb-surface p-3 text-nb-text focus-visible:outline-[3px] focus-visible:outline-nb-focus focus-visible:outline-offset-2";
 ---
@@ -48,33 +47,31 @@ const fieldClass = "nb-field w-full border-2 border-nb-ink bg-nb-surface p-3 tex
 		<textarea class={fieldClass} id="contact-message" name="message" rows="7" maxlength="5000" aria-describedby="contact-message-feedback" data-contact-field required></textarea>
 		<p id="contact-message-feedback" class="nb-field-feedback mt-2 text-sm font-medium" data-field-feedback aria-live="polite" hidden></p>
 	</div>
-	{isDev ? (
-		<>
-			<input type="hidden" name="h-captcha-response" value="10000000-aaaa-bbbb-cccc-000000000001" />
-			<p class="border-2 border-nb-ink bg-nb-surface-muted p-3 text-sm">{ui.contactTestMode}</p>
-		</>
-	) : siteKey ? (
-		<div class="max-w-full z-50 border-2 border-nb-ink bg-white p-2">
-			<div class="h-captcha" data-sitekey={siteKey} data-theme="light"></div>
+	{siteKey ? (
+		<div class="max-w-full z-50 p-2">
+			<div class="h-captcha" data-sitekey={siteKey} data-locale={locale}></div>
 		</div>
 	) : (
 		<p>{ui.contactUnavailable}</p>
 	)}
 	<div class="flex flex-wrap items-center gap-6">
-		<button class="nb-action nb-action-secondary border-nb-ink disabled:cursor-not-allowed disabled:opacity-60" type="submit" disabled={!isDev && !siteKey}>
+		<button class="nb-action nb-action-secondary border-nb-ink disabled:cursor-not-allowed disabled:opacity-60" type="submit" disabled={!siteKey}>
 			{ui.contactSend}
 		</button>
 		<p role="status" aria-live="polite" data-contact-status></p>
 	</div>
 </form>
 
-{!isDev && siteKey && <script is:inline src={`https://js.hcaptcha.com/1/api.js?hl=${locale}`} async defer></script>}
-
 <script>
 	import { actions, isInputError } from "astro:actions";
 
 	interface HCaptchaWindow extends Window {
-		hcaptcha?: { reset: () => void };
+		hcaptcha?: {
+			render: (container: HTMLElement, options: { sitekey: string; theme: "light" | "dark"; hl: string }) => string;
+			remove: (widgetId: string) => void;
+			reset: (widgetId?: string) => void;
+		};
+		contactCaptchaReady?: () => void;
 	}
 
 	const form = document.querySelector<HTMLFormElement>("[data-contact-form]");
@@ -82,6 +79,46 @@ const fieldClass = "nb-field w-full border-2 border-nb-ink bg-nb-surface p-3 tex
 	const submit = form?.querySelector<HTMLButtonElement>('button[type="submit"]');
 	const fields = Array.from(form?.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>("[data-contact-field]") ?? []);
 	const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+	const captchaWindow = window as HCaptchaWindow;
+	const captchaContainer = form?.querySelector<HTMLElement>(".h-captcha");
+	const systemTheme = matchMedia("(prefers-color-scheme: dark)");
+	let captchaReady = false;
+	let captchaId: string | undefined;
+	let captchaTheme: "light" | "dark" | undefined;
+	let sending = false;
+
+	function renderCaptcha(): void {
+		if (!captchaReady || !captchaWindow.hcaptcha || !captchaContainer?.dataset.sitekey || sending) return;
+		const selectedTheme = document.documentElement.dataset.theme;
+		const theme = selectedTheme === "dark" || (!selectedTheme && systemTheme.matches) ? "dark" : "light";
+		if (captchaId !== undefined && captchaTheme === theme) return;
+		if (captchaId !== undefined) captchaWindow.hcaptcha.remove(captchaId);
+		captchaContainer.dataset.theme = theme;
+		captchaId = captchaWindow.hcaptcha.render(captchaContainer, {
+			sitekey: captchaContainer.dataset.sitekey,
+			theme,
+			hl: captchaContainer.dataset.locale ?? "",
+		});
+		captchaTheme = theme;
+	}
+
+	if (captchaContainer) {
+		captchaWindow.contactCaptchaReady = () => {
+			captchaReady = true;
+			renderCaptcha();
+		};
+		const themeObserver = new MutationObserver(renderCaptcha);
+		themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+		systemTheme.addEventListener("change", renderCaptcha);
+		const script = document.createElement("script");
+		script.src = "https://js.hcaptcha.com/1/api.js?render=explicit&onload=contactCaptchaReady";
+		script.async = true;
+		script.defer = true;
+		script.addEventListener("error", () => {
+			if (status) status.textContent = form?.dataset.messageFailed ?? "";
+		});
+		document.head.appendChild(script);
+	}
 
 	function fieldError(field: HTMLInputElement | HTMLTextAreaElement): string | null {
 		const value = field.value.trim();
@@ -149,6 +186,7 @@ const fieldClass = "nb-field w-full border-2 border-nb-ink bg-nb-surface p-3 tex
 			return;
 		}
 
+		sending = true;
 		submit.disabled = true;
 		status.textContent = form.dataset.messageSending ?? "";
 		try {
@@ -177,8 +215,10 @@ const fieldClass = "nb-field w-full border-2 border-nb-ink bg-nb-surface p-3 tex
 		} catch {
 			status.textContent = form.dataset.messageFailed ?? "";
 		} finally {
+			sending = false;
 			submit.disabled = false;
-			(window as HCaptchaWindow).hcaptcha?.reset();
+			captchaWindow.hcaptcha?.reset(captchaId);
+			renderCaptcha();
 		}
 	});
 </script>
