@@ -1,0 +1,17 @@
+---
+/* Credits: https://www.thomasledoux.be/blog/using-server-islands-actions-view-counter */
+import { useIntlayer } from "astro-intlayer";
+import { getPageViews } from "../../lib/umami/client";
+
+interface Props {
+	pathname: string;
+}
+
+const { pathname } = Astro.props;
+const ui = useIntlayer("site");
+const viewCount = await getPageViews(pathname);
+---
+
+<span>
+	{ui.viewCount}: {viewCount}
+</span>

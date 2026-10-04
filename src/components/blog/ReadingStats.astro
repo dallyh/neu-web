@@ -1,0 +1,39 @@
+---
+import calculateReadingTime from "reading-time";
+import { useIntlayer } from "astro-intlayer";
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+	post: CollectionEntry<"blog">;
+}
+
+const { post } = Astro.props;
+
+interface ReadingStats {
+	minutes: number;
+	words: number;
+}
+
+const getReadingStats = (text: string): ReadingStats | undefined => {
+	if (!text || !text.length) return undefined;
+	try {
+		const { minutes, words } = calculateReadingTime(text);
+		if (words > 0) {
+			return {
+				minutes: Math.max(1, Math.ceil(minutes)),
+				words,
+			};
+		}
+		return undefined;
+	} catch {
+		return undefined;
+	}
+};
+
+const stats = getReadingStats(post.body ?? "");
+const ui = useIntlayer("site");
+---
+
+<span>
+	{ui.readingTime}: {stats?.minutes} {ui.minutesLabel(stats?.minutes ?? 0)} / {stats?.words} {ui.wordsLabel(stats?.words ?? 0)}
+</span>

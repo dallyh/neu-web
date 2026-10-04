@@ -1,4 +1,4 @@
-import { t, type Dictionary } from "intlayer";
+import { plural, t, type Dictionary } from "intlayer";
 
 const content = {
 	key: "site",
@@ -54,9 +54,10 @@ const content = {
 		skip: t({ en: "Skip to content", cs: "Přejít na obsah" }),
 		theme: t({ en: "Toggle color theme", cs: "Přepnout barevný motiv" }),
 		heroTitle: t({ en: "Hi there! <br/> I'm Dalibor.", cs: "Zdravím! <br/> Jsem Dalibor." }),
-		heroText: t({ 
-			en: "A Business Consultant who is a passionate analyst and also a technology enthusiast. This is my small space on the web.", 
-			cs: "Business Consultant který je zapálený analytik a zároveň i nadšenec do technologií. Tohle je mé malé místo na internetu." }),
+		heroText: t({
+			en: "A Business Consultant who is a passionate analyst and also a technology enthusiast. This is my small space on the web.",
+			cs: "Business Consultant který je zapálený analytik a zároveň i nadšenec do technologií. Tohle je mé malé místo na internetu.",
+		}),
 		selectedWork: t({ en: "Selected work", cs: "Vybrané projekty" }),
 		featuredPosts: t({ en: "Featured posts", cs: "Doporučené články" }),
 		latestWriting: t({ en: "Latest writing", cs: "Nejnovější články" }),
@@ -95,6 +96,47 @@ const content = {
 		statisticsLink: t({ en: "Web statistics", cs: "Statistiky webu" }),
 		printMe: t({ en: "Print me!", cs: "Vytiskni si mě!" }),
 		footerNeuStyleText: t({ en: "Like the style? Visit:", cs: "Libí se Vám styl? Navštivte:" }),
+		postsLabel: t({
+			cs: plural({
+				one: "příspěvek",
+				few: "příspěvky",
+				many: "příspěvků",
+				other: "příspěvků",
+			}),
+
+			en: plural({
+				one: "post",
+				other: "posts",
+			}),
+		}),
+		minutesLabel: t({
+			cs: plural({
+				one: "minuta",
+				few: "minuty",
+				many: "minut",
+				other: "minut",
+			}),
+
+			en: plural({
+				one: "minute",
+				other: "minutes",
+			}),
+		}),
+		wordsLabel: t({
+			cs: plural({
+				one: "slovo",
+				few: "slova",
+				many: "slov",
+				other: "slov",
+			}),
+
+			en: plural({
+				one: "word",
+				other: "words",
+			}),
+		}),
+		viewCount: t({ en: "Page views", cs: "Počet zobrazení" }),
+		readingTime: t({ en: "Reading time", cs: "Doba čtení" }),
 	},
 } satisfies Dictionary;
 

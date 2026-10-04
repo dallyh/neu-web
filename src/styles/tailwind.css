@@ -4,6 +4,32 @@
 
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
+@utility skeleton {
+	border-radius: var(--nb-radius);
+	background-color: var(--nb-surface-muted);
+	color: transparent;
+	text-shadow: none;
+	animation: nb-skeleton-pulse calc(var(--nb-duration) * 10) ease-in-out infinite;
+
+	@media (prefers-reduced-motion: reduce) {
+		animation: none;
+	}
+
+	@media print {
+		animation: none;
+	}
+}
+
+@keyframes nb-skeleton-pulse {
+	0%,
+	100% {
+		background-color: var(--nb-surface-muted);
+	}
+	50% {
+		background-color: color-mix(in srgb, var(--nb-surface-muted), var(--nb-ink) 12%);
+	}
+}
+
 @theme inline {
 	--color-nb-bg: var(--nb-bg);
 	--color-nb-surface: var(--nb-surface);
@@ -291,23 +317,6 @@
 	:root[data-theme="dark"] .nb-theme-icon-moon {
 		display: none;
 	}
-	.resume-logo-inverted {
-		display: none;
-	}
-	:root[data-theme="dark"] .resume-logo-themed {
-		display: none;
-	}
-	:root[data-theme="dark"] .resume-logo-inverted {
-		display: block;
-	}
-	@media (prefers-color-scheme: dark) {
-		:root:not([data-theme]) .resume-logo-themed {
-			display: none;
-		}
-		:root:not([data-theme]) .resume-logo-inverted {
-			display: block;
-		}
-	}
 	:root[data-theme="dark"] .nb-theme-icon-sun {
 		display: block;
 	}
@@ -360,7 +369,6 @@
 			padding: var(--nb-space-6);
 		}
 	}
-
 	.nb-card:hover:not(.nb-card-no-action) {
 		transform: translate(-2px, -2px);
 		box-shadow: calc(var(--nb-shadow-offset-md) + 4px) calc(var(--nb-shadow-offset-md) + 4px) 0 0 var(--nb-interactive-shadow-color, var(--nb-shadow-color));

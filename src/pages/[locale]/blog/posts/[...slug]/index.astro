@@ -10,6 +10,8 @@ import PageHeader from "../../../../../components/ui/PageHeader.astro";
 import ContentImage from "../../../../../components/ui/ContentImage.astro";
 import { getBlogTags, tagLabel, tagUrl } from "../../../../../lib/tags";
 import { blogOgUrl } from "../../../../../lib/open-graph/urls";
+import ViewCount from "../../../../../components/blog/ViewCount.astro";
+import ReadingStats from "../../../../../components/blog/ReadingStats.astro";
 
 export async function getStaticPaths() {
 	return (await getEntries("blog")).map((entry) => ({ params: { locale: entry.data.locale, slug: getSlugWithoutLocale(entry.id) }, props: { entry } }));
@@ -42,11 +44,17 @@ const tags = await getBlogTags(entry);
 				<ContentImage src={entry.data.image} alt={entry.data.imageAlt ?? ""} width={1536} height={1024} class="max-h-[34rem] w-full object-cover" />
 			</figure>
 		)}
-		<div class="my-6 mb-12 flex flex-col flex-wrap gap-4 font-nb-mono text-nb-meta">
+		<div class="my-6 mb-12 flex flex-col flex-wrap gap-0 font-nb-mono text-nb-meta">
 			<span>
 				{ui.published}: <time datetime={entry.data.publishedAt.toISOString()}>{new Intl.DateTimeFormat(entry.data.locale, { dateStyle: "long" }).format(entry.data.publishedAt)}</time>
 			</span>
-			<div class="flex flex-wrap gap-2">
+			<ViewCount server:defer pathname={Astro.url.pathname}>
+				<span slot="fallback" class="skeleton max-w-fit">
+					{ui.viewCount}: 9999
+				</span>
+			</ViewCount>
+			<ReadingStats post={entry} />
+			<div class="flex flex-wrap gap-2 mt-2">
 				{tags.map((tag) => (
 					<Tag label={tagLabel(tag, entry.data.locale)} href={tagUrl(tag, entry.data.locale)} />
 				))}

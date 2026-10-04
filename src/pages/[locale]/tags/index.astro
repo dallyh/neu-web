@@ -3,8 +3,10 @@ import { locales } from "intlayer";
 import { useIntlayer } from "astro-intlayer";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import PageHeader from "../../../components/ui/PageHeader.astro";
-import { getTags, tagDescription, tagLabel, tagUrl } from "../../../lib/tags";
+import { getPostsByTag, getTags, tagDescription, tagLabel, tagUrl } from "../../../lib/tags";
 import { sectionUrl } from "../../../lib/urls";
+import type { CollectionEntry } from "astro:content";
+import { getCollection } from "astro:content";
 
 export function getStaticPaths() {
 	return locales.map((locale) => ({ params: { locale } }));
@@ -13,22 +15,60 @@ const locale = Astro.params.locale!;
 const ui = useIntlayer("site");
 const tags = (await getTags()).sort((a, b) => tagLabel(a, locale).localeCompare(tagLabel(b, locale), locale));
 const paths = Object.fromEntries(locales.map((target) => [target, sectionUrl("tags", target)]));
+
+type TagsWithPosts = {
+	tag: CollectionEntry<"tags">;
+	posts: number;
+};
+
+const tagsWithPosts: TagsWithPosts[] = await Promise.all(
+	tags.map(async (tag) => {
+		const count = (await getPostsByTag(tag.id, locale))?.length ?? 0;
+		return {
+			tag,
+			posts: count,
+		};
+	}),
+);
+
+const postCount = (await getCollection("blog"))?.length ?? 0;
+const maxCount = Math.max(...tagsWithPosts.map((t) => t.posts));
+
+const capitalizeFirst = (value: string) =>
+  value.charAt(0).toUpperCase() + value.slice(1);
 ---
 
 <BaseLayout title={`${ui.tags} · ${ui.name}`} description={ui.browseTags} paths={paths} fallbackPath="/tags/">
-	<PageHeader class="my-8 mb-12">
+	<PageHeader class="my-8 mb-12 nb-card nb-card-warning nb-card-no-action">
 		<h1 class="nb-page-header-title">{ui.tags}</h1>
-		<p class="nb-page-header-description">{ui.browseTags}</p>
+		<p class="nb-page-header-description">
+			{ui.tags}: {tags.length} | {capitalizeFirst(ui.postsLabel(postCount))}: {postCount}
+		</p>
 	</PageHeader>
 	<div class="grid grid-cols-[repeat(auto-fit,minmax(min(100%,21rem),1fr))] gap-8">
-		{tags.map((tag) => (
-			<article class="nb-card">
+		{tagsWithPosts.map((data) => (
+			<article class="nb-card flex flex-col">
 				<h2 class="mb-4 font-nb-heading text-nb-h3 leading-tight font-bold">
-					<a class="underline decoration-2 underline-offset-4" href={tagUrl(tag, locale)}>
-						{tagLabel(tag, locale)}
+					<a class="underline decoration-2 underline-offset-4" href={tagUrl(data.tag, locale)}>
+						{tagLabel(data.tag, locale)}
 					</a>
 				</h2>
-				<p>{tagDescription(tag, locale)}</p>
+				<p class="mb-2">{tagDescription(data.tag, locale)}</p>
+
+				<div class="text-xs mt-auto">
+					<progress
+						class="overflow-hidden
+					h-2
+                 [&::-webkit-progress-bar]:bg-nb-surface-muted
+                 [&::-webkit-progress-value]:bg-nb-primary
+                 [&::-moz-progress-bar]:bg-red-500 w-full"
+						value={Math.max((data.posts / maxCount) * 100)}
+						max="100"
+					/>
+					<p class="text-sm">
+						<span class="font-bold">{data.posts}</span> {ui.postsLabel(data.posts)}
+					</p>
+				</div>
 			</article>
 		))}
 	</div>
