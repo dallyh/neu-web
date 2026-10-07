@@ -2,6 +2,7 @@
 import { locales } from "intlayer";
 import { useIntlayer } from "astro-intlayer";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import ContentGrid from "../../components/ui/ContentGrid.astro";
 import ProjectCard from "../../components/portfolio/ProjectCard.astro";
 import { getEntries } from "../../lib/content";
 import { sectionUrl } from "../../lib/urls";
@@ -48,11 +49,11 @@ const sectionHeadingClass = "my-8 mt-16 flex flex-wrap items-center justify-betw
 			</a>
 		</div>
 		{featuredPosts.length ? (
-			<div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+			<ContentGrid>
 				{featuredPosts.map((entry, index) => (
 					<ContentCard entry={entry} collection="blog" priority={index === 0} />
 				))}
-			</div>
+			</ContentGrid>
 		) : (
 			<p>{ui.emptyArticles}</p>
 		)}
@@ -67,11 +68,11 @@ const sectionHeadingClass = "my-8 mt-16 flex flex-wrap items-center justify-betw
 			</a>
 		</div>
 		{featuredProjects.length ? (
-			<div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+			<ContentGrid>
 				{featuredProjects.map((entry, index) => (
 					<ProjectCard entry={entry} priority={index === 0} />
 				))}
-			</div>
+			</ContentGrid>
 		) : (
 			<p>{ui.emptyProjects}</p>
 		)}
@@ -86,11 +87,11 @@ const sectionHeadingClass = "my-8 mt-16 flex flex-wrap items-center justify-betw
 			</a>
 		</div>
 		{newestPosts.length ? (
-			<div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+			<ContentGrid>
 				{newestPosts.map((entry, index) => (
 					<ContentCard entry={entry} collection="blog" priority={index === 0} />
 				))}
-			</div>
+			</ContentGrid>
 		) : (
 			<p>{ui.emptyArticles}</p>
 		)}

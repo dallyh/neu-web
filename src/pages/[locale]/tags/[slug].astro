@@ -2,6 +2,7 @@
 import { locales } from "intlayer";
 import { useIntlayer } from "astro-intlayer";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
+import ContentGrid from "../../../components/ui/ContentGrid.astro";
 import ContentCard from "../../../components/ContentCard.astro";
 import PageHeader from "../../../components/ui/PageHeader.astro";
 import { getPostsByTag, getTags, tagDescription, tagLabel, tagUrl } from "../../../lib/tags";
@@ -26,11 +27,11 @@ const paths = Object.fromEntries(locales.map((target) => [target, tagUrl(tag, ta
 	</PageHeader>
 	<h2 class="mb-8 font-nb-heading text-nb-h2 leading-tight font-bold">{ui.taggedPosts}</h2>
 	{posts.length ? (
-		<div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+		<ContentGrid>
 			{posts.map((entry, index) => (
 				<ContentCard entry={entry} collection="blog" priority={index === 0} />
 			))}
-		</div>
+		</ContentGrid>
 	) : (
 		<p>{ui.noTaggedPosts}</p>
 	)}

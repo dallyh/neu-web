@@ -4,13 +4,13 @@ interface Props {
 	href?: string;
 }
 const { label, href } = Astro.props;
-const classes = "inline-flex bg-nb-secondary text-nb-on-secondary max-w-fit max-w-content min-h-[1.9rem] items-center border-2 border-nb-ink px-2.5 py-1 font-nb-mono text-nb-meta leading-none font-bold";
+const classes = "min-h-11 inline-flex max-w-fit max-w-content min-h-[1.9rem] items-center border-2 border-nb-ink px-2.5 py-1 font-nb-mono text-nb-meta leading-none font-bold";
 ---
 
 {href ? (
-	<a class:list={[classes, "min-h-11 no-underline hover:bg-nb-primary hover:text-nb-on-primary"]} href={href}>
+	<a class:list={[classes, "nb-action shadow-nb-sm nb-action-secondary no-underline hover:bg-nb-primary hover:text-nb-on-primary"]} href={href}>
 		{label}
 	</a>
 ) : (
-	<span class={classes}>{label}</span>
+	<span class:list={[classes, "nb-card shadow-nb-sm nb-card-secondary  hover:bg-nb-primary hover:text-nb-on-primary"]}>{label}</span>
 )}

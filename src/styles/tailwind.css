@@ -264,10 +264,7 @@
 	padding-inline: 0.08em;
 	padding-bottom: 0.08em;
 
-	background-image: linear-gradient(
-		var(--nb-primary),
-		var(--nb-primary)
-	);
+	background-image: linear-gradient(var(--nb-primary), var(--nb-primary));
 
 	background-repeat: no-repeat;
 	background-size: 0% 1em;

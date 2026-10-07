@@ -1,9 +1,9 @@
 /* Fixes bad calcs so the radius is not rounded */
 
 .expressive-code .frame {
-    --header-border-radius: var(--ec-brdRad) !important;
+	--header-border-radius: var(--ec-brdRad) !important;
 }
 
 .expressive-code pre {
-    border-radius: var(--ec-brdRad) !important;
+	border-radius: var(--ec-brdRad) !important;
 }

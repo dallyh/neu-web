@@ -4,6 +4,7 @@ import type { CollectionEntry } from "astro:content";
 import { locales } from "intlayer";
 import { useIntlayer } from "astro-intlayer";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
+import ContentGrid from "../../../components/ui/ContentGrid.astro";
 import ContentCard from "../../../components/ContentCard.astro";
 import Pagination from "../../../components/ui/Pagination.astro";
 import PageHeader from "../../../components/ui/PageHeader.astro";
@@ -48,11 +49,11 @@ const paths = Object.fromEntries(locales.map((target) => [target, listingPageUrl
 		</nav>
 	)}
 	{page.data.length ? (
-		<div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+		<ContentGrid>
 			{page.data.map((entry, index) => (
 				<ContentCard entry={entry} collection="blog" headingLevel={2} priority={index === 0} />
 			))}
-		</div>
+		</ContentGrid>
 	) : (
 		<p>{ui.emptyArticles}</p>
 	)}

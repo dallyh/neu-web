@@ -7,5 +7,5 @@ export const contactLinks: {
 } = {
 	github: "https://github.com/dallyh",
 	linkedin: "https://www.linkedin.com/in/dalibor-hon",
-	email: "contact@daliborhon.dev"
+	email: "contact@daliborhon.dev",
 };

@@ -9,10 +9,10 @@ import GitHubLanguages from "./portfolio/GitHubLanguages.astro";
 import ContentImage from "./ui/ContentImage.astro";
 
 type Props =
-	| { entry: CollectionEntry<"blog">; collection: "blog"; priority?: boolean; headingLevel?: 2 | 3 }
-	| { entry: CollectionEntry<"portfolio">; collection: "portfolio"; priority?: boolean; headingLevel?: 2 | 3; githubData?: GitHubProjectData };
+	| { entry: CollectionEntry<"blog">; collection: "blog"; priority?: boolean; headingLevel?: 2 | 3; class?: string }
+	| { entry: CollectionEntry<"portfolio">; collection: "portfolio"; priority?: boolean; headingLevel?: 2 | 3; githubData?: GitHubProjectData; class?: string };
 const props = Astro.props;
-const { entry, collection } = props;
+const { entry, collection, class: className } = props;
 const Heading = props.headingLevel === 2 ? "h2" : "h3";
 const ui = useIntlayer("site");
 const { locale } = useLocale();
@@ -21,7 +21,7 @@ const href = props.collection === "blog" ? contentUrl("blog", props.entry) : con
 const blogTags = props.collection === "blog" ? await getBlogTags(props.entry) : [];
 ---
 
-<article class="nb-card flex h-full flex-col gap-4 relative">
+<article class:list={["nb-card flex h-full flex-col gap-4 relative", className]}>
 	{entry.data.draft && <span class="absolute left-2 top-2 border-2 p-2 border-nb-ink bg-nb-warning font-nb-mono text-nb-meta font-bold uppercase text-nb-on-warning">{ui.draft}</span>}
 	{entry.data.image && (
 		<a href={href} class="block overflow-hidden border-2 border-nb-ink">
@@ -42,11 +42,7 @@ const blogTags = props.collection === "blog" ? await getBlogTags(props.entry) : 
 		<span>{collection === "blog" ? ui.blog : ui.portfolio}</span>
 	</p>
 	<Heading class="font-nb-heading text-nb-h3 leading-tight font-bold">
-		<a
-			class="nb-marker-hover"
-			data-text-marker={entry.data.title}
-			href={href}
-		>
+		<a class="nb-marker-hover" data-text-marker={entry.data.title} href={href}>
 			{entry.data.title}
 		</a>
 	</Heading>

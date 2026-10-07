@@ -72,6 +72,8 @@ Actions use `nb-action` directly on links and buttons, and content cards use `nb
 
 `nb-card` also supplies the shared border, square corners, surface/text colors, responsive padding, and focus-within outline for content, contact, and tag cards. Keep layout classes and accent color overrides on individual cards; do not repeat their shared structural styles.
 
+`src/components/ui/ContentGrid.astro` owns the shared card-list layout: one column by default, two at `md`, and three at `lg`, with `gap-8`. Homepage sections, blog and portfolio indexes, tag results, and the tags index place their own cards in its default slot. Pages retain data fetching, card props, heading levels, image priority, and empty states. The optional `class` prop supports additional layout classes.
+
 Astro's Fonts API uses the Fontsource provider to self-host Bebas Neue, Plus Jakarta Sans, DM Sans, and JetBrains Mono. `BaseLayout.astro` registers the font variables, and the typography tokens in `tokens.css` map them to display, heading, body, and mono roles. The configured Latin and Latin Extended subsets cover English and Czech pages. Production builds require access to Fontsource when the font cache is empty.
 
 ## Rendering philosophy

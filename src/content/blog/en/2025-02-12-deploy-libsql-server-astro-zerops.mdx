@@ -164,8 +164,8 @@ After deployment of the `libsqld` service, we need to push the database schema u
 
 For this we first need to connect to the [VPN](https://docs.zerops.io/references/vpn) provided by Zerops, so we can access the remote database server. You can connect to the VPN using `zcli vpn up`. Run the command in the terminal and then select the `astro-libsql` project. If the connection fails, make sure that you have properly installed [Wireguard](https://www.wireguard.com/) which is required for the VPN connection to be estabilished.
 
-<Callout type="caution" >
-Before the push, make sure that the `ASTRO_DB_REMOTE_URL` is set in your Astro project. It should be set to the URL of the `libsqld` service, which in this case is `http://libsqld:8080`.
+<Callout type="caution">
+	Before the push, make sure that the `ASTRO_DB_REMOTE_URL` is set in your Astro project. It should be set to the URL of the `libsqld` service, which in this case is `http://libsqld:8080`.
 </Callout>
 
 After the VPN is connected, push the database schema to the remote database:
@@ -174,8 +174,11 @@ After the VPN is connected, push the database schema to the remote database:
 npm run astro db push --remote
 ```
 
-<Callout type="note" title="Running commands with Powershell" >
-Most Astro projects already have the `astro` command defined in `package.json`. In the Astro DB's [documentation](https://docs.astro.build/en/guides/astro-db/#pushing-table-schemas) we are guided to run the `push` command using `npm` as follows: `npm run astro db push --remote`. This does not work properly with Powershell, because the `--remote` flag is silently dropped. If you're executing commands from `package.json` with Powershell, you should escape them like so `npm run astro db push -- --remote` See [this](https://www.lloydatkinson.net/posts/2022/powershell-npm-scripts-and-silently-dropped-arguments/) article for more info.
+<Callout type="note" title="Running commands with Powershell">
+	Most Astro projects already have the `astro` command defined in `package.json`. In the Astro DB's [documentation](https://docs.astro.build/en/guides/astro-db/#pushing-table-schemas) we are guided to run the
+	`push` command using `npm` as follows: `npm run astro db push --remote`. This does not work properly with Powershell, because the `--remote` flag is silently dropped. If you're executing commands from
+	`package.json` with Powershell, you should escape them like so `npm run astro db push -- --remote` See [this](https://www.lloydatkinson.net/posts/2022/powershell-npm-scripts-and-silently-dropped-arguments/)
+	article for more info.
 </Callout>
 
 #### Seeding the Database

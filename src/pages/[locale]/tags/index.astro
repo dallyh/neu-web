@@ -2,6 +2,7 @@
 import { locales } from "intlayer";
 import { useIntlayer } from "astro-intlayer";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
+import ContentGrid from "../../../components/ui/ContentGrid.astro";
 import PageHeader from "../../../components/ui/PageHeader.astro";
 import { getPostsByTag, getTags, tagDescription, tagLabel, tagUrl } from "../../../lib/tags";
 import { sectionUrl } from "../../../lib/urls";
@@ -34,8 +35,7 @@ const tagsWithPosts: TagsWithPosts[] = await Promise.all(
 const postCount = (await getCollection("blog"))?.length ?? 0;
 const maxCount = Math.max(...tagsWithPosts.map((t) => t.posts));
 
-const capitalizeFirst = (value: string) =>
-  value.charAt(0).toUpperCase() + value.slice(1);
+const capitalizeFirst = (value: string) => value.charAt(0).toUpperCase() + value.slice(1);
 ---
 
 <BaseLayout title={`${ui.tags} · ${ui.name}`} description={ui.browseTags} paths={paths} fallbackPath="/tags/">
@@ -45,7 +45,7 @@ const capitalizeFirst = (value: string) =>
 			{ui.tags}: {tags.length} | {capitalizeFirst(ui.postsLabel(postCount))}: {postCount}
 		</p>
 	</PageHeader>
-	<div class="grid grid-cols-[repeat(auto-fit,minmax(min(100%,21rem),1fr))] gap-8">
+	<ContentGrid>
 		{tagsWithPosts.map((data) => (
 			<article class="nb-card flex flex-col">
 				<h2 class="mb-4 font-nb-heading text-nb-h3 leading-tight font-bold">
@@ -71,5 +71,5 @@ const capitalizeFirst = (value: string) =>
 				</div>
 			</article>
 		))}
-	</div>
+	</ContentGrid>
 </BaseLayout>
