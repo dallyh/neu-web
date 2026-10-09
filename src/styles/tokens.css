@@ -46,7 +46,9 @@
 
 	/* Hard depth */
 	--nb-shadow-color: var(--nb-ink);
+	--nb-shadow-offset-sm: 3px;
 	--nb-shadow-offset-md: 5px;
+	--nb-shadow-offset-lg: 8px;
 	--nb-shadow-sm: 3px 3px 0 0 var(--nb-shadow-color);
 	--nb-shadow-md: 5px 5px 0 0 var(--nb-shadow-color);
 	--nb-shadow-lg: 8px 8px 0 0 var(--nb-shadow-color);
@@ -172,6 +174,8 @@
 		--nb-shadow-sm: 2px 2px 0 0 var(--nb-shadow-color);
 		--nb-shadow-md: 4px 4px 0 0 var(--nb-shadow-color);
 		--nb-shadow-lg: 6px 6px 0 0 var(--nb-shadow-color);
+		--nb-shadow-offset-sm: 2px;
 		--nb-shadow-offset-md: 4px;
+		--nb-shadow-offset-lg: 6px;
 	}
 }

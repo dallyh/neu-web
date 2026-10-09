@@ -8,15 +8,17 @@ const ui = useIntlayer("site");
 const { locale } = useLocale();
 const path = getPathWithoutLocale(Astro.url.pathname);
 const section = path.startsWith("/about/cv") ? "cv" : path.startsWith("/about") ? "about" : path.startsWith("/blog") || path.startsWith("/tags") ? "blog" : path.startsWith("/portfolio") ? "portfolio" : "";
-const navLinkClass = "nb-action nb-action-accent border-nb-ink w-full px-3 py-2 text-sm lg:w-auto";
+const navLinkClass = "nb-action nb-action-accent nb-action-anim-shadow shadow-nb-offset-sm border-nb-ink w-full px-3 py-2 text-sm lg:w-auto";
 ---
 
 <header class="mt-2 mb-8 flex flex-wrap items-center gap-4 nb-card nb-card-no-action p-4 max-lg:mb-10 print:hidden" data-site-header>
-	<a class="mr-auto inline-flex items-center gap-2 font-nb-heading font-bold no-underline" href={sectionUrl("", locale)}>
-		<span class="text-2xl leading-none text-nb-accent" aria-hidden="true">
-			✳
+	<a class="mr-auto inline-flex items-center gap-2 no-underline" href={sectionUrl("", locale)}>
+		<span class="nb-card shadow-nb-offset-sm hover:nb-card-primary transition-colors duration-nb ease-nb p-1" aria-hidden="true">
+			<Icon name="dh-logo" width={32} height={18} aria-hidden="true" />
 		</span>
-		{ui.name}
+		<span class="font-nb-display nb-marker-hover ml-2 text-4xl mt-2.5 h-fit tracking-wider">
+			{ui.name}
+		</span>
 	</a>
 	<button
 		class="nb-menu-toggle group inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center border-2 border-nb-ink bg-nb-primary p-2 text-nb-on-primary hover:bg-nb-secondary lg:hidden"
