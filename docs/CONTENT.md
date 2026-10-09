@@ -1,139 +1,140 @@
-# Editorial Content
+# Content Collections
 
-The first published entries describe this website itself. Their English and Czech MDX files share `translationKey` values while keeping stable English filename-based slugs. New entries should follow that pattern; set `draft: true` to exclude an entry from production routes and indexes.
+`src/content.config.ts` defines six collections using Astro Content Collections and Zod. This document describes the active schemas; UI strings remain in `src/i18n/site.content.ts`.
 
-Blog, portfolio, and resume content live in Astro Content Collections as MDX.
+## Sources
 
-## Folder convention
+| Collection        | Loader/source                                               |
+| ----------------- | ----------------------------------------------------------- |
+| `blog`            | `glob`, `src/content/blog/**/*.{md,mdx}`                    |
+| `portfolio`       | `glob`, `src/content/portfolio/**/*.{md,mdx}`               |
+| `resume`          | `glob`, `src/content/resume/**/*.{md,mdx}`                  |
+| `privacyPolicy`   | `glob`, `src/content/privacy-policy/**/*.{md,mdx}`          |
+| `tags`            | `file`, `src/content/tags.json`                             |
+| `githubLanguages` | `githubLanguageColorsLoader()`, GitHub language colors JSON |
 
-```text
-src/content/
-  blog/
-    en/
-      2026-09-28-astro-content-collections.mdx
-    cs/
-      2026-09-28-astro-content-collections.mdx
+Blog and portfolio entries live in `en/` and `cs/` directories with collection-local `assets/` folders. Resumes live at `src/content/resume/en.mdx` and `cs.mdx`, with assets in `resume/assets/`. Policies live at `privacy-policy/en.mdx` and `cs.mdx`.
 
-  portfolio/
-    en/
-      project-name.mdx
-    cs/
-      project-name.mdx
-  resume/
-    en/
-      resume.mdx
-    cs/
-      resume.mdx
-  privacy-policy/
-    en.mdx
-    cs.mdx
-  tags.json
-```
+## Shared validation
 
-Blog and portfolio filenames define their public slugs. Keep English filenames, including date prefixes for migrated posts, stable and the same across locales. Translation matching still uses `translationKey`, not filenames.
+- `locale` is a string validated against Intlayer's configured locales (`en` and `cs` in `intlayer.config.ts`).
+- `translationKey` is a non-empty string identifying translated siblings. It does not define the URL.
+- Dates use `z.coerce.date()` and resolve to JavaScript `Date` values.
+- Blog/portfolio `image` uses `image().or(z.url()).optional()`: a local image resolved by Astro or a remote URL. Local paths are relative to the content file; `imageAlt` contains the localized description.
+- Fields with defaults can be omitted from frontmatter. An optional field has no schema default.
 
-## Shared identity
+## Blog schema
 
-Translated versions use the same `translationKey`.
+| Field                 | Validation                    | Required/default        |
+| --------------------- | ----------------------------- | ----------------------- |
+| `title`               | String                        | Required                |
+| `description`         | String                        | Required                |
+| `locale`              | Configured locale string      | Required                |
+| `translationKey`      | Non-empty string              | Required                |
+| `publishedAt`         | Coerced date                  | Required                |
+| `updatedAt`           | Coerced date                  | Optional                |
+| `tags`                | Array of references to `tags` | Required; `[]` is valid |
+| `draft`               | Boolean                       | `false`                 |
+| `featured`            | Boolean                       | `false`                 |
+| `showTableOfContents` | Boolean                       | `false`                 |
+| `image`               | Astro image or URL            | Optional                |
+| `imageAlt`            | String                        | Optional                |
 
-English:
+Referenced tag IDs must exist in `src/content/tags.json`. Cards, article headers, and the blog index link tags to their localized tag pages.
 
-```yaml
-locale: en
-translationKey: astro-content-collections
-```
+## Portfolio schema
 
-Czech:
+| Field                 | Validation                                   | Required/default |
+| --------------------- | -------------------------------------------- | ---------------- |
+| `title`               | String                                       | Required         |
+| `description`         | String                                       | Required         |
+| `locale`              | Configured locale string                     | Required         |
+| `translationKey`      | Non-empty string                             | Required         |
+| `date`                | Coerced date                                 | Required         |
+| `tags`                | Array of strings                             | `[]`             |
+| `stack`               | Array of strings                             | `[]`             |
+| `featured`            | Boolean                                      | `false`          |
+| `showTableOfContents` | Boolean                                      | `false`          |
+| `draft`               | Boolean                                      | `false`          |
+| `role`                | String                                       | Optional         |
+| `repositoryUrl`       | URL                                          | Optional         |
+| `githubUrl`           | URL accepted by `parseGitHubRepositoryUrl()` | Optional         |
+| `externalUrl`         | URL                                          | Optional         |
+| `image`               | Astro image or URL                           | Optional         |
+| `imageAlt`            | String                                       | Optional         |
 
-```yaml
-locale: cs
-translationKey: astro-content-collections
-```
+Portfolio tags are technical strings, not references to the blog taxonomy. `ProjectCard` uses Octokit to fetch repository creation dates and language byte counts when `githubUrl` is set. GitHub's creation date takes precedence over the frontmatter date for display; editorial sorting still uses `date`. Failed requests leave available metadata and the frontmatter fallback usable. `repositoryUrl` also supports non-GitHub repositories.
 
-## Blog frontmatter
+## Resume schema
 
-Recommended schema:
+| Field                 | Validation               | Required/default |
+| --------------------- | ------------------------ | ---------------- |
+| `title`               | String                   | Required         |
+| `description`         | String                   | Required         |
+| `locale`              | Configured locale string | Required         |
+| `translationKey`      | Non-empty string         | Required         |
+| `summary`             | Non-empty string         | Required         |
+| `draft`               | Boolean                  | `false`          |
+| `showTableOfContents` | Boolean                  | `false`          |
 
-```yaml
----
-title: "Content collections in Astro"
-description: "..."
-locale: en
-translationKey: astro-content-collections
-publishedAt: 2026-09-28
-updatedAt: 2026-09-28
-tags: [architecture, internet]
-draft: false
-featured: false
-image: ../assets/astro-content/cover.webp
-imageAlt: "Localized description of the cover illustration."
----
-```
+The published resumes share `translationKey: personal-resume`. Their summaries supply the About pages; their MDX bodies supply `/about/cv/`. `getResumes()` excludes drafts in every environment.
 
-Then the article body follows in MDX.
+Resume MDX imports `Hero`, `DevGrid`/`DevGridItem`, `CertGrid`/`CertCard`, and `Timeline`/`TimelineItem` from `src/components/resume/`. Timeline slots are `exp` and `edu`. Certification images use `ContentImage` with `fit="contain"`. The CV page supplies its H1, so body sections start with H2. Print styles retain the CV text and remove navigation and decorative backgrounds, images, and shadows.
 
-## Portfolio frontmatter
+## Privacy-policy schema
 
-Recommended schema:
+| Field            | Validation               | Required/default |
+| ---------------- | ------------------------ | ---------------- |
+| `title`          | Non-empty string         | Required         |
+| `locale`         | Configured locale string | Required         |
+| `effectiveDate`  | Coerced date             | Required         |
+| `slug`           | Non-empty string         | Required         |
+| `translationKey` | Non-empty string         | Required         |
 
-```yaml
----
-title: "Example Project"
-description: "A concise localized project summary."
-locale: en
-translationKey: example-project
-date: 2026-09-28
-tags:
-    - astro
-    - typescript
-stack:
-    - Astro
-    - TypeScript
-featured: true
-draft: false
-role: "Design & Development"
-repositoryUrl: "https://example.com"
-githubUrl: "https://github.com/owner/repository"
-externalUrl: "https://example.com"
-image: ../assets/example/cover.webp
-imageAlt: "Localized description of the project image."
----
-```
+Unlike blog and portfolio, policies use their explicit localized `slug`. `src/pages/[locale]/[slug].astro` renders them, and the footer links to the active locale's policy. The schema has no draft field.
 
-`githubUrl` is optional and must point to a public GitHub repository. Project cards use GitHub's creation date ahead of the MDX `date` when the API responds, and show the repository's language breakdown. The MDX date remains the fallback and controls editorial ordering. `repositoryUrl` can still point to a non-GitHub source repository. Set the optional server-side `GITHUB_TOKEN` to raise API rate limits; failed or unavailable GitHub responses leave the card usable with its MDX date.
+## Tags schema
 
-Language colors come from the `githubLanguages` content collection, loaded from `ozh/github-colors` during content sync. Entries with no color use a design-token fallback. If the color source is unavailable, previously stored colors are retained when available and cards still render with fallback colors.
+`tags.json` is an array of entries with an `id` and these schema fields:
 
-## Resume frontmatter
+| Field         | Validation                                                                             | Required/default |
+| ------------- | -------------------------------------------------------------------------------------- | ---------------- |
+| `label`       | Record of string keys to non-empty strings; value required for every configured locale | Required         |
+| `description` | Record of string keys to non-empty strings; value required for every configured locale | Required         |
 
-One published resume entry per locale supplies the localized About summary and CV page. Its stable `translationKey` connects the translations. Keep biographical and career prose in MDX, while page labels and form messages belong in Intlayer.
+The file loader uses `id` as the entry identity. Labels and descriptions are localized editorial metadata. Public routes are `/{locale}/tags/` and `/{locale}/tags/{id}/`; results contain posts whose tag references match that ID.
 
-```yaml
----
-title: "Curriculum vitae"
-description: "A concise overview of my work and experience."
-locale: en
-translationKey: personal-resume
-summary: "A short introduction for the About page."
-draft: false
----
-```
+## GitHub-language schema
 
-The body contains the printable CV. `draft: true` removes the entry from the About and CV routes. The published English and Czech resumes live at `src/content/resume/en.mdx` and `cs.mdx`, sharing `translationKey: personal-resume`. Their `summary` supplies the About page introduction.
+| Field   | Validation                                            | Required/default |
+| ------- | ----------------------------------------------------- | ---------------- |
+| `color` | Six-digit hex color (`/^#[0-9a-fA-F]{6}$/`) or `null` | Required         |
 
-Resume MDX imports the presentation components from `src/components/resume/`: `Hero`, `DevGrid`/`DevGridItem`, `CertGrid`/`CertCard`, and `Timeline`/`TimelineItem`. Keep the profile, skill labels, certification names, and career descriptions in the localized MDX. Use `slot="exp"` and `slot="edu"` for timeline entries. Assets are imported from `./assets/`; `CertCard` supports an optional `imgInverted` for dark-theme logos. Technology icons use the existing `astro-iconset` integration with only the required Devicon icons included in its configuration.
+The loader fetches `https://raw.githubusercontent.com/ozh/github-colors/master/colors.json` during content sync and uses each language name as its entry ID. Invalid entries are skipped. Fetch failures retain cached colors when available; language indicators use a design-token fallback if a color is missing.
 
-The CV page supplies its own H1, so resume bodies start with H2 sections. Components use CSS print rules rather than a server-side print flag: technology labels, certifications, and experience remain visible, while decorative icons, logos, backgrounds, and shadows are removed for printing. Migration files are moved into the canonical entries to avoid duplicate About/CV routes for a locale.
+## URLs, translations, and ordering
 
-Set `showTableOfContents: true` in any blog, portfolio, or resume entry to show its heading list. It defaults to `false`; readers can expand or collapse a displayed list. The list is hidden when printing.
+Blog and portfolio have no `slug` field. `getSlugWithoutLocale(entry.id)` removes the leading locale directory and preserves the rest of the ID. Keep English filenames stable across translations to retain historical URLs and analytics:
 
-## MDX components
+- Blog: `/{locale}/blog/posts/{filename}/`.
+- Portfolio: `/{locale}/portfolio/{filename}/`.
+- Privacy policy: `/{locale}/{slug}/`.
 
-The shared renderer in `src/components/mdx/MdxContent.astro` is used by blog, portfolio, and CV pages. It replaces Markdown headings, links, and images with site components. Heading `#` links use Astro's generated IDs, and external HTTP(S) links open in a new tab with an accessible indication.
+Translated siblings are matched by `translationKey`, not filename equality. Missing translations link to the corresponding section in the target locale.
 
-Fenced code blocks in Markdown and MDX use `astro-expressive-code`, configured in `ec.config.mjs`. It uses GitHub's light and dark code themes, follows the site's `data-theme` setting and system preference, and uses the site's font, border, focus, and hard-shadow tokens.
+`getEntries()` sorts blog by `publishedAt` descending and portfolio by `date` descending. The homepage filters featured entries for its featured sections and uses the newest three posts for latest writing.
 
-Authors can use the `Callout` component without importing it in each MDX file:
+Blog and portfolio indexes paginate after locale/draft filtering, with `pagination.itemsPerPage: 6` in each route's `getStaticPaths()`. Page one uses the section root; later pages use `/{locale}/{section}/{page}/`. `Pagination.astro` renders first, previous, current, next, and last controls.
+
+## Drafts
+
+Blog and portfolio drafts appear in development and are excluded in production. `ContentCard` shows a localized draft badge. RSS passes `includeDrafts: false` even in development. Resume drafts are always excluded from About/CV routes.
+
+## Rendering and assets
+
+`src/components/mdx/MdxContent.astro` renders blog, portfolio, and CV content. It maps H1–H6, links, images, and `Callout` to the site's components. Heading anchors use Astro-generated IDs; external HTTP(S) links include an accessible indication and open in a new tab. `showTableOfContents` controls the toggleable heading list, hidden when printing.
+
+`Callout` is available without an MDX import:
 
 ```mdx
 <Callout type="tip" title="Optional title">
@@ -141,76 +142,10 @@ Authors can use the `Callout` component without importing it in each MDX file:
 </Callout>
 ```
 
-Supported types are `note`, `tip`, `success`, `caution`, and `danger`. If omitted, the type is `note` and the label comes from Intlayer. Keep the rest of the body in normal Markdown/MDX.
+Types are `note`, `tip`, `success`, `caution`, and `danger`. The default type is `note`; default labels come from Intlayer. Fenced code uses `astro-expressive-code`, configured in `ec.config.mjs`, with theme-aware colors and project fonts.
 
-Allow a controlled set of design-system components in MDX, for example:
-
-- `Callout`
-- `Figure`
-- `ImageGallery`
-- `CodeExample`
-- `ProjectMetric`
-
-Do not allow arbitrary page-layout components inside editorial MDX.
-
-The MDX author should focus on content rather than manually reconstructing the site's layout.
-
-## Cover assets
-
-The first entries use generated WebP illustrations stored beside their content collections. Local paths in frontmatter are resolved by Astro's image pipeline; absolute HTTPS URLs are also supported.
-
-- `src/content/blog/assets/foundation.webp`: geometric content blocks connected to a browser window; warm cream, yellow, blue, and coral; hard outlines and shadows; no text, flags, gradients, or blur.
-- `src/content/portfolio/assets/website.webp`: layered website panels and interface shapes on blue; hard outlines and shadows; no people, text, flags, or gradients.
-
-Cards and detail pages render `image` when present. Put the localized image description in `imageAlt`; use an empty description only for a purely decorative image.
-
-## Privacy policy
-
-Localized policy MDX files live in `src/content/privacy-policy/{locale}.mdx`. Their frontmatter has `title`, `locale`, `effectiveDate`, `slug`, and a stable `translationKey`. The `locale` and `slug` control the localized URL. The footer links to the policy for the active locale; translated siblings provide locale-switching links.
-
-## Tags
-
-Blog posts use a `tags` array of references, whose IDs must exist in the `tags` collection. The collection is loaded from one JSON file, `src/content/tags.json`, with entries shaped like:
-
-```json
-[{ "id": "architecture", "label": { "en": "Architecture", "cs": "Architektura" }, "description": { "en": "...", "cs": "..." } }]
-```
-
-Every configured locale needs a label and description. Public routes are `/{locale}/tags/` and `/{locale}/tags/{id}/`; the blog index, cards, and detail pages link to the referenced tags. Each tag page lists posts whose `tags` array contains that tag. Portfolio `tags` remain simple technical metadata until a portfolio taxonomy is needed.
-
-Blog and portfolio indexes use Astro pagination with six published entries per page. The first page stays at `/{locale}/blog/` or `/{locale}/portfolio/`; later pages use `/{locale}/blog/{page}/` and `/{locale}/portfolio/{page}/`. Drafts are filtered before pagination, and the shared pagination control uses Astro's generated page URLs.
-Each index route sets its own `pagination.itemsPerPage` in `getStaticPaths()`; change that value to adjust the page size (currently six for both).
-
-Tag labels and descriptions are localized editorial metadata. Technical proper terms such as `Astro`, `TypeScript`, or `.NET` may use the same spelling across locales.
-
-For human-language concepts, the stable tag ID is the key and its displayed label is localized in the tag entry.
-
-## URLs
-
-Blog and portfolio slugs are generated from the content entry ID through `getSlugWithoutLocale()`, which removes only the leading locale folder. Their schemas have no `slug` property. For example, `cs/2025-02-12-deploy-libsql-server-astro-zerops` produces `/cs/blog/posts/2025-02-12-deploy-libsql-server-astro-zerops/`. Project detail URLs use `/{locale}/portfolio/{filename}/`. Keep filenames and trailing slashes stable so historical analytics and bookmarks continue to match. Blog and portfolio indexes retain their existing pagination routes.
-
-Privacy-policy entries continue to use their explicit localized `slug` frontmatter.
-
-Do not expose `translationKey` as the URL unless they intentionally happen to be the same.
-
-## Ordering
-
-Blog:
-
-1. published date descending
-2. optionally feature pinned content through explicit `featured`
-
-Portfolio:
-
-- use explicit date/order logic
-- do not rely on filesystem enumeration order
-
-## Drafts
-
-Drafts are visible in development indexes and detail pages, with a localized badge on content cards. They must never be present in production indexes, feeds, sitemap entries, or generated detail pages.
+Cards and detail pages render frontmatter images through `ContentImage.astro`, which handles local Astro images and remote sources. Collection assets live beside their content; resume MDX imports its assets directly.
 
 ## RSS
 
-Each configured locale has a static feed at `/{locale}/rss.xml`, generated by `src/pages/[locale]/rss.xml.ts`. Feeds include all published blog posts for that locale, sorted newest first, with localized channel metadata and tag labels. The shared content helper receives `includeDrafts: false`, so feeds omit drafts in development too.
-
-The Astro Container API renders posts through the shared MDX components with the table of contents disabled. HTML is sanitized for feed readers: images and article structure are preserved, while scripts, styles, SVG icons, and code-copy buttons are removed. Links and image sources are resolved against each post's canonical URL. Set `PUBLIC_SITE_URL` before building so feed URLs point to the deployed site. Every page advertises its locale's feed through an RSS alternate link, and the footer provides a subscription link.
+`src/pages/[locale]/rss.xml.ts` prerenders `/{locale}/rss.xml` for each configured locale. Feeds contain published posts, newest first, with localized channel metadata and tag labels. Astro's Container API renders the shared MDX components with the table of contents disabled. Sanitization removes scripts, styles, SVG icons, and code-copy buttons while preserving article structure and images. Links and image sources become absolute URLs. `PUBLIC_SITE_URL` supplies the production origin; `BaseLayout` and the footer expose the active locale's feed.

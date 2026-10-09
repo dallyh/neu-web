@@ -1,30 +1,53 @@
 # Personal website
 
-## Running the site
+## Disclaimer
 
-This repository contains the first working Astro site slice. Use the Node version in `.nvmrc`, then run `pnpm install`, `pnpm dev`, `pnpm check`, and `pnpm build`. Set `PUBLIC_SITE_URL` to the deployed site origin when building for production so canonical and alternate URLs use the public domain.
+This site was made with help from Codex for the initial scaffold, design, and migration from my [old](https://github.com/dallyh/daliborhon.dev) website. I then edited the design, fixed bugs, and reviewed the implementation. I don't really have free time to do it all by myself without help from the AI.
 
-The localized homepage, blog, portfolio, About, and CV are available under `/en/` and `/cs/`. The first article and project describe this site's foundation. UI strings live in `src/i18n/site.content.ts`; editorial content lives in the MDX collections.
+## Commands
 
-## Contact form and Node deployment
+| Command                          | Purpose                                             |
+| -------------------------------- | --------------------------------------------------- |
+| `nvm use`                        | Select the Node version in `.nvmrc`                 |
+| `pnpm install --frozen-lockfile` | Install locked dependencies                         |
+| `pnpm dev`                       | Start the development server                        |
+| `pnpm check`                     | Check Astro and TypeScript                          |
+| `pnpm build`                     | Build static pages and the Node server              |
+| `pnpm start`                     | Run `dist/server/entry.mjs`                         |
+| `pnpm preview`                   | Preview the build locally (not a production server) |
+| `pnpm format`                    | Format project files                                |
 
-The site prerenders its content pages and handles contact submissions with a typed Astro Action on the standalone Node adapter. Build with `pnpm build`, then run `pnpm start` in the container. Set `HOST=0.0.0.0` and the desired `PORT` for container access.
+## Environment
 
-For Coolify, select the repository's `Dockerfile` build pack with `/` as the base directory and `Dockerfile` as the Dockerfile location. Set **Ports Exposes** to `4321`. Pass `PUBLIC_SITE_URL` (the site's public origin) and `PUBLIC_HCAPTCHA_SITE_KEY` as **build variables**. Add `GITHUB_TOKEN` as a **build variable** with **Runtime Variable** disabled, and enable **Use Docker Build Secrets** in Coolify's advanced settings. The Dockerfile requires this secret for `pnpm build`, where it authenticates the GitHub API requests that populate project metadata. Set `HCAPTCHA_SECRET`, `RESEND_API_KEY`, `CONTACT_FROM_EMAIL`, and `CONTACT_TO_EMAIL` as **runtime environment variables**. The image includes a health check against `/` and runs as the non-root `node` user.
+Copy `.env.example` to `.env` for local development. Public settings are baked into pages; changing them requires a new build.
 
-With **Use Docker Build Secrets** enabled, Coolify supplies the public build variables as secret mounts too. The `pnpm build` command explicitly mounts `PUBLIC_SITE_URL`, `PUBLIC_HCAPTCHA_SITE_KEY`, and `GITHUB_TOKEN` together because Coolify skips automatic injection into `RUN` commands that already contain mounts. The public variables also accept ordinary `--build-arg` values for local Docker builds. Changing their runtime values does not update prerendered pages; deploy a new build to apply changes.
+| Variable                           | Available at | Purpose                                                                  |
+| ---------------------------------- | ------------ | ------------------------------------------------------------------------ |
+| `PUBLIC_SITE_URL`                  | Build        | Public origin for canonical URLs, RSS, and OG images                     |
+| `PUBLIC_HCAPTCHA_SITE_KEY`         | Build        | Contact widget site key; use hCaptcha's test site key locally            |
+| `GITHUB_TOKEN`                     | Build        | GitHub project metadata; required as a secret for Docker builds          |
+| `UMAMI_URL`                        | Build        | Analytics origin; defaults to `https://analytics.daliborhon.dev`         |
+| `UMAMI_SITE_ID`                    | Build        | Analytics website ID; defaults to `7e04370d-ecba-4fd8-8d71-2d50880d0d59` |
+| `PREVIEW`                          | Build        | `true` disables tracking; default `false`; development never tracks      |
+| `HCAPTCHA_SECRET`                  | Runtime      | Production hCaptcha verification secret                                  |
+| `RESEND_API_KEY`                   | Runtime      | Send contact emails                                                      |
+| `CONTACT_FROM_EMAIL`               | Runtime      | Resend-authorized sender address; supports `Name <email>`                |
+| `CONTACT_TO_EMAIL`                 | Runtime      | Contact email recipient                                                  |
+| `UMAMI_USERNAME`, `UMAMI_PASSWORD` | Runtime      | Server-side page-view queries; not needed for tracking                   |
+| `HOST`, `PORT`                     | Runtime      | Bind address/port; Docker defaults to `0.0.0.0:4321`                     |
 
-Copy `.env.example` to a local `.env` and fill in your own values. Set `PUBLIC_HCAPTCHA_SITE_KEY` and `PUBLIC_SITE_URL` **at build time** so they appear in the static pages. A local `pnpm build` can use `GITHUB_TOKEN` from `.env`; for a local Docker build, export `GITHUB_TOKEN` in your shell and pass it as a BuildKit secret with `docker build --secret id=GITHUB_TOKEN,env=GITHUB_TOKEN .`. Set `HCAPTCHA_SECRET`, `RESEND_API_KEY`, `CONTACT_FROM_EMAIL`, and `CONTACT_TO_EMAIL` **at runtime** for the action. The contact variables are declared in Astro's `env.schema` and imported from `astro:env/client` or `astro:env/server`; `PUBLIC_SITE_URL` remains a configuration input because Astro's config runs before the `astro:env` module is available. Use an hCaptcha site key/secret pair for the same site. `CONTACT_FROM_EMAIL` must be a sender address authorized in Resend; visitors' addresses are sent as `reply_to`. The form stays disabled until its public site key is available. Never commit the private values.
+## Docker / Coolify
 
-Replace `CONTACT_FROM_EMAIL` with an address on a domain verified for sending in Resend. An `@example.com` placeholder is rejected by the action before it attempts delivery. The Resend testing sender `onboarding@resend.dev` is an option while setting up the integration, subject to Resend's testing-domain recipient restrictions. The server logs the HTTP status and provider error code for rejected sends without logging the API key or message body.
-Both `CONTACT_FROM_EMAIL` and `CONTACT_TO_EMAIL` must be valid email addresses. `CONTACT_FROM_EMAIL` may also use Resend's `Name <address@domain.com>` format. A bare domain or a display name alone is not a sender address; the action reports these configuration errors before calling Resend.
+Export `GITHUB_TOKEN` in your shell, then build with BuildKit:
 
-For local testing, `pnpm dev` submits hCaptcha's published test response token and verifies it with the matching test site key and secret. No widget or checkbox appears in development, so the form works on `localhost`. Production builds use only the configured real key pair and render the widget. Set the Resend variables to test actual email delivery. Do not deploy the development server because the test pair provides no bot protection.
+```bash
+docker build \
+  --secret id=GITHUB_TOKEN,env=GITHUB_TOKEN \
+  --build-arg PUBLIC_SITE_URL=https://neu.daliborhon.dev \
+  --build-arg PUBLIC_HCAPTCHA_SITE_KEY=your-site-key \
+  -t neu-web .
 
-The About and CV text in `src/content/resume/` is explicitly draft placeholder copy. Replace both language versions before treating it as personal biography or career history.
+docker run --rm -p 4321:4321 --env-file .env neu-web
+```
 
-Public About-page profile URLs and the optional public email address live in `src/lib/contact-links.ts`. Until supplied, the profile cards are labeled as drafts and the email card links to the contact form. The private Resend sender and recipient addresses are never displayed there.
-
-Styling uses Tailwind CSS v4 with the existing neubrutalist tokens in `src/styles/tokens.css`. Shared theme, MDX prose, and print rules live in `src/styles/tailwind.css`.
-
-`AGENTS.md`, `DESIGN.md`, and the files in `docs/` describe the implementation rules. `src/content.config.ts` is the active schema; `src/content.config.ts.example` is the original reference template.
+In Coolify, use `Dockerfile` at the repository root, expose port `4321`, and enable **Use Docker Build Secrets**. Mark build settings as build variables; make `GITHUB_TOKEN` build-only. Add contact secrets and Umami credentials as runtime variables. The image runs as the non-root `node` user and includes a health check.

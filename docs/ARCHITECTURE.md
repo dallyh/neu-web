@@ -13,60 +13,70 @@ The site uses three distinct layers.
 │ Astro Content Collections + localized MDX   │
 ├─────────────────────────────────────────────┤
 │ Visual system                               │
-│ DESIGN.md + design tokens + UI primitives   │
+│ docs/DESIGN.md + tokens + UI primitives     │
 └─────────────────────────────────────────────┘
 ```
 
 These layers should cooperate but not absorb each other's responsibilities.
 
-## Suggested source tree
+## Source tree
 
 ```text
 src/
+  actions/index.ts                 # setLocale and sendContact
   components/
-    layout/
-    ui/
-    blog/
-    portfolio/
-
+    ContentCard.astro
+    ContactForm.astro
+    about/                        # ContactLinks
+    blog/                         # Comments, ReadingStats, ViewCount
+    layout/                       # Header, Footer, LocaleSwitcher, ThemeToggle
+    mdx/                          # MdxContent, headings, links, images, Callout, TOC
+    portfolio/                    # ProjectCard, GitHubLanguages
+    resume/                       # Hero, grids, certifications, timeline
+    ui/                           # ContentGrid, ContentImage, PageHeader, Pagination, Tag
   content/
-    blog/
-      en/
-      cs/
-    portfolio/
-      en/
-      cs/
-    resume/
-      en/
-      cs/
+    blog/{en,cs,assets}/
+    portfolio/{en,cs,assets}/
+    resume/{en.mdx,cs.mdx,assets}/
+    privacy-policy/{en,cs}.mdx
     tags.json
-
   content.config.ts
-
-  layouts/
-    BaseLayout.astro
-    ArticleLayout.astro
-    ProjectLayout.astro
-
+  i18n/site.content.ts            # Intlayer site dictionary
+  icons/                          # Local SVG icons
+  layouts/BaseLayout.astro
   lib/
     content.ts
-    i18n.ts
     urls.ts
-
+    tags.ts
+    resume.ts
+    privacy.ts
+    contact-links.ts
+    github.ts
+    github-url.ts
+    github-language-colors-loader.ts
+    open-graph/                   # TSX templates, rendering, fonts, URLs, tokens
+    umami/                        # Authentication and page-view queries
   pages/
-    [...localized routing structure...]
-
+    index.ts                      # Preference-based locale redirect
+    [locale]/
+      index.astro
+      [slug].astro                # Privacy policy
+      about/{index,cv}.astro
+      blog/[...page].astro
+      blog/posts/[...slug]/{index.astro,og.png.ts}
+      portfolio/{[...page],[slug]}.astro
+      tags/{index,[slug]}.astro
+      rss.xml.ts
+      og.png.ts
   styles/
     tokens.css
     tailwind.css
-
-  content declarations/
-    *.content.ts
+    ec-overrides.css
 ```
 
-Intlayer content declaration files may live anywhere covered by Intlayer's configured content directory. Prefer placing them close to the UI domain they describe or in one clearly named i18n/content area; choose one convention and keep it consistent.
+`astro.config.mjs` configures the standalone Node adapter, typed environment variables, Fontsource fonts, Expressive Code, MDX, `astro-iconset`, Intlayer, and Tailwind's Vite plugin. `intlayer.config.ts` configures locales and routing; `ec.config.mjs` configures code rendering. UI declarations use the `site` dictionary in `src/i18n/site.content.ts`.
 
-Tailwind CSS v4 is wired through its Vite plugin. `tokens.css` remains the source for light/dark colors, typography, and hard shadows; `tailwind.css` exposes those tokens as utilities and holds only base, MDX prose, motion, and print rules. Page and component styling lives in Astro utility classes.
+Tailwind CSS v4 is wired through its Vite plugin. `tokens.css` remains the source for light/dark colors, typography, and hard shadows; `tailwind.css` exposes those tokens as utilities and holds shared utilities, component styles, base rules, MDX prose, motion, and print rules. Page and component styling lives in Astro utility classes.
 
 Actions use `nb-action` directly on links and buttons, and content cards use `nb-card` on the article element. Both own their CSS box shadow and increase its offset as they lift on hover; actions remove the shadow while pressed. Shadow-only wrapper elements are unnecessary. The default shadow follows the theme's ink color; `nb-shadow-inverted` can override its color and the border on the same element. Disabled actions do not lift, and reduced-motion preferences suppress transforms.
 
@@ -78,7 +88,7 @@ Astro's Fonts API uses the Fontsource provider to self-host Bebas Neue, Plus Jak
 
 ## Rendering philosophy
 
-The site is content-heavy and should be mostly static.
+Content pages are prerendered. The standalone Node server handles Actions, the root redirect, and server islands such as page-view counts.
 
 Use Astro rendering for:
 
@@ -95,7 +105,7 @@ Use browser-side JavaScript only for genuinely interactive behavior such as a pe
 
 The localized About and CV pages are prerendered from the `resume` MDX collection. The form uses a small browser script to call a typed Astro Action, which runs on the standalone Astro Node adapter. The action validates fields, verifies hCaptcha server-side, and sends plain-text mail through Resend. Astro's `env.schema` declares the contact configuration: the public hCaptcha site key is built into the prerendered page, while the Resend key and hCaptcha secret stay in the server environment. The CV hides site navigation when printed.
 
-The contact form renders hCaptcha explicitly after its API-ready callback, using the active locale and the site's light/dark theme. Theme changes recreate the widget, resetting its verification while preserving form fields; a system color-scheme change applies only when no explicit site theme is selected. Recreation is deferred while a contact submission is in progress.
+The contact form renders hCaptcha explicitly after its API-ready callback, using the active locale and the site's light/dark theme. Theme changes recreate the widget, resetting its verification while preserving form fields; a system color-scheme change applies only when no explicit site theme is selected. Recreation is deferred while a contact submission is in progress. The browser always renders the configured site key, including in development; use hCaptcha’s published test site key locally because the development Action verifies with its test key/secret pair. Public profile and email links come from `src/lib/contact-links.ts`.
 
 ## Data flow
 
@@ -143,27 +153,29 @@ entry.id       = locale folder + stable English filename
 
 `getSlugWithoutLocale(entry.id)` removes the locale folder to derive blog and portfolio URLs. Stable English filenames preserve legacy analytics paths. Blog detail URLs use `/{locale}/blog/posts/{filename}/`, and project detail URLs use `/{locale}/portfolio/{filename}/`. Translated siblings are still resolved through `translationKey`; no blog or portfolio `slug` frontmatter is needed.
 
-## Helpers
+## Helper APIs
 
-Centralize repeated logic.
+Reuse these exports rather than duplicating queries or route construction in pages.
 
-Recommended APIs:
+| Module in `src/lib/`               | Exports and behavior                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `content.ts`                       | `getEntries(collection, locale?, options?)` filters drafts/locales and sorts newest first; `options.includeDrafts: false` excludes development drafts. `getEntryBySlug(collection, locale, slug)` resolves an entry. `getTranslations(collection, translationKey)` and `getTranslatedSibling(collection, entry, locale)` resolve translations. `getSlugWithoutLocale(id)` derives a stable filename slug; `contentUrl(collection, entry)` builds the detail URL. Collections are `blog` or `portfolio`. |
+| `urls.ts`                          | `withTrailingSlash(path)`, `sectionUrl(section, locale)`, `listingPageUrl(section, locale, page)`, and `rssUrl(locale)` build shared URLs with Intlayer.                                                                                                                                                                                                                                                                                                                                                |
+| `tags.ts`                          | `getTags()`, `getBlogTags(entry)`, `tagLabel(tag, locale)`, `tagDescription(tag, locale)`, `tagUrl(tagOrId, locale)`, and `getPostsByTag(tagId, locale)` resolve tag references and localized metadata.                                                                                                                                                                                                                                                                                                 |
+| `resume.ts`                        | `getResumes()` returns non-draft resumes, including in development.                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `privacy.ts`                       | `getPrivacyPolicies()`, `privacyPolicyLocale(entry)`, and `privacyPolicyUrl(entry)` resolve localized policies.                                                                                                                                                                                                                                                                                                                                                                                         |
+| `github.ts`                        | `getGitHubProjectData(githubUrl?)` caches Octokit repository creation dates and language byte counts; partial failures retain available data.                                                                                                                                                                                                                                                                                                                                                           |
+| `github-url.ts`                    | `parseGitHubRepositoryUrl(url)` validates and parses repository URLs.                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| `github-language-colors-loader.ts` | `githubLanguageColorsLoader()` supplies the `githubLanguages` collection.                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| `contact-links.ts`                 | `contactLinks` stores public GitHub, LinkedIn, and email destinations independently of private Resend settings.                                                                                                                                                                                                                                                                                                                                                                                         |
+| `open-graph/urls.ts`               | `websiteOgUrl(locale)` and `blogOgUrl(entry)` build image URLs.                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| `umami/auth.ts`, `umami/client.ts` | `getToken()` and `getPageViews(path)` query the server-side analytics API.                                                                                                                                                                                                                                                                                                                                                                                                                              |
 
-```ts
-getBlogEntries(locale);
-getPortfolioEntries(locale);
+## Homepage and navigation
 
-getBlogEntryBySlug(locale, slug);
-getPortfolioEntryBySlug(locale, slug);
+The homepage fetches both collections and renders the hero, featured posts, selected work, and newest posts in that order. Each card section shows up to three entries through `ContentGrid`. Blog and portfolio indexes use Astro pagination with six entries per page, configured separately in each route's `getStaticPaths()`.
 
-getTranslations(collection, translationKey);
-getTranslatedSibling(entry, targetLocale);
-
-getBlogUrl(entry);
-getPortfolioUrl(entry);
-```
-
-Do not duplicate this logic in route files.
+`Header` supplies navigation with a mobile menu, the DH SVG logo, locale switching, and theme controls. `BaseLayout` sets localized metadata, canonical/hreflang URLs, RSS discovery, and Open Graph images. Native cross-document view transitions are enabled only when reduced motion is not requested; no client router is used.
 
 ## Blog comments
 
@@ -185,8 +197,4 @@ Website labels and hero copy come from Intlayer; blog titles, descriptions, and 
 
 ## Draft behavior
 
-During production builds, drafts must be excluded.
-
-During local development it is acceptable to expose drafts, preferably with a visible draft indicator.
-
-Keep draft filtering centralized.
+`getEntries()` includes blog/portfolio drafts in development and excludes them in production. `ContentCard` renders a localized draft badge. RSS explicitly disables drafts even in development. `getResumes()` excludes draft resumes in all environments; the privacy-policy schema has no draft field.

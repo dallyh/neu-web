@@ -75,7 +75,7 @@ Do not make every section a different saturated color. Loud color must reinforce
 
 ### Typography
 
-Recommended roles:
+Font roles:
 
 - Display: `Bebas Neue`, 400 (the supplied display weight)
 - Heading/UI: `Plus Jakarta Sans`, 600–700
@@ -108,13 +108,13 @@ transition duration
 z-index
 ```
 
-Canonical starting values are provided in `src/styles/tokens.css`.
+Canonical values are defined in `src/styles/tokens.css`.
 
 ---
 
 ## 5. Light Theme
 
-Suggested palette:
+Palette in `src/styles/tokens.css`:
 
 ```css
 --nb-bg: #fffdf5;
@@ -125,7 +125,7 @@ Suggested palette:
 --nb-secondary: #74b9ff;
 --nb-accent: #ff6b6b;
 --nb-success: #88d498;
---nb-orange: #ffa552;
+--nb-warning: #ffa552;
 --nb-lavender: #b8a9fa;
 ```
 
@@ -137,7 +137,7 @@ The structural color is `--nb-ink`.
 
 Dark mode must be intentionally designed, not produced by simply inverting colors.
 
-Suggested palette:
+Palette in `src/styles/tokens.css`:
 
 ```css
 --nb-bg: #151515;
@@ -148,7 +148,7 @@ Suggested palette:
 --nb-secondary: #74b9ff;
 --nb-accent: #ff7a70;
 --nb-success: #88d498;
---nb-orange: #ffad66;
+--nb-warning: #ffad66;
 --nb-lavender: #c0b3ff;
 ```
 
@@ -162,7 +162,7 @@ Use black text on bright accent surfaces when that is the higher-contrast pairin
 
 Use fluid type where possible.
 
-Suggested ranges:
+Type scale in `src/styles/tokens.css`:
 
 ```text
 Display XL: clamp(3.5rem, 10vw, 8rem)
@@ -173,7 +173,7 @@ H3:         clamp(1.35rem, 2vw, 2rem)
 Body lg:    1.125rem
 Body:       1rem
 Small:      .875rem
-Meta:       .75rem–.875rem
+Meta:       .8125rem
 ```
 
 Rules:
@@ -289,18 +289,16 @@ Never apply maximum visual intensity to every component on the page.
 
 The homepage should communicate identity immediately.
 
-Recommended structure:
+Current structure in `src/pages/[locale]/index.astro`:
 
-1. signature navigation
-2. oversized hero statement
-3. compact role/identity line
-4. primary and secondary CTA
-5. selected work
-6. technical focus / stack
-7. latest writing
-8. short CV/about bridge
-9. contact CTA
-10. footer
+1. navigation
+2. hero statement, identity text, and portfolio/blog links
+3. featured posts
+4. selected work
+5. newest posts
+6. footer
+
+Each card section uses `ContentGrid` and shows up to three entries.
 
 Hero requirements:
 
@@ -375,15 +373,7 @@ Do not put a heavy shadow on every paragraph container.
 
 The CV needs to work both as a branded page and as practical information.
 
-Recommended sections:
-
-- profile/summary
-- experience timeline
-- selected projects
-- technical skills
-- education/certifications
-- languages
-- contact/download
+The localized resume MDX provides the profile, technical skills, certifications, experience, and education. `src/components/resume/` renders its grids and timeline; `/about/cv/` supplies the page header and print button. Public contact details and the contact form are on `/about/`.
 
 Use a strong structural grid, compact metadata, and restrained accent colors.
 

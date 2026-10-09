@@ -32,23 +32,24 @@ pnpm update
 
 ## 1. Project goal
 
-Build a multilingual personal website containing:
+Maintain the multilingual personal website containing:
 
 - portfolio / project case studies
 - blog
 - CV / experience
 - about/contact surfaces
 
-The visual language is modern neubrutalism. `DESIGN.md` is the source of truth for visual decisions.
+The visual language is modern neubrutalism. `docs/DESIGN.md` is the source of truth for visual decisions.
 
 Before making UI changes, read:
 
 1. `AGENTS.md`
-2. `DESIGN.md`
-3. `.codex/skills/neubrutalism-ui/SKILL.md` when present
-4. `docs/ARCHITECTURE.md`
-5. `docs/I18N.md`
-6. `docs/CONTENT.md`
+2. `docs/INVENTORY.md`
+3. `docs/DESIGN.md`
+4. `.codex/skills/neubrutalism-ui/SKILL.md` when present
+5. `docs/ARCHITECTURE.md`
+6. `docs/I18N.md`
+7. `docs/CONTENT.md`
 
 Do not invent a parallel design system, translation system, or content architecture.
 
@@ -138,21 +139,15 @@ Do not assume English and Czech are the final locale set. Read configured locale
 
 ## 5. Content organization
 
-Canonical structure:
+Current content structure:
 
 ```text
-src/
-  content/
-    blog/
-      en/
-        example-post.mdx
-      cs/
-        example-post.mdx
-    portfolio/
-      en/
-        example-project.mdx
-      cs/
-        example-project.mdx
+src/content/
+  blog/{en,cs,assets}/
+  portfolio/{en,cs,assets}/
+  resume/{en.mdx,cs.mdx,assets}/
+  privacy-policy/{en,cs}.mdx
+  tags.json
 ```
 
 Localized siblings share a stable `translationKey`.
@@ -181,34 +176,7 @@ See `docs/CONTENT.md`.
 
 Use Astro Content Collections and Zod schemas.
 
-Blog entries should support at minimum:
-
-- `title`
-- `description`
-- `locale`
-- `translationKey`
-- `publishedAt`
-- `updatedAt` optional
-- `tags` (an array of references to the `tags` collection)
-- `draft`
-- `featured`
-- `image` optional
-
-Portfolio entries should support at minimum:
-
-- `title`
-- `description`
-- `locale`
-- `translationKey`
-- `date`
-- `tags`
-- `featured`
-- `draft`
-- `externalUrl` optional
-- `repositoryUrl` optional
-- `image` optional
-- `role` optional
-- `stack`
+The active schemas and loaders are in `src/content.config.ts`. `docs/CONTENT.md` documents every field, validation rule, and default for `blog`, `portfolio`, `resume`, `privacyPolicy`, `tags`, and `githubLanguages`. Update that documentation when changing a schema.
 
 Do not duplicate whole MDX documents in TypeScript data structures.
 
@@ -218,27 +186,15 @@ Do not duplicate whole MDX documents in TypeScript data structures.
 
 Use `astro-intlayer` as the single UI i18n system.
 
-Expected integration:
-
-```ts
-import { defineConfig } from "astro/config";
-import { intlayer } from "astro-intlayer";
-
-export default defineConfig({
-    integrations: [intlayer()],
-});
-```
-
-Typical server-side component use:
+`astro.config.mjs` registers `intlayer()` alongside Expressive Code, MDX, and the icon integration. UI strings live in `src/i18n/site.content.ts` under the `site` dictionary:
 
 ```astro
 ---
 import { useIntlayer } from "astro-intlayer";
-
-const content = useIntlayer("navigation");
+const ui = useIntlayer("site");
 ---
 
-<a href="/">{content.home}</a>
+<span>{ui.home}</span>
 ```
 
 For locale information use `useLocale()`.
@@ -253,7 +209,7 @@ See `docs/I18N.md`.
 
 ## 8. UI implementation rules
 
-`DESIGN.md` owns visual direction.
+`docs/DESIGN.md` owns visual direction.
 
 When the neubrutalism skill exists, use it.
 
@@ -281,38 +237,19 @@ Never turn the site into generic rounded SaaS UI.
 
 Prefer small reusable primitives and composition.
 
-Suggested structure:
+Existing shared components:
 
-```text
-src/components/
-  layout/
-    Header.astro
-    Footer.astro
-    LocaleSwitcher.astro
-    ThemeToggle.astro
+- `src/layouts/BaseLayout.astro`: page shell and metadata.
+- `src/components/layout/`: header, footer, locale switcher, and theme toggle.
+- `src/components/ui/`: `ContentGrid`, `ContentImage`, `PageHeader`, `Pagination`, and `Tag`.
+- `src/components/ContentCard.astro`: blog cards.
+- `src/components/portfolio/`: `ProjectCard` and `GitHubLanguages`.
+- `src/components/blog/`: comments, reading statistics, and page views.
+- `src/components/mdx/`: shared MDX renderer, headings, links, images, callouts, and table of contents.
+- `src/components/resume/`: CV presentation components.
+- `src/components/about/ContactLinks.astro` and `src/components/ContactForm.astro`: contact surfaces.
 
-  ui/
-    Button.astro
-    Card.astro
-    Tag.astro
-    Callout.astro
-    SectionHeading.astro
-
-  blog/
-    BlogCard.astro
-    BlogList.astro
-    ArticleMeta.astro
-
-  portfolio/
-    ProjectCard.astro
-    ProjectGrid.astro
-    ProjectMeta.astro
-
-src/layouts/
-  BaseLayout.astro
-  ArticleLayout.astro
-  ProjectLayout.astro
-```
+`nb-action` and `nb-card` in `src/styles/tailwind.css` supply shared action/card styling. See `docs/ARCHITECTURE.md` for the source tree and helper APIs.
 
 Do not create one-off components when an existing primitive can be composed.
 
@@ -389,14 +326,7 @@ Prefer named, typed helper functions for:
 
 Do not scatter locale filtering and URL construction logic across page files.
 
-Centralize content helpers, for example:
-
-```text
-src/lib/
-  content.ts
-  i18n.ts
-  urls.ts
-```
+Reuse `src/lib/content.ts` for blog/portfolio queries and URLs, `src/lib/urls.ts` for section/feed/pagination URLs, and `src/lib/tags.ts`, `resume.ts`, and `privacy.ts` for their collections. Their current APIs are documented in `docs/ARCHITECTURE.md`.
 
 Keep content schemas in `src/content.config.ts`.
 
@@ -436,30 +366,3 @@ Do not:
 - generate locale paths by string concatenation if Intlayer already provides the correct helper
 - expose draft content in production
 - silently fall back to another language for missing editorial content
-
----
-
-## 16. Initial implementation priority
-
-Unless the user specifies otherwise, build in this order:
-
-1. Astro project/integrations
-2. Intlayer configuration
-3. content collection schemas
-4. locale-aware base layout
-5. header/navigation/locale switcher/theme control
-6. homepage
-7. portfolio index and detail
-8. blog index and detail
-9. CV/about page
-10. SEO/RSS/sitemap refinements
-
-The first milestone should prove the architecture with at least:
-
-- two locales
-- one translated UI dictionary
-- one blog translation pair
-- one portfolio translation pair
-- working localized routes
-- locale switching
-- light/dark design tokens

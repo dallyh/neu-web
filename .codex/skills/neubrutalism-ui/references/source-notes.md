@@ -17,4 +17,4 @@ The kit distills the site's documented design grammar into an original, project-
 - stronger expression on portfolio/marketing surfaces than on dense reading/functional surfaces
 - WCAG-aware contrast, focus, and hit-target handling
 
-This file is explanatory context only. `DESIGN.md` is the project source of truth.
+This file is explanatory context only. `docs/DESIGN.md` is the project source of truth.

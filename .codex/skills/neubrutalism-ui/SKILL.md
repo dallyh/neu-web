@@ -9,7 +9,7 @@ Use this skill for UI work in this repository.
 
 ## Start here
 
-1. Read `/DESIGN.md` before making design decisions.
+1. Read `docs/DESIGN.md` before making design decisions.
 2. Inspect existing project components and styles before adding new primitives.
 3. Reuse `/src/styles/tokens.css`, `/src/styles/tailwind.css`, and the existing Tailwind utilities where applicable.
 4. Load only the references needed for the task:
@@ -26,7 +26,7 @@ Use this skill for UI work in this repository.
 ### When creating UI
 
 1. Identify the surface: homepage, portfolio, project detail, blog index, blog article, CV, about, form, navigation, or shared component.
-2. Apply the intensity level defined in `DESIGN.md`.
+2. Apply the intensity level defined in `docs/DESIGN.md`.
 3. Build a conventional semantic UX skeleton first.
 4. Apply neubrutalist tokens as the visual layer.
 5. Use hard zero-blur shadows, explicit borders, flat fills, square geometry, and systematic typography.
