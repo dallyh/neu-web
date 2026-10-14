@@ -352,7 +352,7 @@
 	.nb-card {
 		/* default */
 		@apply shadow-nb-offset-md;
-		--nb-transform: 2px;
+		--nb-transform: round(to-zero, calc(var(--nb-shadow-offset) / 2), 1px);
 	}
 	.nb-action {
 		display: inline-flex;
@@ -413,18 +413,35 @@
 			box-shadow: calc(var(--nb-shadow-offset) + calc(var(--nb-transform) * 2)) calc(var(--nb-shadow-offset) + calc(var(--nb-transform) * 2)) 0 0 var(--nb-interactive-shadow-color, var(--nb-shadow-color));
 		}
 	}
-	
+
 	.nb-prose a {
 		font-weight: 650;
 		text-decoration: underline;
 		text-decoration-thickness: 2px;
 		text-underline-offset: 0.18em;
 	}
+
+	.nb-prose code {
+		@apply text-nb-surface;
+
+		&::before,
+		&::after {
+			display: none;
+		}
+	}
+
 	.nb-prose .nb-heading-anchor {
 		text-decoration: none;
 	}
-	.nb-callout-body > * + * {
-		margin-top: 0.75em;
+	
+	.nb-callout-body {
+		> * + * {
+			margin-top: 0.75em;
+		}
+
+		* {
+			color: inherit !important;
+		}
 	}
 }
 
