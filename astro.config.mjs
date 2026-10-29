@@ -9,6 +9,10 @@ import tailwindcss from "@tailwindcss/vite";
 import process from "node:process";
 import { loadEnv } from "vite";
 
+import sitemap from "@astrojs/sitemap";
+
+import aiRobotsTxt from "astro-ai-robots-txt";
+
 const { PUBLIC_SITE_URL } = loadEnv(process.env.NODE_ENV ?? "", process.cwd(), "");
 
 // https://astro.build/config
@@ -89,6 +93,8 @@ export default defineConfig({
 		mdx(),
 		icon({ include: { devicon: ["html5", "css3", "javascript", "typescript", "react", "nodejs-wordmark", "csharp", "dot-net", "dotnetcore", "microsoftsqlserver", "git", "azure", "azuredevops"] } }),
 		intlayer(),
+		sitemap(),
+		aiRobotsTxt(),
 	],
 	vite: { plugins: [tailwindcss()] },
 });
