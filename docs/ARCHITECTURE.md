@@ -29,7 +29,7 @@ src/
     ContactForm.astro
     about/                        # ContactLinks
     blog/                         # Comments, ReadingStats, ViewCount
-    layout/                       # Header, Footer, LocaleSwitcher, ThemeToggle
+    layout/                       # Header, Footer, LocaleSwitcher, Search, ThemeToggle
     mdx/                          # MdxContent, headings, links, images, Callout, TOC
     portfolio/                    # ProjectCard, GitHubLanguages
     resume/                       # Hero, grids, certifications, timeline
@@ -74,7 +74,7 @@ src/
     ec-overrides.css
 ```
 
-`astro.config.mjs` configures the standalone Node adapter, typed environment variables, Fontsource fonts, Expressive Code, MDX, `astro-iconset`, Intlayer, and Tailwind's Vite plugin. `intlayer.config.ts` configures locales and routing; `ec.config.mjs` configures code rendering. UI declarations use the `site` dictionary in `src/i18n/site.content.ts`.
+`astro.config.mjs` configures the standalone Node adapter, typed environment variables, Fontsource fonts, Expressive Code, MDX, `astro-iconset`, Intlayer, Pagefind, and Tailwind's Vite plugin. `intlayer.config.ts` configures locales and routing; `ec.config.mjs` configures code rendering. UI declarations use the `site` dictionary in `src/i18n/site.content.ts`.
 
 Tailwind CSS v4 is wired through its Vite plugin. `tokens.css` remains the source for light/dark colors, typography, and hard shadows; `tailwind.css` exposes those tokens as utilities and holds shared utilities, component styles, base rules, MDX prose, motion, and print rules. Page and component styling lives in Astro utility classes.
 
@@ -176,6 +176,20 @@ Reuse these exports rather than duplicating queries or route construction in pag
 The homepage fetches both collections and renders the hero, featured posts, selected work, and newest posts in that order. Each card section shows up to three entries through `ContentGrid`. Blog and portfolio indexes use Astro pagination with six entries per page, configured separately in each route's `getStaticPaths()`.
 
 `Header` supplies navigation with a mobile menu, a DH wordmark that reveals the full localized name on hover or keyboard focus, locale switching, and theme controls. `BaseLayout` sets localized metadata, canonical/hreflang URLs, RSS discovery, and Open Graph images. Native cross-document view transitions are enabled only when reduced motion is not requested; no client router is used.
+
+## Static search
+
+`astro-pagefind` runs after the existing integrations in `astro.config.mjs`. During `pnpm build`, it indexes prerendered HTML and writes the search bundle and language indexes to `dist/client/pagefind`. The standalone Node server serves these static files; queries run in the browser without a search API endpoint or external service.
+
+`BaseLayout` has a `searchable?: boolean` prop, defaulting to `false`. Searchable pages receive `data-pagefind-body` on `<main>`. Blog posts, project details, About, CV, and privacy-policy pages opt in; the homepage, tag pages, and paginated listings do not. Their H1 elements supply `data-pagefind-meta="title"`. Header/footer content is outside the indexed main region, while `data-pagefind-ignore` excludes the contact form, comments, table of contents, heading permalink controls, and view/reading statistics. Production draft filtering also keeps drafts out of the index.
+
+`src/components/layout/Search.astro` owns the icon-only trigger, native `<dialog>`, browser logic, and scoped styles. `BaseLayout` places it in the header slot between `LocaleSwitcher` and `ThemeToggle`. It composes `PagefindConfig`, `pagefind-input`, `pagefind-summary`, `pagefind-results`, and `pagefind-keyboard-hints` using the shared `site-search` instance. The active locale and `<html lang>` select the corresponding language index. Authored labels and the unavailable message come from Intlayer; Pagefind localizes its built-in status messages.
+
+Opening search focuses the input and locks background scrolling. Closing restores the previous scroll setting and returns focus to the trigger. Escape clears a non-empty query before closing; the close button and backdrop also dismiss the dialog. Queries/results persist when reopened on the same page. Only the results area scrolls, keeping the input, summary, and keyboard hints visible. Bundle-loading failures show a localized message while keeping dismissal available.
+
+The component maps Pagefind's `--pf-*` variables to the site's theme tokens and bounds generated-content overrides to its search container. It uses square borders, hard shadows, project fonts, visible focus states, and reduced-motion rules. Search controls are hidden when printing, and the trigger remains hidden until its browser handler is initialized.
+
+Development serves the last production index: run `pnpm build` before testing with `pnpm dev`, and rebuild after editorial changes. The generated files stay in `dist/` and are included in the existing Docker deployment output.
 
 ## Blog comments
 

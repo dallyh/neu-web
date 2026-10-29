@@ -1,0 +1,296 @@
+---
+import { useIntlayer, useLocale } from "astro-intlayer";
+import { Icon } from "astro-iconset/components";
+import PagefindConfig from "astro-pagefind/components/PagefindConfig.astro";
+
+const ui = useIntlayer("site");
+const { locale } = useLocale();
+---
+
+<button class="search-trigger" type="button" aria-label={ui.search} aria-haspopup="dialog" aria-controls="site-search" data-search-trigger hidden>
+	<Icon name="search" size={24} aria-hidden="true" />
+</button>
+
+<dialog class="search-dialog" id="site-search" aria-labelledby="site-search-title" data-pagefind-ignore>
+	<header class="search-heading">
+		<h2 id="site-search-title">{ui.search}</h2>
+		<button class="search-close" type="button" aria-label={ui.closeSearch} data-search-close>
+			<Icon name="close" size={24} aria-hidden="true" />
+		</button>
+	</header>
+	<div class="search-body">
+		<p class="search-error" role="alert" data-search-error hidden>
+			{ui.searchUnavailable}
+		</p>
+		<div class="search-content" data-search-content>
+			<PagefindConfig instance="site-search" lang={locale} />
+			<pagefind-input instance="site-search" placeholder={ui.searchPlaceholder}></pagefind-input>
+			<pagefind-summary instance="site-search" default-message={ui.searchIntro} role="status" aria-live="polite" aria-atomic="true"></pagefind-summary>
+			<pagefind-results instance="site-search"></pagefind-results>
+			<pagefind-keyboard-hints instance="site-search"></pagefind-keyboard-hints>
+		</div>
+	</div>
+</dialog>
+
+<script>
+	interface SearchInput extends HTMLElement {
+		instance?: {
+			on: (event: "error", callback: () => void, owner: Element) => void;
+		};
+	}
+
+	const trigger = document.querySelector<HTMLButtonElement>("[data-search-trigger]");
+	const dialog = document.querySelector<HTMLDialogElement>("#site-search");
+	const close = dialog?.querySelector<HTMLButtonElement>("[data-search-close]");
+	const input = dialog?.querySelector<SearchInput>("pagefind-input");
+	const content = dialog?.querySelector<HTMLElement>("[data-search-content]");
+	const error = dialog?.querySelector<HTMLElement>("[data-search-error]");
+	let previousOverflow = "";
+	let backdropPointerDown = false;
+
+	if (trigger && dialog && close && input && content && error) {
+		const showError = () => {
+			content.hidden = true;
+			error.hidden = false;
+			if (dialog.open) close.focus();
+		};
+
+		const ready = customElements.whenDefined("pagefind-input").then(() => {
+			input.instance?.on("error", showError, dialog);
+		});
+
+		trigger.addEventListener("click", async () => {
+			if (dialog.open) return;
+			previousOverflow = document.documentElement.style.overflow;
+			dialog.showModal();
+			document.documentElement.style.overflow = "hidden";
+			try {
+				await ready;
+				if (dialog.open && !content.hidden) input.querySelector<HTMLInputElement>("input")?.focus();
+			} catch {
+				showError();
+			}
+		});
+
+		close.addEventListener("click", () => dialog.close());
+		dialog.addEventListener("close", () => {
+			document.documentElement.style.overflow = previousOverflow;
+			trigger.focus({ preventScroll: true });
+		});
+
+		// Clear a query before dismissing, including when a result has focus.
+		dialog.addEventListener(
+			"keydown",
+			(event) => {
+				if (event.key !== "Escape") return;
+				event.preventDefault();
+				event.stopPropagation();
+				if (input.querySelector<HTMLInputElement>("input")?.value) {
+					input.querySelector<HTMLButtonElement>(".pf-input-clear")?.click();
+				} else {
+					dialog.close();
+				}
+			},
+			true,
+		);
+
+		const outside = (event: MouseEvent) => {
+			const rect = dialog.getBoundingClientRect();
+			return event.target === dialog && (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom);
+		};
+		dialog.addEventListener("pointerdown", (event) => {
+			backdropPointerDown = outside(event);
+		});
+		dialog.addEventListener("click", (event) => {
+			if (backdropPointerDown && outside(event)) dialog.close();
+			backdropPointerDown = false;
+		});
+		trigger.hidden = false;
+	}
+</script>
+
+<style>
+	.search-trigger,
+	.search-close {
+		display: inline-flex;
+		min-width: 2.75rem;
+		min-height: 2.75rem;
+		align-items: center;
+		justify-content: center;
+		gap: var(--nb-space-2);
+		border: var(--nb-border-sm) solid var(--nb-ink);
+		border-radius: var(--nb-radius);
+		background: var(--nb-surface);
+		padding: var(--nb-space-2);
+		color: var(--nb-text);
+		font-family: var(--nb-font-heading);
+		font-weight: 700;
+		cursor: pointer;
+	}
+	.search-trigger:hover {
+		background: var(--nb-surface-muted);
+	}
+	.search-trigger[hidden] {
+		display: none;
+	}
+	.search-close {
+		border-color: var(--nb-on-primary);
+		background: var(--nb-primary);
+		color: var(--nb-on-primary);
+	}
+	.search-close:hover {
+		background: var(--nb-secondary);
+	}
+	.search-dialog {
+		--pf-text: var(--nb-text);
+		--pf-text-secondary: var(--nb-text-muted);
+		--pf-text-muted: var(--nb-text-muted);
+		--pf-background: var(--nb-surface);
+		--pf-border: var(--nb-ink);
+		--pf-border-focus: var(--nb-focus);
+		--pf-skeleton: var(--nb-surface-muted);
+		--pf-skeleton-shine: var(--nb-surface-muted);
+		--pf-hover: var(--nb-surface-muted);
+		--pf-mark: var(--nb-on-primary);
+		--pf-scroll-shadow: transparent;
+		--pf-shadow-sm: var(--nb-shadow-sm);
+		--pf-shadow-md: var(--nb-shadow-md);
+		--pf-shadow-lg: var(--nb-shadow-lg);
+		--pf-error-bg: var(--nb-surface);
+		--pf-error-border: var(--nb-error);
+		--pf-error-text: var(--nb-error);
+		--pf-error-text-secondary: var(--nb-text-muted);
+		--pf-outline-focus: var(--nb-focus);
+		--pf-outline-width: var(--nb-border-md);
+		--pf-outline-offset: var(--nb-space-1);
+		--pf-font: var(--nb-font-body);
+		--pf-input-height: 3rem;
+		--pf-input-font-size: 1rem;
+		--pf-summary-font-size: var(--nb-small);
+		--pf-result-title-font-size: 1.125rem;
+		--pf-result-excerpt-font-size: 1rem;
+		--pf-results-gap: var(--nb-space-4);
+		--pf-border-radius: var(--nb-radius);
+		width: min(48rem, calc(100% - 2 * var(--nb-space-4)));
+		max-width: none;
+		max-height: 90dvh;
+		margin: 5dvh auto auto;
+		overflow: hidden;
+		border: var(--nb-border-md) solid var(--nb-ink);
+		border-radius: var(--nb-radius);
+		background: var(--nb-surface);
+		padding: 0;
+		color: var(--nb-text);
+		box-shadow: var(--nb-shadow-lg);
+	}
+	.search-dialog[open] {
+		display: flex;
+		flex-direction: column;
+	}
+	.search-dialog::backdrop {
+		background: rgb(0 0 0 / 65%);
+	}
+	.search-heading {
+		display: flex;
+		flex: none;
+		align-items: center;
+		justify-content: space-between;
+		gap: var(--nb-space-4);
+		border-bottom: var(--nb-border-md) solid var(--nb-ink);
+		background: var(--nb-primary);
+		padding: var(--nb-space-4) var(--nb-space-5);
+		color: var(--nb-on-primary);
+	}
+	.search-heading h2 {
+		font: 700 var(--nb-h3) / var(--nb-leading-heading) var(--nb-font-heading);
+	}
+	.search-body {
+		display: flex;
+		flex-direction: column;
+		min-height: 0;
+		overflow: hidden;
+		padding: var(--nb-space-5);
+	}
+	.search-content {
+		flex: 1;
+		min-height: 0;
+	}
+	.search-content:not([hidden]) {
+		display: flex;
+		flex-direction: column;
+	}
+	.search-content :global(pagefind-input),
+	.search-content :global(pagefind-summary),
+	.search-content :global(pagefind-keyboard-hints) {
+		flex-shrink: 0;
+	}
+	.search-content :global(pagefind-results) {
+		flex: 1 1 auto;
+		min-height: 0;
+		overflow-y: auto;
+		overscroll-behavior: contain;
+		padding: var(--nb-space-1);
+		margin: calc(-1 * var(--nb-space-1));
+	}
+	.search-content :global(pagefind-summary) {
+		margin-block: var(--nb-space-4);
+	}
+	.search-content :global(pagefind-keyboard-hints) {
+		margin-top: var(--nb-space-5) !important;
+	}
+	.search-error {
+		border: var(--nb-border-sm) solid var(--nb-error);
+		padding: var(--nb-space-4);
+	}
+
+	/* Pagefind deliberately uses ID-level specificity; bound overrides to this dialog. */
+	.search-content :global(.pf-input),
+	.search-content :global(.pf-result-card),
+	.search-content :global(.pf-heading-chip) {
+		border-width: var(--nb-border-sm) !important;
+	}
+	.search-content :global(.pf-result-title) {
+		font-family: var(--nb-font-heading) !important;
+		font-weight: 700 !important;
+	}
+	.search-content :global(.pf-summary),
+	.search-content :global(.pf-keyboard-hint),
+	.search-content :global(.pf-keyboard-key) {
+		font-family: var(--nb-font-mono) !important;
+	}
+	.search-content :global(.pf-result-excerpt) {
+		white-space: normal !important;
+	}
+	.search-content :global(mark) {
+		background: var(--nb-primary) !important;
+		color: var(--nb-on-primary) !important;
+	}
+	.search-content :global(.pf-input:focus-visible) {
+		box-shadow: none !important;
+	}
+	.search-content :global(:is(input, button, a):focus-visible) {
+		outline: var(--nb-border-md) solid var(--nb-focus) !important;
+		outline-offset: var(--nb-space-1) !important;
+	}
+	.search-content :global(.pf-keyboard-key),
+	.search-content :global(.pf-heading-chip),
+	.search-content :global(.pf-skeleton) {
+		border-radius: var(--nb-radius) !important;
+	}
+	.search-content :global(.pf-skeleton) {
+		background: var(--nb-surface-muted) !important;
+		animation: none !important;
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.search-content :global(*) {
+			transition: none !important;
+			animation: none !important;
+		}
+	}
+	@media print {
+		.search-trigger,
+		.search-dialog[open] {
+			display: none;
+		}
+	}
+</style>

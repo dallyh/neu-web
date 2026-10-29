@@ -21,11 +21,13 @@ const translations = await getTranslations("portfolio", entry.data.translationKe
 const paths = Object.fromEntries(translations.map((sibling) => [sibling.data.locale, contentUrl("portfolio", sibling)]));
 ---
 
-<BaseLayout title={`${entry.data.title} · ${ui.name}`} description={entry.data.description} paths={paths} fallbackPath="/portfolio/">
+<BaseLayout searchable title={`${entry.data.title} · ${ui.name}`} description={entry.data.description} paths={paths} fallbackPath="/portfolio/">
 	<article>
 		<PageHeader class="my-8 mb-12 nb-card nb-card-secondary nb-card-no-action">
 			<p class="nb-page-header-label">{ui.portfolio}</p>
-			<h1 class="nb-page-header-title">{entry.data.title}</h1>
+			<h1 class="nb-page-header-title" data-pagefind-meta="title">
+				{entry.data.title}
+			</h1>
 			<p class="nb-page-header-description mb-4">{entry.data.description}</p>
 			{entry.data.githubUrl && (
 				<ExternalLink href={entry.data.githubUrl} class="text-sm nb-action nb-action-primary nb-shadow w-fit gap-2">

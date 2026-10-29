@@ -44,7 +44,7 @@ function generateTocHtml(headings: MarkdownHeading[]): string {
 ---
 
 {headings.length > 0 && (
-	<toc-root>
+	<toc-root data-pagefind-ignore>
 		<details class="nb-card nb-card-no-action p-4 print:hidden" open id="tocDetails">
 			<summary class="cursor-pointer font-nb-heading font-bold">{ui.tableOfContents}</summary>
 			<nav aria-label={ui.tableOfContents} class="mt-3">

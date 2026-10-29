@@ -3,6 +3,11 @@ import { plural, t, type Dictionary } from "intlayer";
 const content = {
 	key: "site",
 	content: {
+		search: t({ en: "Search", cs: "Hledat" }),
+		closeSearch: t({ en: "Close search", cs: "Zavřít vyhledávání" }),
+		searchPlaceholder: t({ en: "Search articles, projects, and more…", cs: "Hledat články, projekty a další…" }),
+		searchIntro: t({ en: "Start typing to search this site.", cs: "Začněte psát a prohledejte tento web." }),
+		searchUnavailable: t({ en: "Search is unavailable right now. Please try again later.", cs: "Vyhledávání nyní není dostupné. Zkuste to prosím později." }),
 		name: t({ en: "Dalibor Hon", cs: "Dalibor Hon" }),
 		home: t({ en: "Home", cs: "Domů" }),
 		portfolio: t({ en: "Portfolio", cs: "Portfolio" }),

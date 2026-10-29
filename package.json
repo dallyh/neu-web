@@ -28,6 +28,7 @@
         "astro-expressive-code": "^0.44.3",
         "astro-iconset": "^0.0.6",
         "astro-intlayer": "^9.7.0",
+        "astro-pagefind": "^2.0.1",
         "intlayer": "^9.7.0",
         "octokit": "^5.0.5",
         "sanitize-html": "^2.18.1",

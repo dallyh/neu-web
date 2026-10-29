@@ -12,6 +12,7 @@ import { websiteOgUrl } from "../lib/open-graph/urls";
 import { ogSize } from "../lib/open-graph/theme";
 import "../styles/tailwind.css";
 import "../styles/ec-overrides.css";
+import Search from "../components/layout/Search.astro";
 
 interface Props {
 	title: string;
@@ -21,8 +22,9 @@ interface Props {
 	articleDate?: Date;
 	ogImage?: string;
 	ogImageAlt?: string;
+	searchable?: boolean;
 }
-const { title, description, paths = {}, fallbackPath = "/", articleDate, ogImage, ogImageAlt = title } = Astro.props;
+const { title, description, paths = {}, fallbackPath = "/", articleDate, ogImage, ogImageAlt = title, searchable = false } = Astro.props;
 const { locale, availableLocales } = useLocale();
 const ui = useIntlayer("site");
 const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url).href;
@@ -81,9 +83,10 @@ const analyticsScript = `${UMAMI_URL.replace(/\/$/, "")}/script.js`;
 		<div class="px-4 mx-auto w-full max-w-[80rem] print:max-w-none print:px-0 lg:px-0">
 			<Header>
 				<LocaleSwitcher paths={paths} fallbackPath={fallbackPath} />
+				<Search />
 				<ThemeToggle />
 			</Header>
-			<main id="main">
+			<main id="main" data-pagefind-body={searchable || undefined}>
 				<slot />
 			</main>
 			<Footer />

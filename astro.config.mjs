@@ -1,6 +1,7 @@
 // @ts-check
 import { defineConfig, envField, fontProviders } from "astro/config";
 import mdx from "@astrojs/mdx";
+import pagefind from "astro-pagefind";
 import node from "@astrojs/node";
 import icon from "astro-iconset";
 import expressiveCode from "astro-expressive-code";
@@ -95,6 +96,7 @@ export default defineConfig({
 		intlayer(),
 		sitemap(),
 		aiRobotsTxt(),
+		pagefind(),
 	],
 	vite: { plugins: [tailwindcss()] },
 });

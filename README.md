@@ -17,6 +17,8 @@ This site was made with help from Codex for the initial scaffold, design, and mi
 | `pnpm preview`                   | Preview the build locally (not a production server) |
 | `pnpm format`                    | Format project files                                |
 
+Search uses the last production index during development. Run `pnpm build` before testing search with `pnpm dev`; rebuild after content changes.
+
 ## Environment
 
 Copy `.env.example` to `.env` for local development. Public settings are baked into pages; changing them requires a new build.

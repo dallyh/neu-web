@@ -25,10 +25,12 @@ const paths = Object.fromEntries(
 );
 ---
 
-<BaseLayout title={`${entry.data.title} · ${ui.name}`} description={ui.privacyPolicyDescription} paths={paths}>
+<BaseLayout searchable title={`${entry.data.title} · ${ui.name}`} description={ui.privacyPolicyDescription} paths={paths}>
 	<article>
 		<PageHeader class="my-8 mb-12">
-			<h1 class="nb-page-header-title">{entry.data.title}</h1>
+			<h1 class="nb-page-header-title" data-pagefind-meta="title">
+				{entry.data.title}
+			</h1>
 			<p class="nb-page-header-description">
 				{ui.effectiveDate}: <time datetime={entry.data.effectiveDate.toISOString()}>{new Intl.DateTimeFormat(privacyPolicyLocale(entry), { dateStyle: "long" }).format(entry.data.effectiveDate)}</time>
 			</p>
