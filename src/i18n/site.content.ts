@@ -55,7 +55,7 @@ const content = {
 		language: t({ en: "Language", cs: "Jazyk" }),
 		skip: t({ en: "Skip to content", cs: "Přejít na obsah" }),
 		theme: t({ en: "Toggle color theme", cs: "Přepnout barevný motiv" }),
-		heroTitle: t({ en: "Hi there! <br/> I'm Dalibor.", cs: "Zdravím! <br/> Jsem Dalibor." }),
+		heroTitle: t({ en: "Hi there<span>!</span> <br/> I'm <span>Dalibor</span><span>.</span>", cs: "Zdravím<span>!</span> <br/> Jsem <span>Dalibor</span><span>.</span>" }),
 		heroText: t({
 			en: "A Business Consultant who is a passionate analyst and also a technology enthusiast. This is my small space on the web.",
 			cs: "Business Consultant který je zapálený analytik a zároveň i nadšenec do technologií. Tohle je mé malé místo na internetu.",
@@ -74,6 +74,7 @@ const content = {
 		published: t({ en: "Published", cs: "Publikováno" }),
 		role: t({ en: "Role", cs: "Role" }),
 		stack: t({ en: "Stack", cs: "Technologie" }),
+		viewOnGitHub: t({ en: "View on GitHub", cs: "Zobrazit na GitHubu" }),
 		backToBlog: t({ en: "All articles", cs: "Všechny články" }),
 		backToTags: t({ en: "All tags", cs: "Všechny štítky" }),
 		backToPortfolio: t({ en: "All projects", cs: "Všechny projekty" }),

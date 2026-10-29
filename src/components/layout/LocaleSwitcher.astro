@@ -12,7 +12,7 @@ const { paths, fallbackPath } = Astro.props;
 const ui = useIntlayer("site");
 const { locale, availableLocales } = useLocale();
 const localeLinkClass =
-	"inline-flex min-h-11 min-w-11 items-center justify-center border-2 border-transparent p-2 font-nb-heading text-sm font-bold no-underline hover:bg-nb-surface-muted aria-[current=true]:border-nb-ink aria-[current=true]:bg-nb-primary aria-[current=true]:text-nb-on-primary aria-[current=true]:underline";
+	"inline-flex min-h-11 min-w-11 items-center justify-center border-2 border-nb-ink p-2 font-nb-heading text-sm font-bold no-underline hover:bg-nb-surface-muted aria-[current=true]:border-nb-ink aria-[current=true]:bg-nb-primary aria-[current=true]:text-nb-on-primary";
 ---
 
 <nav class="flex flex-wrap items-center gap-2 border-l-2 border-nb-ink pl-3" aria-label={ui.language} data-locale-switcher>

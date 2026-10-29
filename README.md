@@ -51,3 +51,12 @@ docker run --rm -p 4321:4321 --env-file .env neu-web
 ```
 
 In Coolify, use `Dockerfile` at the repository root, expose port `4321`, and enable **Use Docker Build Secrets**. Mark build settings as build variables; make `GITHUB_TOKEN` build-only. Add contact secrets and Umami credentials as runtime variables. The image runs as the non-root `node` user and includes a health check.
+
+## Licensing
+
+Blog posts under `src/content/posts/` are licensed under
+[CC BY-SA 4.0](./src/content/LICENSE.md).
+
+The website's source code is publicly available for reference
+but is not distributed under an open-source license.
+All rights reserved.

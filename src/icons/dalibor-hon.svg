@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 784 116" fill="currentColor" role="img" aria-label="Dalibor Hon">
+	<title>Dalibor Hon</title>
+	<g data-wordmark-d="" transform="translate(-44 -62)">
+		<path fill-rule="evenodd" d="M44 62H84L112 90V150L84 178H44ZM66 84V156H76L90 142V98L76 84Z" />
+	</g>
+	<g data-wordmark-alibor="">
+		<path transform="translate(84)" fill-rule="evenodd" d="M0 116V28L28 0H40L68 28V116H46V72H22V116ZM22 50H46V36L34 24L22 36Z" />
+		<path transform="translate(168)" d="M0 0H22V94H58V116H0Z" />
+		<path transform="translate(242)" d="M0 0H22V116H0Z" />
+		<path transform="translate(280)" fill-rule="evenodd" d="M0 0H44L68 24V46L56 58L68 70V92L44 116H0ZM22 22V48H38L46 40V34L34 22ZM22 68V94H34L46 82V76L38 68Z" />
+		<path transform="translate(364)" fill-rule="evenodd" d="M0 28L28 0H40L68 28V88L40 116H28L0 88ZM22 36L34 24L46 36V80L34 92L22 80Z" />
+		<path transform="translate(448)" fill-rule="evenodd" d="M0 0H44L68 24V50L50 68L68 116H44L28 72H22V116H0ZM22 22V50H34L46 38V34L34 22Z" />
+	</g>
+	<g data-wordmark-surname="">
+		<g data-wordmark-h="" transform="translate(420 -62)">
+			<path d="M128 62H150V108H174V62H196V178H174V130H150V178H128Z" />
+		</g>
+		<g data-wordmark-on="">
+			<path transform="translate(632)" fill-rule="evenodd" d="M0 28L28 0H40L68 28V88L40 116H28L0 88ZM22 36L34 24L46 36V80L34 92L22 80Z" />
+			<path transform="translate(716)" d="M0 116V0H22L46 66V0H68V116H46L22 50V116Z" />
+		</g>
+	</g>
+</svg>

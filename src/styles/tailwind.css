@@ -285,21 +285,21 @@
 	box-decoration-break: clone;
 
 	padding-inline: 0.16em;
-	/* padding-bottom: 0.08em; */
+	padding-bottom: 0.08em;
 
-	background-image: linear-gradient(var(--nb-primary), var(--nb-primary));
+	background-image: linear-gradient(var(--nb-marker-hover-color, var(--nb-primary)), var(--nb-marker-hover-color, var(--nb-primary)));
 
 	background-repeat: no-repeat;
-	background-size: 0% 1em;
-	background-position: 0.12em calc(100% - 0.12em);
+	background-size: 0% 1.15em;
+	background-position: 0.12em 100%;
 
 	transition:
 		background-size 300ms ease-out,
 		color 300ms ease-out;
 
 	&:hover {
-		background-size: calc(100% - 0.22em) 1em;
-		color: var(--nb-on-primary);
+		background-size: calc(100% - 0.22em) 1.15em;
+		color: var(--nb-marker-hover-ink, var(--nb-on-primary));
 	}
 
 	&:focus-visible {
@@ -309,6 +309,51 @@
 	@media (prefers-reduced-motion: reduce) {
 		transition: none;
 	}
+}
+
+@utility nb-marker-hover-primary {
+	--nb-marker-hover-color: var(--nb-primary);
+	--nb-marker-hover-ink: var(--nb-on-primary);
+}
+
+@utility nb-marker-hover-secondary {
+	--nb-marker-hover-color: var(--nb-secondary);
+	--nb-marker-hover-ink: var(--nb-on-secondary);
+}
+
+@utility nb-marker-hover-accent {
+	--nb-marker-hover-color: var(--nb-accent);
+	--nb-marker-hover-ink: var(--nb-on-accent);
+}
+
+@utility nb-marker-hover-success {
+	--nb-marker-hover-color: var(--nb-success);
+	--nb-marker-hover-ink: var(--nb-on-success);
+}
+
+@utility nb-marker-hover-success-ink {
+	--nb-marker-hover-color: var(--nb-success-ink);
+	--nb-marker-hover-ink: var(--nb-on-success-ink);
+}
+
+@utility nb-marker-hover-error {
+	--nb-marker-hover-color: var(--nb-error);
+	--nb-marker-hover-ink: var(--nb-on-error);
+}
+
+@utility nb-marker-hover-warning {
+	--nb-marker-hover-color: var(--nb-warning);
+	--nb-marker-hover-ink: var(--nb-on-warning);
+}
+
+@utility nb-marker-hover-lavender {
+	--nb-marker-hover-color: var(--nb-lavender);
+	--nb-marker-hover-ink: var(--nb-on-lavender);
+}
+
+@utility nb-marker-hover-focus {
+	--nb-marker-hover-color: var(--nb-focus);
+	--nb-marker-hover-ink: var(--nb-on-focus);
 }
 
 /* MDX is generated markup, so its descendants cannot carry utility classes. */
@@ -333,21 +378,6 @@
 		color: var(--nb-success-ink);
 	}
 
-	.nb-theme-icon-sun,
-	:root[data-theme="dark"] .nb-theme-icon-moon {
-		display: none;
-	}
-	:root[data-theme="dark"] .nb-theme-icon-sun {
-		display: block;
-	}
-	@media (prefers-color-scheme: dark) {
-		:root:not([data-theme]) .nb-theme-icon-sun {
-			display: block;
-		}
-		:root:not([data-theme]) .nb-theme-icon-moon {
-			display: none;
-		}
-	}
 	.nb-action,
 	.nb-card {
 		/* default */
@@ -433,7 +463,7 @@
 	.nb-prose .nb-heading-anchor {
 		text-decoration: none;
 	}
-	
+
 	.nb-callout-body {
 		> * + * {
 			margin-top: 0.75em;

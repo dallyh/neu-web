@@ -1,5 +1,6 @@
 import type { APIRoute, GetStaticPaths } from "astro";
 import { getIntlayer, isDeclaredLocale, locales } from "intlayer";
+import sanitize from "sanitize-html";
 import { WebsiteTemplate } from "../../lib/open-graph/WebsiteTemplate";
 import { renderOpenGraph } from "../../lib/open-graph/render";
 
@@ -13,7 +14,7 @@ export const GET: APIRoute = async ({ params, site }) => {
 	return renderOpenGraph(
 		WebsiteTemplate({
 			name: ui.name,
-			title: ui.heroTitle,
+			title: sanitize(ui.heroTitle, { allowedTags: [], allowedAttributes: {} }),
 			description: ui.heroText,
 			sections: [ui.portfolio, ui.blog, ui.cv],
 			host: site.host,

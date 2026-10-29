@@ -175,7 +175,7 @@ Reuse these exports rather than duplicating queries or route construction in pag
 
 The homepage fetches both collections and renders the hero, featured posts, selected work, and newest posts in that order. Each card section shows up to three entries through `ContentGrid`. Blog and portfolio indexes use Astro pagination with six entries per page, configured separately in each route's `getStaticPaths()`.
 
-`Header` supplies navigation with a mobile menu, the DH SVG logo, locale switching, and theme controls. `BaseLayout` sets localized metadata, canonical/hreflang URLs, RSS discovery, and Open Graph images. Native cross-document view transitions are enabled only when reduced motion is not requested; no client router is used.
+`Header` supplies navigation with a mobile menu, a DH wordmark that reveals the full localized name on hover or keyboard focus, locale switching, and theme controls. `BaseLayout` sets localized metadata, canonical/hreflang URLs, RSS discovery, and Open Graph images. Native cross-document view transitions are enabled only when reduced motion is not requested; no client router is used.
 
 ## Blog comments
 

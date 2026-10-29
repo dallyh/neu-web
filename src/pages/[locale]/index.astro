@@ -23,8 +23,21 @@ const sectionHeadingClass = "my-8 mt-16 flex flex-wrap items-center justify-betw
 ---
 
 <BaseLayout title={ui.name} description={ui.heroText} paths={paths}>
-	<section class="grid items-end gap-8 py-8 pb-10 md:grid-cols-[minmax(0,3fr)_minmax(16rem,2fr)] md:gap-12 md:pb-20" aria-labelledby="hero-title">
-		<h1 id="hero-title" class="max-w-[11ch] font-nb-display text-nb-display-xl leading-[1.05] font-normal tracking-[-.04em]">
+	<section class="grid items-end gap-8 py-8 pb-10 md:grid-cols-[minmax(0,3fr)_minmax(16rem,2fr)] md:gap-12" aria-labelledby="hero-title">
+		<h1
+			id="hero-title"
+			class="max-w-[11ch]
+			font-nb-display
+			text-nb-display-xl
+			leading-[1.05] 
+			font-normal 
+			tracking-[-.04em] 
+			[&>span:first-of-type]:text-nb-accent 
+			[&>span:nth-of-type(2)]:text-nb-primary 
+			[&>span:nth-of-type(2)]:tracking-[-1px]
+			[&>span:nth-of-type(2)]:[-webkit-text-stroke:1px_var(--nb-on-primary)] 
+			[&>span:last-of-type]:text-nb-accent"
+		>
 			{ui.heroTitle}
 		</h1>
 		<div class="nb-card nb-card-primary nb-card-no-action">

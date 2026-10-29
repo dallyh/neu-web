@@ -19,6 +19,7 @@ const { locale } = useLocale();
 const date = props.collection === "blog" ? props.entry.data.publishedAt : (props.githubData?.createdAt ?? props.entry.data.date);
 const href = props.collection === "blog" ? contentUrl("blog", props.entry) : contentUrl("portfolio", props.entry);
 const blogTags = props.collection === "blog" ? await getBlogTags(props.entry) : [];
+const headerStyle = collection === "blog" ? "text-nb-warning nb-marker-hover-warning" : "text-nb-focus nb-marker-hover-focus";
 ---
 
 <article class:list={["nb-card flex h-full flex-col gap-4 relative", className]}>
@@ -42,7 +43,7 @@ const blogTags = props.collection === "blog" ? await getBlogTags(props.entry) : 
 		<span>{collection === "blog" ? ui.blog : ui.portfolio}</span>
 	</p>
 	<Heading class="font-nb-heading text-nb-h3 leading-tight font-bold">
-		<a class="nb-marker-hover" data-text-marker={entry.data.title} href={href}>
+		<a class:list={["nb-marker-hover", headerStyle]} data-text-marker={entry.data.title} href={href}>
 			{entry.data.title}
 		</a>
 	</Heading>

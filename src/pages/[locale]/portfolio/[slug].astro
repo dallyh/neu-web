@@ -8,6 +8,8 @@ import Tag from "../../../components/ui/Tag.astro";
 import MdxContent from "../../../components/mdx/MdxContent.astro";
 import PageHeader from "../../../components/ui/PageHeader.astro";
 import ContentImage from "../../../components/ui/ContentImage.astro";
+import ExternalLink from "../../../components/mdx/ExternalLink.astro";
+import { Icon } from "astro-iconset/components";
 
 export async function getStaticPaths() {
 	return (await getEntries("portfolio")).map((entry) => ({ params: { locale: entry.data.locale, slug: getSlugWithoutLocale(entry.id) }, props: { entry } }));
@@ -24,25 +26,33 @@ const paths = Object.fromEntries(translations.map((sibling) => [sibling.data.loc
 		<PageHeader class="my-8 mb-12 nb-card nb-card-secondary nb-card-no-action">
 			<p class="nb-page-header-label">{ui.portfolio}</p>
 			<h1 class="nb-page-header-title">{entry.data.title}</h1>
-			<p class="nb-page-header-description">{entry.data.description}</p>
+			<p class="nb-page-header-description mb-4">{entry.data.description}</p>
+			{entry.data.githubUrl && (
+				<ExternalLink href={entry.data.githubUrl} class="text-sm nb-action nb-action-primary nb-shadow w-fit gap-2">
+					<Icon name="github" size={20} aria-hidden="true" />
+					{ui.viewOnGitHub}
+				</ExternalLink>
+			)}
 		</PageHeader>
 		{entry.data.image && (
 			<figure class="mt-8 overflow-hidden border-2 border-nb-ink">
 				<ContentImage src={entry.data.image} alt={entry.data.imageAlt ?? ""} width={1536} height={1024} class="max-h-[34rem] w-full object-cover" />
 			</figure>
 		)}
-		<div class="my-6 mb-12 flex flex-wrap items-center gap-4 font-nb-mono text-nb-meta">
+		<div class="mb-8 flex flex-col flex-wrap gap-4 font-nb-mono text-nb-meta">
+			<div class="flex gap-2">
+				{entry.data.tags.map((tag) => (
+					<Tag label={tag} />
+				))}
+			</div>
 			{entry.data.role && (
-				<span>
+				<div>
 					{ui.role}: {entry.data.role}
-				</span>
+				</div>
 			)}
-			<span>
+			<div class="flex">
 				{ui.stack}: {entry.data.stack.join(", ")}
-			</span>
-			{entry.data.tags.map((tag) => (
-				<Tag label={tag} />
-			))}
+			</div>
 		</div>
 		<MdxContent {Content} {headings} showTableOfContents={entry.data.showTableOfContents} />
 	</article>

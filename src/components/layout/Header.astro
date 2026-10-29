@@ -3,6 +3,7 @@ import { useIntlayer, useLocale } from "astro-intlayer";
 import { getPathWithoutLocale } from "intlayer";
 import { sectionUrl } from "../../lib/urls";
 import { Icon } from "astro-iconset/components";
+import wordmark from "../../icons/dalibor-hon.svg?raw";
 
 const ui = useIntlayer("site");
 const { locale } = useLocale();
@@ -12,12 +13,11 @@ const navLinkClass = "nb-action nb-action-accent nb-action-anim-shadow shadow-nb
 ---
 
 <header class="mt-2 mb-8 flex flex-wrap items-center gap-4 nb-card nb-card-no-action p-4 max-lg:mb-10 print:hidden" data-site-header>
-	<a class="mr-auto inline-flex items-center gap-2 no-underline" href={sectionUrl("", locale)}>
-		<span class="nb-card shadow-nb-offset-sm hover:nb-card-primary transition-colors duration-nb ease-nb p-1" aria-hidden="true">
-			<Icon name="dh-logo" width={32} height={18} aria-hidden="true" />
-		</span>
-		<span class="font-nb-display nb-marker-hover ml-2 text-4xl mt-2.5 h-fit tracking-wider">
-			
+	<a class="nb-brand mr-auto inline-flex no-underline" href={sectionUrl("", locale)} aria-label={ui.name}>
+		<span class="nb-card nb-card-no-action shadow-nb-offset-sm inline-flex min-h-11 items-center justify-start p-2" aria-hidden="true">
+			<span class="nb-brand-viewport">
+				<Fragment set:html={wordmark} />
+			</span>
 		</span>
 	</a>
 	<button
@@ -60,6 +60,69 @@ const navLinkClass = "nb-action nb-action-accent nb-action-anim-shadow shadow-nb
 		</div>
 	</div>
 </header>
+
+<style>
+	.nb-brand {
+		--nb-wordmark-height: 24px;
+		--nb-wordmark-width: calc(152 / 116 * var(--nb-wordmark-height));
+		--nb-wordmark-shift: -464px;
+		--nb-wordmark-clip: inset(0 100% 0 0);
+	}
+
+	.nb-brand-viewport {
+		display: block;
+		width: var(--nb-wordmark-width);
+		height: var(--nb-wordmark-height);
+		overflow: hidden;
+		transition: width var(--nb-duration-slowest) var(--nb-ease);
+	}
+
+	.nb-brand-viewport :global(svg) {
+		display: block;
+		width: calc(784 / 116 * var(--nb-wordmark-height));
+		max-width: none;
+		height: var(--nb-wordmark-height);
+	}
+
+	.nb-brand-viewport :global([data-wordmark-surname]) {
+		transform: translateX(var(--nb-wordmark-shift));
+		transition: transform var(--nb-duration-slowest) var(--nb-ease);
+	}
+
+	.nb-brand-viewport :global([data-wordmark-alibor]),
+	.nb-brand-viewport :global([data-wordmark-on]) {
+		clip-path: var(--nb-wordmark-clip);
+		transition: clip-path var(--nb-duration-slowest) var(--nb-ease);
+	}
+
+	.nb-brand:focus-visible {
+		--nb-wordmark-width: calc(784 / 116 * var(--nb-wordmark-height));
+		--nb-wordmark-shift: 0px;
+		--nb-wordmark-clip: inset(0 0 0 0);
+	}
+
+	@media (hover: hover) {
+		.nb-brand:hover {
+			--nb-wordmark-width: calc(784 / 116 * var(--nb-wordmark-height));
+			--nb-wordmark-shift: 0px;
+			--nb-wordmark-clip: inset(0 0 0 0);
+		}
+	}
+
+	.nb-brand:is(:hover, :focus-visible) > span {
+		background: var(--nb-primary);
+		color: var(--nb-on-primary);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.nb-brand-viewport,
+		.nb-brand-viewport :global([data-wordmark-surname]),
+		.nb-brand-viewport :global([data-wordmark-alibor]),
+		.nb-brand-viewport :global([data-wordmark-on]) {
+			transition: none;
+		}
+	}
+</style>
 
 <noscript>
 	<style is:inline>
