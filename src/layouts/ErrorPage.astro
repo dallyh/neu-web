@@ -1,0 +1,37 @@
+---
+import { useIntlayer, useLocale } from "astro-intlayer";
+import BaseLayout from "./BaseLayout.astro";
+import PageHeader from "../components/ui/PageHeader.astro";
+import { sectionUrl } from "../lib/urls";
+
+interface Props {
+	status: 404 | 500;
+}
+
+const { status } = Astro.props;
+const ui = useIntlayer("site");
+const { locale } = useLocale();
+const title = status === 404 ? ui.pageNotFound : ui.serverError;
+const description = status === 404 ? ui.pageNotFoundDescription : ui.serverErrorDescription;
+const cardColor =  status === 404 ? "nb-card-warning" : "nb-card-error";
+---
+
+<BaseLayout title={`${status} · ${title} · ${ui.name}`} description={description} noIndex>
+	<section class="my-12 mx-auto md:my-20">
+		<PageHeader class:list={["nb-card nb-card-no-action", cardColor]}>
+			<p class="mb-4 font-nb-display text-8xl leading-none" aria-hidden="true">
+				{status}
+			</p>
+			<h1 class="nb-page-header-title">{title}</h1>
+			<p class="nb-page-header-description">{description}</p>
+		</PageHeader>
+		<div class="mt-8 flex flex-wrap gap-4">
+			<a class="nb-action nb-action-secondary" href={sectionUrl("", locale)}>
+				{ui.backHome}
+			</a>
+			<a class="nb-action nb-action-primary" href={sectionUrl("blog", locale)}>
+				{ui.viewAllArticles}
+			</a>
+		</div>
+	</section>
+</BaseLayout>

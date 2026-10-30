@@ -7,7 +7,7 @@ import PageHeader from "../../../components/ui/PageHeader.astro";
 import { getPostsByTag, getTags, tagDescription, tagLabel, tagUrl } from "../../../lib/tags";
 import { sectionUrl } from "../../../lib/urls";
 import type { CollectionEntry } from "astro:content";
-import { getCollection } from "astro:content";
+import { getEntries } from "../../../lib/content";
 
 export function getStaticPaths() {
 	return locales.map((locale) => ({ params: { locale } }));
@@ -32,7 +32,7 @@ const tagsWithPosts: TagsWithPosts[] = await Promise.all(
 	}),
 );
 
-const postCount = (await getCollection("blog"))?.length ?? 0;
+const postCount = (await getEntries("blog", locale)).length;
 const maxCount = Math.max(...tagsWithPosts.map((t) => t.posts));
 
 const capitalizeFirst = (value: string) => value.charAt(0).toUpperCase() + value.slice(1);

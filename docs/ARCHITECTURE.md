@@ -199,7 +199,7 @@ Development serves the last production index: run `pnpm build` before testing wi
 
 `BaseLayout` includes the self-hosted Umami tracker only in production builds with `PREVIEW=false`. The typed public `UMAMI_URL` and `UMAMI_SITE_ID` settings default to the existing analytics instance and website ID. Set them, along with `PREVIEW`, during the build; changing runtime variables cannot change a prerendered tracking script. Docker supports both build arguments and Coolify BuildKit secret injection for these values.
 
-`src/lib/umami/auth.ts` and `client.ts` provide server-only `getToken()` and `getPageViews(path)` helpers. Login is lazy and shared across concurrent calls; expired tokens are renewed on one HTTP 401 retry. Requests have a ten-second timeout, validate their responses, and log errors with `console.error` without logging credentials or tokens. Page-view queries use Umami's `path` filter and return a primitive `number`, throwing on failure rather than reporting a false zero. `UMAMI_USERNAME` and `UMAMI_PASSWORD` are optional server secrets needed only when querying the API, and can be supplied to the Node container at runtime. No API login runs just from importing a helper or building the site.
+`src/lib/umami/auth.ts` and `client.ts` provide server-only `getToken()` and `getPageViews(path)` helpers. Login is lazy and shared across concurrent calls; expired tokens are renewed on one HTTP 401 retry. Requests have a ten-second timeout, validate their responses, and log errors with `console.error` without logging credentials or tokens. Page-view queries use Umami's `path` filter and return a primitive `number`, throwing on failure rather than reporting a false zero. `ViewCount.astro` catches those failures and omits the optional counter, so the server island completes without leaving a loading placeholder. `UMAMI_USERNAME` and `UMAMI_PASSWORD` are optional server secrets needed only when querying the API, and can be supplied to the Node container at runtime. No API login runs just from importing a helper or building the site.
 
 ## Open Graph images
 
@@ -212,3 +212,7 @@ Website labels and hero copy come from Intlayer; blog titles, descriptions, and 
 ## Draft behavior
 
 `getEntries()` includes blog/portfolio drafts in development and excludes them in production. `ContentCard` renders a localized draft badge. RSS explicitly disables drafts even in development. `getResumes()` excludes draft resumes in all environments; the privacy-policy schema has no draft field.
+
+## Error pages
+
+`src/pages/404.astro` and `500.astro` render on demand through the shared `layouts/ErrorPage.astro` surface. They preserve their HTTP error status, disable indexing, and use private, non-cacheable responses. Intlayer resolves the request locale from the URL or visitor preferences. Both pages provide localized home and blog links, and locale switching falls back to the target locale's homepage. The 500 page displays generic copy rather than exposing exception details; it handles server-rendering errors, not build failures or upstream proxy errors.

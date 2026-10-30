@@ -1,0 +1,9 @@
+---
+import ErrorPage from "../layouts/ErrorPage.astro";
+
+export const prerender = false;
+Astro.response.status = 500;
+Astro.response.headers.set("Cache-Control", "private, no-store");
+---
+
+<ErrorPage status={500} />

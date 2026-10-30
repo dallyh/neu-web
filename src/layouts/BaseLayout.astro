@@ -23,8 +23,9 @@ interface Props {
 	ogImage?: string;
 	ogImageAlt?: string;
 	searchable?: boolean;
+	noIndex?: boolean;
 }
-const { title, description, paths = {}, fallbackPath = "/", articleDate, ogImage, ogImageAlt = title, searchable = false } = Astro.props;
+const { title, description, paths = {}, fallbackPath = "/", articleDate, ogImage, ogImageAlt = title, searchable = false, noIndex = false } = Astro.props;
 const { locale, availableLocales } = useLocale();
 const ui = useIntlayer("site");
 const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url).href;
@@ -46,6 +47,7 @@ const analyticsScript = `${UMAMI_URL.replace(/\/$/, "")}/script.js`;
 		<link rel="icon" type="image/svg+xml" sizes="any" href="/favicon.svg" />
 		<title>{title}</title>
 		<meta name="description" content={description} />
+		{noIndex && <meta name="robots" content="noindex, nofollow" />}
 		<link rel="canonical" href={canonical} />
 		<link rel="alternate" type="application/rss+xml" title={ui.rssTitle} href={new URL(rssUrl(locale), Astro.site ?? Astro.url).href} />
 		{availableLocales

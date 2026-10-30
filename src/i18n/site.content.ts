@@ -3,6 +3,11 @@ import { plural, t, type Dictionary } from "intlayer";
 const content = {
 	key: "site",
 	content: {
+		pageNotFound: t({ en: "Page not found", cs: "Stránka nenalezena" }),
+		pageNotFoundDescription: t({ en: "This page may have moved, or the address may be incorrect.", cs: "Stránka mohla být přesunuta nebo je její adresa nesprávná." }),
+		serverError: t({ en: "Something went wrong", cs: "Něco se pokazilo" }),
+		serverErrorDescription: t({ en: "I couldn't load this page. Please try again in a moment.", cs: "Tuto stránku se nepodařilo načíst. Zkuste to prosím za chvíli znovu." }),
+		backHome: t({ en: "Back to home", cs: "Zpět na úvod" }),
 		search: t({ en: "Search", cs: "Hledat" }),
 		closeSearch: t({ en: "Close search", cs: "Zavřít vyhledávání" }),
 		searchPlaceholder: t({ en: "Search articles, projects, and more…", cs: "Hledat články, projekty a další…" }),

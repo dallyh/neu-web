@@ -9,9 +9,16 @@ interface Props {
 
 const { pathname } = Astro.props;
 const ui = useIntlayer("site");
-const viewCount = await getPageViews(pathname);
+let viewCount: number | undefined;
+try {
+	viewCount = await getPageViews(pathname);
+} catch {
+	// The client logs failures; optional statistics must not break this island.
+}
 ---
 
-<span>
-	{ui.viewCount}: {viewCount}
-</span>
+{viewCount !== undefined && (
+	<span>
+		{ui.viewCount}: {viewCount}
+	</span>
+)}
