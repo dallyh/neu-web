@@ -59,7 +59,6 @@ Referenced tag IDs must exist in `src/content/tags.json`. Cards, article headers
 | `role`                | String                                       | Optional         |
 | `repositoryUrl`       | URL                                          | Optional         |
 | `githubUrl`           | URL accepted by `parseGitHubRepositoryUrl()` | Optional         |
-| `externalUrl`         | URL                                          | Optional         |
 | `image`               | Astro image or URL                           | Optional         |
 | `imageAlt`            | String                                       | Optional         |
 

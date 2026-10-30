@@ -71,7 +71,6 @@ const portfolio = defineCollection({
 				.url()
 				.refine((url) => parseGitHubRepositoryUrl(url) !== undefined, "Use a GitHub repository URL")
 				.optional(),
-			externalUrl: z.url().optional(),
 			image: image().or(z.url()).optional(),
 			imageAlt: z.string().optional(),
 		}),
