@@ -14,8 +14,19 @@ interface Props {
 
 export function BlogTemplate({ name, label, title, description, date, host }: Props) {
 	return (
-		<div style={{ ...ogSize, display: "flex", padding: 24, background: colors.background, color: colors.ink, fontFamily: ogFonts.body }}>
-			<div style={{ display: "flex", flexDirection: "column", width: "100%", padding: 40, background: colors.surface, border: `3px solid ${colors.ink}`, boxShadow: `8px 8px 0 ${colors.ink}` }}>
+		<div style={{ ...ogSize, boxSizing: "border-box", display: "flex", padding: 24, background: colors.background, color: colors.ink, fontFamily: ogFonts.body }}>
+			<div
+				style={{
+					display: "flex",
+					flexDirection: "column",
+					boxSizing: "border-box",
+					width: "100%",
+					padding: 40,
+					background: colors.surface,
+					border: `3px solid ${colors.ink}`,
+					boxShadow: `8px 8px 0 ${colors.ink}`,
+				}}
+			>
 				<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 22 }}>
 					<div style={{ background: colors.primary, border: `3px solid ${colors.ink}`, padding: "8px 16px", fontFamily: ogFonts.heading, fontWeight: 700 }}>{label}</div>
 					<div>{date}</div>

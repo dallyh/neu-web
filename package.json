@@ -23,7 +23,7 @@
         "@fontsource/bebas-neue": "^5.3.0",
         "@fontsource/dm-sans": "^5.3.0",
         "@fontsource/plus-jakarta-sans": "^5.3.0",
-        "astro": "^7.4.3",
+        "astro": "^7.4.4",
         "astro-ai-robots-txt": "^0.1.5",
         "astro-expressive-code": "^0.44.3",
         "astro-iconset": "^0.0.6",
@@ -32,16 +32,16 @@
         "intlayer": "^9.7.0",
         "octokit": "^5.0.5",
         "sanitize-html": "^2.18.1",
-        "satori": "^0.33.5",
+        "satori": "^0.63.2",
         "sharp": "^0.35.5"
     },
     "allowScripts": {
         "esbuild": true
     },
-    "packageManager": "pnpm@12.6.0+sha512.3ef68f951cb111ac204b4a5a16f0b2ddf0da56a96e0413e81d855d9f0b55ef926714709028e1cd00c405c2c5fb7b9e8ec4dc46777c805d0373c2f2ff00fd20ec",
+    "packageManager": "pnpm@12.16.1+sha512.091d1dee7927575661b25dab3c2ae31cafc1c54d6b71ed6a6600cf0c1cb10434a447eae14015f1b23e2e6bedeed79df94a932e2164d2832280dce3fb32f656d1",
     "devDependencies": {
         "@astrojs/check": "^0.9.12",
-        "@iconify-json/devicon": "^1.2.73",
+        "@iconify-json/devicon": "^1.2.74",
         "@tailwindcss/typography": "^0.5.20",
         "@tailwindcss/vite": "^4.3.3",
         "@types/node": "^24.19.2",
@@ -49,7 +49,7 @@
         "prettier": "^3.9.10",
         "prettier-plugin-astro": "^1.1.2",
         "prettier-plugin-tailwindcss": "^0.8.1",
-        "prettier-plugin-toml": "^3.0.2",
+        "prettier-plugin-toml": "^4.1.0",
         "reading-time": "^1.5.0",
         "tailwindcss": "^4.3.3",
         "typescript": "^6.0.3",

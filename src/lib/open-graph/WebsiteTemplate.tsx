@@ -13,8 +13,19 @@ interface Props {
 
 export function WebsiteTemplate({ name, title, description, sections, host }: Props) {
 	return (
-		<div style={{ ...ogSize, display: "flex", padding: 24, background: colors.background, color: colors.ink, fontFamily: ogFonts.body }}>
-			<div style={{ display: "flex", flexDirection: "column", width: "100%", padding: 40, background: colors.primary, border: `3px solid ${colors.ink}`, boxShadow: `8px 8px 0 ${colors.ink}` }}>
+		<div style={{ ...ogSize, boxSizing: "border-box", display: "flex", padding: 24, background: colors.background, color: colors.ink, fontFamily: ogFonts.body }}>
+			<div
+				style={{
+					display: "flex",
+					flexDirection: "column",
+					boxSizing: "border-box",
+					width: "100%",
+					padding: 40,
+					background: colors.primary,
+					border: `3px solid ${colors.ink}`,
+					boxShadow: `8px 8px 0 ${colors.ink}`,
+				}}
+			>
 				<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontFamily: ogFonts.heading, fontWeight: 700, fontSize: 24 }}>
 					<div>{name}</div>
 					<div style={{ background: colors.secondary, border: `3px solid ${colors.ink}`, padding: "8px 16px" }}>{host}</div>
